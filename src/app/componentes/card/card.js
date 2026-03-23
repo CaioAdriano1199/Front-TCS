@@ -2,10 +2,9 @@
 
 export default function Card({ 
   children, 
-  className = "",
-  bgcor = "bg-white" }) {
+  className = "" }) {
   return (
-    <div className={`${bgcor} rounded-md shadow-lg p-6 ${className}`}>
+    <div className={` rounded-md shadow-lg p-6 ${className}`}>
       {children}
     </div>
   );

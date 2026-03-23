@@ -1,33 +1,44 @@
+"use client";
+import { use } from "react";
 import Card from "../componentes/card/card"
 
 export default function Login() {
+const [email, setEmail] =useState("");
+const [password, setPassword] =useState("");
+
+const infologin = {
+  email: email,
+  password: password
+}
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            Login Page
+
+      <main className="flex min-h-screen flex-col items-center justify-center bg-white">
+
+            <Card className="flex w-100 flex-col justify-center mt-6 bg-gray-500">
+              <h1 className="self-center p-5 text-3xl font-semibold text-black">
+            Relic
             </h1>
-            <Card className="w-full mt-6">
-              <form className="flex flex-col gap-4">
+                
                 <input
                   type="email"
                   placeholder="Email"
-                  className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="border bg-white border-gray-300 rounded-md my-2.5 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onChange={(e) => setEmail(e.target.value)}
                 />
                 <input
                   type="password"
                   placeholder="Password"
-                  className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="border bg-white border-gray-300 rounded-md my-2.5 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
                   type="submit"
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
+                  className="bg-gray-200 hover:bg-gray-170 my-2.5 text-black font-bold py-2 px-4 rounded-md"
                 >
                   Login
                 </button>
-              </form>
             </Card>
         </main>
-    </div>
   )
 }

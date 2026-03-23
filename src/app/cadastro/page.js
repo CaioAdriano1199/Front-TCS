@@ -1,40 +1,59 @@
 "use client";
 import Card from "../componentes/card/card";
-import { use, useState } from "react";
+import {useState } from "react";
 
 export default function Cadastro() {
   const [pgc, setPgc] = useState(0);
+  const [compsenha,setcompsenha] = useState(false);
+  const [email, setEmail] = useState("");
+  const [none, setNone] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [cnpj, setCnpj] = useState("");
+  const [companyName, setCompanyName] = useState("");
+
+  const infocadastro = {
+    email: email,
+    none: none,
+    password: password,
+    confirmPassword: confirmPassword,
+    cnpj: cnpj,
+    companyName: companyName
+  }
+
+  function compararsenha(e) {
+    const value = e.target.value;
+    setConfirmPassword(value);
+  
+    setcompsenha(password !== value);
+  }
+
     return (
-        <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-            <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-                <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50"> 
-                    Cadastro Page
+            <main className="flex min-h-screen flex-col items-center justify-center bg-white">
+
+            <Card className="flex w-100 flex-col justify-center mt-6 bg-gray-500">
+              <div className=" self-center flex justifi-center flex-col p-5">
+                <h2 className="self-center text-3xl font-semibold leading-10 tracking-tight text-black"> 
+                    Relic
+                </h2>
+                <h1 className="text-4xl self-center">
+                Cadastro
                 </h1>
-            </main>
-            <Card className="w-full mt-6">
+                </div>
               {pgc === 0 && (
-                              <form className="flex flex-col gap-4">
-                <input
-                  type="text"
-                  placeholder="Name"
-                  className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+              <form className="flex flex-col gap-4">
                 <input
                   type="email"
                   placeholder="Email"
-                  className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <input
-                  type="password"
-                  placeholder="Password"
-                  className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="border bg-white border-gray-300 rounded-md my-5 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onChange={(e) => setEmail(e.target.value)}
                 />
                 <button
                   type="submit"
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
                   onClick={() => setPgc(1)}
                 >
-                  Cadastrar
+                  Continuar
                 </button>
               </form>
               )} {pgc === 1 && (
@@ -43,56 +62,46 @@ export default function Cadastro() {
                 <input
                   type="text"
                   placeholder="Name"
-                  className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="border bg-white border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onChange={(e) => setNone(e.target.value)}
                 />
                 <input
-                  type="email"
-                  placeholder="Email"
-                  className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  type="password"
+                  placeholder="Senha"
+                  className="border bg-white border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <input
                   type="password" 
-                  placeholder="Password"
-                  className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Confirmar senha"
+                  className="border bg-white border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onChange={(e) => compararsenha(e)}
                 />
-                <input
-                  type="text"
-                  placeholder="CPF"
-                  className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                {password !== confirmPassword && compsenha === true ? (
+                  <p className="text-red-500 text-sm">As senhas não coincidem</p>
+                ) : null}
                 <button
                   type="submit"
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
+                  onClick={() => setPgc(2)}
                 >
-                  Cadastrar
+                  Continuar
                 </button>
               </form>
               )}  {pgc === 2 && (
                 <form className="flex flex-col gap-4">
                 <input
                   type="text"
-                  placeholder="Name"
-                  className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="CNPJ"
+                  className="border bg-white border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onChange={(e) => setCnpj(e.target.value)}
                 />
-                <input
-                  type="email"
-                  placeholder="Email"
-                  className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                />
-                <input
-                  type="password"
-                  placeholder="Password"
-                  className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />  
                 <input
                   type="text"
-                  placeholder="CPF"
-                  className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <input
-                  type="text"                  placeholder="Matricula"
-                  className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />    
+                  placeholder="Nome da empresa"
+                  className="border bg-white border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onChange={(e) => setCompanyName(e.target.value)}
+                />     
                 <button
                   type="submit"
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
@@ -101,8 +110,9 @@ export default function Cadastro() {
                 </button>
               </form>
               )}
-
             </Card>
-        </div>
+            </main>
     )
-}
+              }
+            
+            

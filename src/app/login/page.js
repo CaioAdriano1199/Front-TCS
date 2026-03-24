@@ -1,5 +1,5 @@
 "use client";
-import { use } from "react";
+import { useState } from "react";
 import Card from "../componentes/card/card"
 
 export default function Login() {
@@ -9,6 +9,26 @@ const [password, setPassword] =useState("");
 const infologin = {
   email: email,
   password: password
+}
+
+async function login() {
+  try {
+    const resposta = await fetch("http://localhost:8080/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(infologin)
+    });
+
+    const dados = await resposta.json();
+    const token = dados.token;
+    console.log("Token recebido:", token);
+    localStorage.setItem("token", token);
+
+  } catch (erro) {
+    console.error("Erro no login:", erro);
+  }
 }
 
   return (
@@ -35,6 +55,7 @@ const infologin = {
                 <button
                   type="submit"
                   className="bg-gray-200 hover:bg-gray-170 my-2.5 text-black font-bold py-2 px-4 rounded-md"
+                  onClick={login}
                 >
                   Login
                 </button>

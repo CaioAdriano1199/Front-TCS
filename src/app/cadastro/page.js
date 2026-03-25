@@ -6,35 +6,65 @@ export default function Cadastro() {
   const [pgc, setPgc] = useState(0);
   const [compsenha,setcompsenha] = useState(false);
   const [email, setEmail] = useState("");
-  const [none, setNone] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [nome, setNome] = useState("");
+  const [senha, setSenha] = useState("");
+  const [confirmSenha, setConfirmSenha] = useState("");
   const [cnpj, setCnpj] = useState("");
   const [nomeempresa, setNomeempresa] = useState("");
 
-  const infocadastro = {
+  const usuario = {
     email: email,
-    none: none,
-    password: password,
-    confirmPassword: confirmPassword,
-    cnpj: cnpj,
-    nomeEmpresa: nomeempresa
+    nome: nome,
+    senha: senha
   }
 
-  async function cadastro() {
+const cadastro ={
+  usuario: usuario,
+  empresa: empresa
+}
+
+  const empresa = {
+    cnpj: cnpj,
+    nome: nomeempresa
+  }
+
+ /* function cadastrogeral() {
+    cadastroUsuario();
+    cadastroEmpresa();
+  }*/
+
+  async function cadastroUsuario() {
 
   try {
-    const resposta = await fetch("http://localhost:8080/api/usuarios", {
+    const resposta = await fetch("http://localhost:8081/usuarios", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(infocadastro)
+      body: JSON.stringify(cadastro)
     });
 
     const dados = await resposta.json();
 
-    console.log("Sucesso:", dados);
+    console.log("Sucesso no cadastro do usuário");
+  } catch (erro) {
+    console.error("Erro:", erro);
+  }
+}
+async function cadastroEmpresa() {
+
+  try {
+    const resposta = await fetch("http://localhost:8081/empresas", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(cadastro)
+    });
+
+    const dados = await resposta.json();
+
+    console.log("Sucesso no cadastro da empresa");
   } catch (erro) {
     console.error("Erro:", erro);
   }
@@ -42,9 +72,9 @@ export default function Cadastro() {
 
   function compararsenha(e) {
     const value = e.target.value;
-    setConfirmPassword(value);
+    setConfirmSenha(value);
   
-    setcompsenha(password !== value);
+    setcompsenha(Senha !== value);
   }
 
     return (
@@ -84,14 +114,14 @@ export default function Cadastro() {
                   type="text"
                   placeholder="Nome"
                   className="border text-black bg-white border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  onChange={(e) => setNone(e.target.value)}
+                  onChange={(e) => setNome(e.target.value)}
                   required
                 />
                 <input
                   type="password"
                   placeholder="Senha"
                   className="border bg-white text-black border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => setSenha(e.target.value)}
                   required
                 />
                 <input
@@ -101,13 +131,13 @@ export default function Cadastro() {
                   onChange={(e) => compararsenha(e)}
                   required
                 />
-                {password !== confirmPassword && compsenha === true ? (
+                {senha !== confirmSenha && compsenha === true ? (
                   <p className="text-red-500 text-sm">As senhas não coincidem</p>
                 ) : null}
                 <button
                   type="submit"
                   className="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-md disabled:bg-gray-400 disabled:cursor-not-allowed"
-                  disabled={password !== confirmPassword || compsenha === true || password === "" || confirmPassword === ""|| none === ""}
+                  disabled={senha !== confirmSenha || compsenha === true || senha === "" || confirmSenha === ""|| nome === ""}
                   onClick={() => setPgc(2)}
                 >
                   Continuar
@@ -132,7 +162,7 @@ export default function Cadastro() {
                 <button
                   type="submit"
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md disabled:bg-gray-400 disabled:cursor-not-allowed"
-                  onClick={cadastro}
+                  onClick={cadastro()}
                   disabled={cnpj === "" || nomeempresa === ""}
                 >
                   Cadastrar

@@ -4,16 +4,16 @@ import Card from "../componentes/card/card"
 
 export default function Login() {
 const [email, setEmail] =useState("");
-const [password, setPassword] =useState("");
+const [senha, setSenha] =useState("");
 
 const infologin = {
   email: email,
-  password: password
+  senha: password
 }
 
 async function login() {
   try {
-    const resposta = await fetch("http://localhost:8080/api/login", {
+    const resposta = await fetch("http://localhost:8081/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -21,10 +21,10 @@ async function login() {
       body: JSON.stringify(infologin)
     });
 
-    const dados = await resposta.json();
+    /*const dados = await resposta.json();
     const token = dados.token;
     console.log("Token recebido:", token);
-    localStorage.setItem("token", token);
+    localStorage.setItem("token", token);*/
 
   } catch (erro) {
     console.error("Erro no login:", erro);
@@ -50,7 +50,7 @@ async function login() {
                   type="password"
                   placeholder="Password"
                   className="border bg-white border-gray-300 rounded-md my-2.5 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => setSenha(e.target.value)}
                 />
                 <button
                   type="submit"

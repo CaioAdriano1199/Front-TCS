@@ -8,7 +8,7 @@ const [senha, setSenha] =useState("");
 
 const infologin = {
   email: email,
-  senha: password
+  senha: senha
 }
 
 async function login() {

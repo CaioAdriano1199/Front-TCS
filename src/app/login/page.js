@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Card from "../componentes/card/card"
+import { redirect } from "next/navigation";
 
 export default function Login() {
 const [email, setEmail] =useState("");
@@ -21,13 +22,18 @@ async function login() {
       body: JSON.stringify(infologin)
     });
 
-    /*const dados = await resposta.json();
+    const dados = await resposta.json();
     const token = dados.token;
+    const admin = dados.admSistema;
     console.log("Token recebido:", token);
-    localStorage.setItem("token", token);*/
+    console.log("Admin:", admin);
+    localStorage.setItem("token", token);
+    localStorage.setItem("admin", admin);
+    redirect("/main");
 
   } catch (erro) {
     console.error("Erro no login:", erro);
+    
   }
 }
 

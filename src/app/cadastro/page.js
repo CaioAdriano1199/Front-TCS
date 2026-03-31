@@ -18,22 +18,21 @@ export default function Cadastro() {
     senha: senha
   }
 
+    const empresa = {
+    cnpj: cnpj,
+    nome: nomeempresa
+  }
+
 const cadastro ={
   usuario: usuario,
   empresa: empresa
 }
 
-  const empresa = {
-    cnpj: cnpj,
-    nome: nomeempresa
-  }
 
- /* function cadastrogeral() {
-    cadastroUsuario();
-    cadastroEmpresa();
-  }*/
 
-  async function cadastroUsuario() {
+
+
+  /*async function cadastroUsuario() {
 
   try {
     const resposta = await fetch("http://localhost:8081/usuarios", {
@@ -50,7 +49,7 @@ const cadastro ={
   } catch (erro) {
     console.error("Erro:", erro);
   }
-}
+}*/
 async function cadastroEmpresa() {
 
   try {
@@ -74,7 +73,7 @@ async function cadastroEmpresa() {
     const value = e.target.value;
     setConfirmSenha(value);
   
-    setcompsenha(Senha !== value);
+    setcompsenha(senha !== value);
   }
 
     return (
@@ -99,7 +98,7 @@ async function cadastroEmpresa() {
                   required
                 />
                 <button
-                  type="submit"
+                  type="button"
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md disabled:bg-gray-400 disabled:cursor-not-allowed"
                   onClick={() => setPgc(1)}
                   disabled={email === ""}
@@ -135,7 +134,7 @@ async function cadastroEmpresa() {
                   <p className="text-red-500 text-sm">As senhas não coincidem</p>
                 ) : null}
                 <button
-                  type="submit"
+                  type="button"
                   className="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-md disabled:bg-gray-400 disabled:cursor-not-allowed"
                   disabled={senha !== confirmSenha || compsenha === true || senha === "" || confirmSenha === ""|| nome === ""}
                   onClick={() => setPgc(2)}
@@ -160,9 +159,9 @@ async function cadastroEmpresa() {
                   required
                 />     
                 <button
-                  type="submit"
+                  type="button"
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md disabled:bg-gray-400 disabled:cursor-not-allowed"
-                  onClick={cadastro()}
+                  onClick={() => cadastroEmpresa()}
                   disabled={cnpj === "" || nomeempresa === ""}
                 >
                   Cadastrar

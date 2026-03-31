@@ -152,6 +152,7 @@ export default function Sidemenu({ setPgc }) {
                     className="cursor-pointer"
                     onClick={() => mostrarMembros(equipe)}
                   >
+                    <i className="bi bi-people"></i>
                     {equipe.nome}
                   </li>
                 ))}
@@ -167,7 +168,9 @@ export default function Sidemenu({ setPgc }) {
               <h2 className="text-2xl font-bold mb-2">Membros</h2>
               <ul className="list-disc pl-5">
                 {membrosEquipe.map((membro, index) => (
-                  <li key={index}>{membro.nome}</li>
+                  <li key={index}>
+                    <i className="bi bi-person"></i> {membro.nome}
+                  </li>
                 ))}
               </ul>
             </>

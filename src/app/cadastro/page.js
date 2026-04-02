@@ -64,6 +64,7 @@ async function cadastroEmpresa() {
     const dados = await resposta.json();
 
     console.log("Sucesso no cadastro da empresa");
+    redirect("/login");
   } catch (erro) {
     console.error("Erro:", erro);
   }

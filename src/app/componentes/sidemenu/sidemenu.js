@@ -1,7 +1,7 @@
 "use client";
 import { receberarquivos } from "../servico/receberarquivos";
 import { receberEquipes } from "../servico/receberequipes";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { redirect } from "next/navigation";
 import Modal from "../modal/modal";
 
@@ -11,11 +11,14 @@ export default function Sidemenu({ setPgc }) {
   const [membrosEquipe, setMembrosEquipe] = useState([]);
   const [modalArquivo, setmodalArquivo] = useState(false);
   const [modalEquipe, setmodalEquipe] = useState(false);
+  const [modalNovapasta, setmodalNovaPasta] = useState(false);
   const [modalNovaEquipe, setmodalNovaEquipe] = useState(false);
   const [modalNovoMembro, setmodalNovoMembro] = useState(false);
   const [modalMembros, setmodalMembros] = useState(false);
   const [modalArquivoPasta, setmodalArquivoPasta] = useState(false);
   const [arquivosPasta, setArquivosPasta] = useState([]);
+  const [arquivonovo, setArquivonovo] = useState(null);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     async function carregar() {
@@ -40,6 +43,15 @@ export default function Sidemenu({ setPgc }) {
   function mostrarArquivosPasta(arquivo) {
     setArquivosPasta(arquivo.arquivos);
     setmodalArquivoPasta(true);
+  }
+
+  function abrirSeletor() {
+    inputRef.current.click();
+  }
+
+  function handleUpload(event) {
+    const file = event.target.files[0];
+    setArquivonovo(file);
   }
 
   return (
@@ -101,6 +113,16 @@ export default function Sidemenu({ setPgc }) {
             <>
               <div className="mb-4">
                 <h2 className="text-2xl font-bold mb-2">Lista de Arquivos</h2>
+                <div className="my-4">
+                  <button onClick={() => setmodalNovaPasta(true)} className="my-4 mr-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-folder"></i> Nova pasta</p></button>
+                  <button onClick={() => abrirSeletor()} className="my-4 mr-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-folder"></i> Novo arquivo</p></button>
+                  <input
+                    type="file"
+                    ref={inputRef}
+                    onChange={handleUpload}
+                    className="hidden"
+                  />
+                </div>
               </div>
               <ul className="list-disc pl-5">
                 {listaArquivos.map((arquivo) => (
@@ -128,6 +150,14 @@ export default function Sidemenu({ setPgc }) {
                 ← Voltar
               </button>
               <h2 className="text-2xl font-bold mb-2">Arquivos na Pasta</h2>
+                                <button onClick={() => setmodalNovaPasta(true)} className="my-4 mr-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-folder"></i> Nova pasta</p></button>
+                  <button onClick={() => abrirSeletor()} className="my-4 mr-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-folder"></i> Novo arquivo</p></button>
+                                    <input
+                    type="file"
+                    ref={inputRef}
+                    onChange={handleUpload}
+                    className="hidden"
+                  />
               <ul className="list-disc pl-5">
                 {arquivosPasta.map((arquivo) => (
                   <li key={arquivo.id}>{arquivo.nome}</li>
@@ -190,6 +220,15 @@ export default function Sidemenu({ setPgc }) {
         <div className="flex flex-col items-center">
           <input type="text" placeholder="Nome da nova equipe" className="border p-2 w-full mb-4" />
           <button className="bg-blue-500 text-white px-4 py-2 rounded">Criar equipe</button>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={modalNovapasta}
+        onClose={() => setmodalNovaPasta(false)}
+        className="text-black">
+        <div className="flex flex-col items-center">
+          <input type="text" placeholder="Nome da nova pasta" className="border p-2 w-full mb-4" />
+          <button className="bg-blue-500 text-white px-4 py-2 rounded">Criar pasta</button>
         </div>
       </Modal>
       <Modal

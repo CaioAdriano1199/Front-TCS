@@ -10,6 +10,6 @@
     "nodejs_compat"
   ],
   "assets": {
-    "bucket": ".open-next/assets"
+    "directory": ".open-next/assets"
   }
 }

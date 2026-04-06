@@ -25,7 +25,7 @@ export async function receberarquivos() {
       id: 1,
       nome: "Contrato.pdf",
       tipo: "arquivo",
-      dataUpload: "2026-03-20"
+      dataUpload: "2026-03-20 10:30:00"
     },
     {
       id: 2,
@@ -36,22 +36,22 @@ export async function receberarquivos() {
           id: 5,
           nome: "documento.txt",
           tipo: "arquivo",
-          dataUpload: "2026-03-19"
+          dataUpload: "2026-03-19 14:45:00"
         },
         {
           id: 6,
           nome: "imagem.png",
           tipo: "arquivo",
-          dataUpload: "2026-03-18"
+          dataUpload: "2026-03-18 09:20:00"
         }
       ],
-      dataUpload: "2026-03-18"
+      dataUpload: "2026-03-18 00:00:00"
     },
     {
       id: 3,
       nome: "Planilha.xlsx",
       tipo: "arquivo",
-      dataUpload: "2026-03-15"
+      dataUpload: "2026-03-15 12:00:00"
     },
     {
       id: 4,
@@ -62,16 +62,16 @@ export async function receberarquivos() {
           id: 7,
           nome: "slide1.png",
           tipo: "arquivo",
-          dataUpload: "2026-03-10"
+          dataUpload: "2026-03-10 09:00:00"
         },
         {
           id: 8,
           nome: "slide2.png",
           tipo: "arquivo",
-          dataUpload: "2026-03-10"
+          dataUpload: "2026-03-10 09:05:00"
         }
       ],
-      dataUpload: "2026-03-10"
+      dataUpload: "2026-03-10 00:00:00"
     }
   ];
 }

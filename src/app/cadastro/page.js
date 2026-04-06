@@ -32,24 +32,7 @@ const cadastro ={
 
 
 
-  /*async function cadastroUsuario() {
 
-  try {
-    const resposta = await fetch("http://localhost:8081/usuarios", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(cadastro)
-    });
-
-    const dados = await resposta.json();
-
-    console.log("Sucesso no cadastro do usuário");
-  } catch (erro) {
-    console.error("Erro:", erro);
-  }
-}*/
 async function cadastroEmpresa() {
 
   try {

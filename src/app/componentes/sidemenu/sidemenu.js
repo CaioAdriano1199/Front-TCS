@@ -18,6 +18,7 @@ export default function Sidemenu({ setPgc }) {
   const [modalArquivoPasta, setmodalArquivoPasta] = useState(false);
   const [arquivosPasta, setArquivosPasta] = useState([]);
   const [arquivonovo, setArquivonovo] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -33,6 +34,12 @@ export default function Sidemenu({ setPgc }) {
 
     carregar();
     carregarEquipes();
+
+    
+    if (typeof window !== "undefined") {
+      const adminStatus = localStorage.getItem("admin") === "true";
+      setIsAdmin(adminStatus);
+    }
   }, []);
 
   function mostrarMembros(equipe) {
@@ -60,11 +67,7 @@ export default function Sidemenu({ setPgc }) {
         <div className="p-4 text-2xl font-bold">
           Relic
         </div>
-        <nav className="flex flex-col mt-4">
-          <a onClick={() => setPgc(0)} className="px-4 py-2 hover:bg-gray-700">Principal</a>
-          <a onClick={() => setPgc(1)} className="px-4 py-2 hover:bg-gray-700">Cadastro</a>
-          <a onClick={() => setPgc(2)} className="px-4 py-2 hover:bg-gray-700">Login</a>
-        </nav>
+
         <h1 className="text-xl font-bold mt-4">Documentos</h1>
         <nav className="flex flex-col mt-4">
           {listaArquivos.map((arquivo) => (
@@ -75,14 +78,14 @@ export default function Sidemenu({ setPgc }) {
           <a onClick={() => setmodalArquivo(true)} className="cursor-pointer px-4 py-2 hover:bg-lightgray-700">Mais arquivos...</a>
         </nav>
         <div className="mt-auto p-4 text-sm text-gray-400">
-          <button onClick={() => {
-            if (localStorage.getItem("admin") === "true") {
-              localStorage.setItem("admin", "false");
+         <button onClick={() => {
+            if (isAdmin) {
+              setIsAdmin(false);
             } else {
-              localStorage.setItem("admin", "true");
+              setIsAdmin(true);
             }
-          }}>set admin</button>
-          {localStorage.getItem("admin") === "true" && (
+          }}>set admin</button> 
+          {isAdmin && (
 
             <button
               onClick={() => setmodalEquipe(true)}
@@ -92,7 +95,9 @@ export default function Sidemenu({ setPgc }) {
           )}
           <button
             onClick={() => {
-              localStorage.removeItem("token");
+              if (typeof window !== "undefined") {
+                localStorage.removeItem("token");
+              }
               redirect("/login");
             }}
             className="w-full self-start text-white font-bold py-2 px-4 rounded-md"

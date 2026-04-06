@@ -8,8 +8,8 @@
     "start": "next start",
     "lint": "biome check",
     "format": "biome format --write",
-    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview"
+    "deploy": "NEXT_DISABLE_TURBOPACK=1 opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "preview": "NEXT_DISABLE_TURBOPACK=1 opennextjs-cloudflare build && opennextjs-cloudflare preview"
   },
   "dependencies": {
     "bootstrap-icons": "^1.13.1",

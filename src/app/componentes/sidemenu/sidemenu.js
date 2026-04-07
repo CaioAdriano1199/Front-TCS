@@ -26,6 +26,7 @@ export default function Sidemenu({ setPgc }) {
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const [nome, setNome] = useState("");
   const [ordemDesc, setOrdemDesc] = useState(true);
+  const [busca, setBusca] = useState("");
   const [tipoOrdenacao, setTipoOrdenacao] = useState("data");
   const colaborador = {
     email: email,
@@ -65,6 +66,17 @@ export default function Sidemenu({ setPgc }) {
     setmodalArquivoPasta(true);
   }
 
+  const arquivosPastaOrdenados = [...arquivosPasta].sort((a, b) => {
+  if (tipoOrdenacao === "data") {
+    const dataA = new Date(a.dataUpload);
+    const dataB = new Date(b.dataUpload);
+    return ordemDesc ? dataB - dataA : dataA - dataB;
+  } else {
+    return ordemDesc
+      ? b.nome.localeCompare(a.nome)
+      : a.nome.localeCompare(b.nome);
+  }
+});
 
   const arquivosOrdenados = [...listaArquivos].sort((a, b) => {
     if (tipoOrdenacao === "data") {
@@ -178,7 +190,7 @@ export default function Sidemenu({ setPgc }) {
         className="text-black m-90 max-h-2/3 overflow-y-auto"
         width="w-full h-full">
         <div className="p-4">
-          {!modalArquivoPasta && (
+          {!modalArquivoPasta && ( //modal de arquivos principais
             <>
               <div className="mb-4">
                 <h2 className="text-2xl font-bold mb-2">Lista de Arquivos</h2>
@@ -219,13 +231,13 @@ export default function Sidemenu({ setPgc }) {
                       )}
                       {arquivo.nome}
                     </p>
-                    <p className="text-sm text-gray-500">{new Date(arquivo.dataUpload).toLocaleDateString("pt-BR")}</p>
+                    <p className="text-sm text-gray-500">{new Date(arquivo.dataUpload).toLocaleString("pt-BR",{day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'}).replace(",", "")}</p>
                   </div>
                 ))}
               </div>
             </>
           )}
-          {modalArquivoPasta && (
+          {modalArquivoPasta && ( //modal de arquivos dentro da pasta
             <>
               <button onClick={() => setmodalArquivoPasta(false)}>
                 ← Voltar
@@ -233,6 +245,14 @@ export default function Sidemenu({ setPgc }) {
               <h2 className="text-2xl font-bold mb-2">Arquivos na Pasta</h2>
               <button onClick={() => setmodalNovaPasta(true)} className="my-4 mr-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-folder"></i> Nova pasta</p></button>
               <button onClick={() => abrirSeletor()} className="my-4 mr-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-file-earmark"></i> Novo arquivo</p></button>
+              <button onClick={() => {
+                setTipoOrdenacao("nome");
+                setOrdemDesc(!ordemDesc);
+              }} className="my-4 mr-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-sort-alpha-down-alt"></i> Ordenar por nome</p></button>
+              <button onClick={() => {
+                setTipoOrdenacao("data");
+                setOrdemDesc(!ordemDesc);
+              }} className="my-4 mr-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-sort-down-alt"></i> Ordenar por data</p></button>
               <input
                 type="file"
                 ref={inputRef}
@@ -240,7 +260,7 @@ export default function Sidemenu({ setPgc }) {
                 className="hidden"
               />
               <div className="w-full mx-auto overflow-y-auto max-h-96">
-                {listaArquivos.map((arquivo) => (
+                {arquivosPastaOrdenados.map((arquivo) => (
                   <div className="w-full cursor-pointer flex justify-between items-center p-2 rounded hover:bg-gray-200"
                     onClick={
                       arquivo.tipo === "pasta"
@@ -257,7 +277,7 @@ export default function Sidemenu({ setPgc }) {
                       )}
                       {arquivo.nome}
                     </p>
-                    <p className="text-sm text-gray-500">{arquivo.dataUpload}</p>
+                    <p className="text-sm text-gray-500">{new Date(arquivo.dataUpload).toLocaleString("pt-BR",{day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'}).replace(",", "")}</p>
                   </div>
                 ))}
               </div>
@@ -292,28 +312,39 @@ export default function Sidemenu({ setPgc }) {
               </ul>
             </>
           )}
-          {modalMembros && (
+          {modalMembros && ( //modal de membros da equipe
             <>
+            <div className="flex justify-between items-center mb-4">
               <button onClick={() => setmodalMembros(false)}>
                 ← Voltar
               </button>
-
+              <input
+                type="text"
+                placeholder="Buscar membro..."
+                value={busca}
+                onChange={(e) => setBusca(e.target.value)}
+              />
+              </div>
               <h2 className="text-2xl font-bold mb-2 ">Membros</h2>
               <button onClick={() => setmodalNovoMembro(true)} className="my-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-person"></i> Novo membro</p></button>
 
-              <ul className="list-disc pl-5">
+              <div className="flex flex-col">
                 {membrosEquipe.map((membro, index) => (
-                  <li key={index}>
-                    <i className="bi bi-person"></i> {membro.nome}
-                  </li>
+                  <p key={index}>
+                    {busca && !membro.nome.toLowerCase().includes(busca.toLowerCase()) ? null : (
+                      <>
+                        <i className="bi bi-person"></i> {membro.nome}
+                      </>
+                    )}
+                  </p>
                 ))}
-              </ul>
+              </div>
             </>
           )}
         </div>
       </Modal>
       <Modal
-        isOpen={modalNovaEquipe}
+        isOpen={modalNovaEquipe} //modal para criar nova equipe
         onClose={() => setmodalNovaEquipe(false)}>
         <div className="flex flex-col items-center">
           <input type="text" placeholder="Nome da nova equipe" className="border p-2 w-full mb-4" />
@@ -321,7 +352,7 @@ export default function Sidemenu({ setPgc }) {
         </div>
       </Modal>
       <Modal
-        isOpen={modalNovapasta}
+        isOpen={modalNovapasta} //modal para criar nova pasta
         onClose={() => setmodalNovaPasta(false)}
         className="text-black">
         <div className="flex flex-col items-center">
@@ -330,7 +361,7 @@ export default function Sidemenu({ setPgc }) {
         </div>
       </Modal>
       <Modal
-        isOpen={modalNovoMembro}
+        isOpen={modalNovoMembro} //modal para adicionar novo membro a equipe
         onClose={() => setmodalNovoMembro(false)}>
         <div className="flex flex-col items-center">
           <input
@@ -365,6 +396,9 @@ export default function Sidemenu({ setPgc }) {
             onChange={(e) => setConfirmarSenha(e.target.value)}
             required
           />
+          {senha !== confirmarSenha && confirmarSenha !== "" ? (
+            <p className="text-red-500 text-sm">As senhas não coincidem</p>
+          ) : null}
           <button onClick={() => cadastroUsuario()}
             className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
             disabled={senha !== confirmarSenha || email === "" || nome === "" || senha === "" || confirmarSenha === ""}

@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { redirect } from "next/navigation";
 import Modal from "../modal/modal";
 import toast from "react-hot-toast";
+import ActionMenu from "../menudeacao/menudeacao";
 
 export default function Sidemenu({ setPgc }) {
   const [listaArquivos, setListaArquivos] = useState([]);
@@ -17,17 +18,29 @@ export default function Sidemenu({ setPgc }) {
   const [modalNovoMembro, setmodalNovoMembro] = useState(false);
   const [modalMembros, setmodalMembros] = useState(false);
   const [modalArquivoPasta, setmodalArquivoPasta] = useState(false);
+  const [modalMoverMembro, setmodalMoverMembro] = useState(false);
+  const [modalEditarMembro, setmodalEditarMembro] = useState(false);
   const [arquivosPasta, setArquivosPasta] = useState([]);
   const [arquivonovo, setArquivonovo] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const inputRef = useRef(null);
   const [email, setEmail] = useState("");
+  const [emailAtt, setEmailAtt] = useState("");
   const [senha, setSenha] = useState("");
+  const [senhaAtt, setSenhaAtt] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const [nome, setNome] = useState("");
+  const [nomeAtt, setNomeAtt] = useState("");
   const [ordemDesc, setOrdemDesc] = useState(true);
   const [busca, setBusca] = useState("");
   const [tipoOrdenacao, setTipoOrdenacao] = useState("data");
+  const [membro, setMembro] = useState({});
+  const [equipeSelecionada, setEquipeSelecionada] = useState([]);
+  const colaboradorAtt = {
+    email: emailAtt,
+    nome: nomeAtt,
+    senha: senhaAtt
+  }
   const colaborador = {
     email: email,
     senha: senha,
@@ -67,16 +80,20 @@ export default function Sidemenu({ setPgc }) {
   }
 
   const arquivosPastaOrdenados = [...arquivosPasta].sort((a, b) => {
-  if (tipoOrdenacao === "data") {
-    const dataA = new Date(a.dataUpload);
-    const dataB = new Date(b.dataUpload);
-    return ordemDesc ? dataB - dataA : dataA - dataB;
-  } else {
-    return ordemDesc
-      ? b.nome.localeCompare(a.nome)
-      : a.nome.localeCompare(b.nome);
-  }
-});
+    if (tipoOrdenacao === "data") {
+      const dataA = new Date(a.dataUpload);
+      const dataB = new Date(b.dataUpload);
+      return ordemDesc ? dataB - dataA : dataA - dataB;
+    } else {
+      return ordemDesc
+        ? b.nome.localeCompare(a.nome)
+        : a.nome.localeCompare(b.nome);
+    }
+  });
+
+  const membrosFiltrados = membrosEquipe.filter((membro) =>
+    !busca || membro.nome.toLowerCase().includes(busca.toLowerCase())
+  );
 
   const arquivosOrdenados = [...listaArquivos].sort((a, b) => {
     if (tipoOrdenacao === "data") {
@@ -216,22 +233,38 @@ export default function Sidemenu({ setPgc }) {
               <div className="w-full mx-auto overflow-y-auto max-h-96">
                 {arquivosOrdenados.map((arquivo) => (
                   <div className="w-full cursor-pointer flex justify-between items-center p-2 rounded hover:bg-gray-200"
-                    onClick={
-                      arquivo.tipo === "pasta"
-                        ? () => mostrarArquivosPasta(arquivo)
-                        : undefined
-                    }
+
                     key={arquivo.id}>
-                    <p
-                    >
-                      {arquivo.tipo === "arquivo" ? (
-                        <i className="bi bi-file-earmark"></i>
-                      ) : (
-                        <i className="bi bi-folder"></i>
-                      )}
-                      {arquivo.nome}
-                    </p>
-                    <p className="text-sm text-gray-500">{new Date(arquivo.dataUpload).toLocaleString("pt-BR",{day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'}).replace(",", "")}</p>
+                    <div className="flex-2 flex justify-between items-center"
+                      onClick={
+                        arquivo.tipo === "pasta"
+                          ? () => mostrarArquivosPasta(arquivo)
+                          : undefined
+                      }>
+                      <p
+                      >
+                        {arquivo.tipo === "arquivo" ? (
+                          <i className="bi bi-file-earmark"></i>
+                        ) : (
+                          <i className="bi bi-folder"></i>
+                        )}
+                        {arquivo.nome}
+                      </p>
+                      <p className="text-sm text-gray-500">{new Date(arquivo.dataUpload).toLocaleString("pt-BR", { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(",", "")}</p>
+                    </div>
+                    <ActionMenu className="flex-1"
+                      options={[
+                        {
+                          label: "Editar",
+                          onClick: () => { }
+                        },
+                        {
+                          label: "Excluir",
+                          onClick: () => { }
+                        }
+                      ]}
+                    />
+
                   </div>
                 ))}
               </div>
@@ -262,22 +295,37 @@ export default function Sidemenu({ setPgc }) {
               <div className="w-full mx-auto overflow-y-auto max-h-96">
                 {arquivosPastaOrdenados.map((arquivo) => (
                   <div className="w-full cursor-pointer flex justify-between items-center p-2 rounded hover:bg-gray-200"
-                    onClick={
-                      arquivo.tipo === "pasta"
-                        ? () => mostrarArquivosPasta(arquivo)
-                        : undefined
-                    }
+
                     key={arquivo.id}>
-                    <p
-                    >
-                      {arquivo.tipo === "arquivo" ? (
-                        <i className="bi bi-file-earmark"></i>
-                      ) : (
-                        <i className="bi bi-folder"></i>
-                      )}
-                      {arquivo.nome}
-                    </p>
-                    <p className="text-sm text-gray-500">{new Date(arquivo.dataUpload).toLocaleString("pt-BR",{day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'}).replace(",", "")}</p>
+                    <div className="flex-2 flex justify-between items-center"
+                      onClick={
+                        arquivo.tipo === "pasta"
+                          ? () => mostrarArquivosPasta(arquivo)
+                          : undefined
+                      }>
+                      <p
+                      >
+                        {arquivo.tipo === "arquivo" ? (
+                          <i className="bi bi-file-earmark"></i>
+                        ) : (
+                          <i className="bi bi-folder"></i>
+                        )}
+                        {arquivo.nome}
+                      </p>
+                      <p className="text-sm text-gray-500">{new Date(arquivo.dataUpload).toLocaleString("pt-BR", { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(",", "")}</p>
+                    </div>
+                    <ActionMenu className="flex-1"
+                      options={[
+                        {
+                          label: "Editar",
+                          onClick: () => { }
+                        },
+                        {
+                          label: "Excluir",
+                          onClick: () => { }
+                        }
+                      ]}
+                    />
                   </div>
                 ))}
               </div>
@@ -286,7 +334,7 @@ export default function Sidemenu({ setPgc }) {
         </div>
       </Modal>
 
-      <Modal
+      <Modal //modal de equipes
         isOpen={modalEquipe}
         onClose={() => setmodalEquipe(false)}
         className="text-black m-90 max-h-2/3 overflow-y-auto"
@@ -298,46 +346,92 @@ export default function Sidemenu({ setPgc }) {
               <div className="my-4">
                 <button onClick={() => setmodalNovaEquipe(true)} className="my-4 mr-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-people"></i> Nova equipe</p></button>
               </div>
-              <ul className="list-disc pl-5">
+              <div className="flex flex-col">
                 {listaEquipes.map((equipe) => (
-                  <li
-                    key={equipe.id}
-                    className="cursor-pointer"
-                    onClick={() => mostrarMembros(equipe)}
-                  >
-                    <i className="bi bi-people"></i>
-                    {equipe.nome}
-                  </li>
+                  <div key={equipe.id} className="flex justify-between items-center p-2 rounded hover:bg-gray-200">
+                    <p
+                      className="cursor-pointer flex-2 hover:bg-gray-300 p-1 rounded"
+                      onClick={() => mostrarMembros(equipe)}
+                    >
+                      <i className="bi bi-people"></i>
+                      {equipe.nome}
+                    </p>
+                    <ActionMenu className="flex-1"
+                      options={[
+                        {
+                          label: "Editar",
+                          onClick: () => {
+
+                          }
+                        },
+                        {
+                          label: "Excluir",
+                          onClick: () => {
+
+                          }
+                        }
+                      ]}
+                    />
+                  </div>
                 ))}
-              </ul>
+              </div>
             </>
           )}
           {modalMembros && ( //modal de membros da equipe
             <>
-            <div className="flex justify-between items-center mb-4">
-              <button onClick={() => setmodalMembros(false)}>
-                ← Voltar
-              </button>
-              <input
-                type="text"
-                placeholder="Buscar membro..."
-                value={busca}
-                onChange={(e) => setBusca(e.target.value)}
-              />
+              <div className="flex justify-between items-center mb-4">
+                <button onClick={() => setmodalMembros(false)}>
+                  ← Voltar
+                </button>
+                <input
+                  type="text"
+                  placeholder="Buscar membro..."
+                  value={busca}
+                  onChange={(e) => setBusca(e.target.value)}
+                />
               </div>
               <h2 className="text-2xl font-bold mb-2 ">Membros</h2>
               <button onClick={() => setmodalNovoMembro(true)} className="my-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-person"></i> Novo membro</p></button>
 
               <div className="flex flex-col">
-                {membrosEquipe.map((membro, index) => (
-                  <p key={index}>
-                    {busca && !membro.nome.toLowerCase().includes(busca.toLowerCase()) ? null : (
-                      <>
-                        <i className="bi bi-person"></i> {membro.nome}
-                      </>
-                    )}
-                  </p>
+                {membrosFiltrados.map((membro, index) => (
+                  <div key={index} className="flex justify-between items-center p-2 rounded hover:bg-gray-200">
+                    <p className="cursor-pointer flex-2 hover:bg-gray-300 p-1 rounded">
+
+                      <i className="bi bi-person"></i> {membro.nome}
+
+
+                    </p>
+                    <ActionMenu className="flex-1"
+                      options={[{
+                        label: "mover para...",
+                        onClick: () => {
+                          setmodalMoverMembro(true);
+                        }
+                      },
+                      {
+                        label: "Editar",
+                        onClick: () => {
+                            setMembro(membro);
+                            setmodalEditarMembro(true);
+                            setEmailAtt(membro.email);
+                            setNomeAtt(membro.nome);
+                            setSenhaAtt(membro.senha);
+                        }
+                      },
+                      {
+                        label: "Excluir",
+                        onClick: () => {
+
+                        }
+                      }
+                      ]}
+                    />
+                  </div>
+
+
                 ))}
+
               </div>
             </>
           )}
@@ -403,6 +497,55 @@ export default function Sidemenu({ setPgc }) {
             className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
             disabled={senha !== confirmarSenha || email === "" || nome === "" || senha === "" || confirmarSenha === ""}
           >Cadastrar</button>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={modalMoverMembro} //modal para mover membro para outra equipe
+        onClose={() => setmodalMoverMembro(false)} className="text-black">
+        <div className="flex flex-col items-center">
+          <h2 className="text-2xl font-bold mb-4">Mover para equipe:</h2>
+          {listaEquipes.map((equipe) => (
+            <label className="mb-2 cursor-pointer" key={equipe.id}>
+              <input type="checkbox" name="equipe" value={equipe.id} className="mr-2" />
+              {equipe.nome}
+            </label>
+          ))}
+          <button className="bg-blue-500 text-white px-4 py-2 rounded">Salvar</button>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={modalEditarMembro} //modal para editar informações do membro
+        onClose={() => setmodalEditarMembro(false)} className="text-black">
+        <div className="flex flex-col items-center">
+          <input
+            type="email"
+            placeholder="Email"
+            value={emailAtt}
+            className="border bg-white text-black border-gray-300 rounded-md my-2.5 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onChange={(e) => setEmailAtt(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Nome"
+            value={nomeAtt}
+            className="border text-black bg-white border-gray-300 rounded-md my-2.5 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onChange={(e) => setNomeAtt(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Senha"
+            value={senhaAtt}
+            className="border bg-white text-black border-gray-300 rounded-md my-2.5 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onChange={(e) => setSenhaAtt(e.target.value)}
+            required
+          />
+
+          <button onClick={() => cadastroUsuario()}
+            className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
+            disabled={emailAtt === "" || nomeAtt === "" || senhaAtt === ""}
+          >Atualizar</button>
         </div>
       </Modal>
     </>

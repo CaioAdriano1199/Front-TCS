@@ -7,9 +7,11 @@ import Modal from "../modal/modal";
 import toast from "react-hot-toast";
 import ActionMenu from "../menudeacao/menudeacao";
 import { receberPastasRaiz } from "../servico/receberpastasraiz";
+import { criarEquipe } from "../servico/criarequipe";
 
 export default function Sidemenu({ setPgc }) {
   const [listaArquivos, setListaArquivos] = useState([]);
+  const [historicoPastas, setHistoricoPastas] = useState([]);
   const [listaPastasRaiz, setListaPastasRaiz] = useState([]);
   const router = useRouter();
   const URL_BASE = process.env.NEXT_PUBLIC_BASE_URL;
@@ -21,8 +23,8 @@ export default function Sidemenu({ setPgc }) {
   const [modalNovaEquipe, setmodalNovaEquipe] = useState(false);
   const [modalNovoMembro, setmodalNovoMembro] = useState(false);
   const [modalMembros, setmodalMembros] = useState(false);
-  const [modalArquivoPasta, setmodalArquivoPasta] = useState(false);
-  const [modalArquivoPastaRaiz, setmodalArquivoPastaRaiz] = useState(false);
+  const [subpastas, setSubpastas] = useState([]);
+  const [arquivos, setArquivos] = useState([]);
   const [modalMoverMembro, setmodalMoverMembro] = useState(false);
   const [modalEditarMembro, setmodalEditarMembro] = useState(false);
   const [arquivosPasta, setArquivosPasta] = useState([]);
@@ -42,6 +44,7 @@ export default function Sidemenu({ setPgc }) {
   const [membro, setMembro] = useState({});
   const [equipeSelecionada, setEquipeSelecionada] = useState([]);
   const [tipomodalarquivos, setTipomodalarquivos] = useState("lista");
+  const [nomeNovaEquipe, setNomeNovaEquipe] = useState("");
   const colaboradorAtt = {
     email: emailAtt,
     nome: nomeAtt,
@@ -56,7 +59,19 @@ export default function Sidemenu({ setPgc }) {
   useEffect(() => {
     async function carregar() {
       const dados = await receberarquivos();
-      setListaArquivos(dados);
+      const subpastasFormatadas = (dados.subpastas || []).map((p) => ({
+        ...p,
+        tipo: "pasta",
+        dataUpload: p.dataCriacao
+      }));
+
+      const arquivosFormatados = (dados.arquivos || []).map((a) => ({
+        ...a,
+        tipo: "arquivo",
+        dataUpload: a.dataUpload
+      }));
+
+      setListaArquivos([...subpastasFormatadas, ...arquivosFormatados]);
     }
 
     async function carregarEquipes() {
@@ -79,12 +94,20 @@ export default function Sidemenu({ setPgc }) {
     setmodalMembros(true);
   }
 
-async function abrirPastasRaiz() {
-  const dados = await receberPastasRaiz();
-  setListaPastasRaiz(dados);
-  setTipomodalarquivos("raiz");
-  setmodalArquivo(true);
-}
+  async function abrirPastasRaiz() {
+    const dados = await receberPastasRaiz();
+    setListaPastasRaiz(dados);
+    setTipomodalarquivos("raiz");
+    setmodalArquivo(true);
+  }
+
+  async function criarNovaEquipe() {
+    const equipeData = {
+      nomeEmpresa: nomeNovaEquipe
+    };
+    await criarEquipe(equipeData);
+    setmodalNovaEquipe(false);
+  }
 
   const arquivosPastaOrdenados = [...arquivosPasta].sort((a, b) => {
     if (tipoOrdenacao === "data") {
@@ -103,28 +126,87 @@ async function abrirPastasRaiz() {
   );
 
   const arquivosOrdenados = [...listaArquivos].sort((a, b) => {
+    if (a.tipo !== b.tipo) {
+      return a.tipo === "pasta" ? -1 : 1;
+    }
+
     if (tipoOrdenacao === "data") {
-      const dataA = new Date(a.dataUpload);
-      const dataB = new Date(b.dataUpload);
+      const dataA = new Date(a.dataUpload || 0);
+      const dataB = new Date(b.dataUpload || 0);
 
       return ordemDesc
         ? dataB - dataA
         : dataA - dataB;
     }
-    else if (tipoOrdenacao === "nome") {
-      const nomeA = a.nome.toLowerCase();
-      const nomeB = b.nome.toLowerCase();
+
+    if (tipoOrdenacao === "nome") {
+      const nomeA = (a.nome || "").toLowerCase();
+      const nomeB = (b.nome || "").toLowerCase();
 
       return ordemDesc
         ? nomeB.localeCompare(nomeA)
         : nomeA.localeCompare(nomeB);
     }
+
+    return 0;
   });
 
   function ordenarArquivos() {
     setOrdemDesc(!ordemDesc);
   }
 
+  async function mostrarArquivosPasta(pasta) {
+    const dados = await receberarquivos(pasta.id);
+
+    const subpastasFormatadas = (dados.subpastas || []).map((p) => ({
+      ...p,
+      tipo: "pasta",
+      dataUpload: p.dataCriacao
+    }));
+
+    const arquivosFormatados = (dados.arquivos || []).map((a) => ({
+      ...a,
+      tipo: "arquivo",
+      dataUpload: a.dataUpload
+    }));
+
+    const tudo = [...subpastasFormatadas, ...arquivosFormatados];
+
+    setHistoricoPastas((prev) => [...prev, pasta]);
+
+    setListaArquivos(tudo);
+    setTipomodalarquivos("pastaprincipal");
+  }
+
+  async function voltarPasta() {
+  const novoHistorico = [...historicoPastas];
+  novoHistorico.pop();
+
+  const pastaAnterior = novoHistorico[novoHistorico.length - 1];
+
+  setHistoricoPastas(novoHistorico);
+
+  if (!pastaAnterior) {
+    abrirPastasRaiz();
+    return;
+  }
+
+  const dados = await receberarquivos(pastaAnterior.id);
+
+  const subpastasFormatadas = (dados.subpastas || []).map((p) => ({
+    ...p,
+    tipo: "pasta",
+    dataUpload: p.dataCriacao
+  }));
+
+  const arquivosFormatados = (dados.arquivos || []).map((a) => ({
+    ...a,
+    tipo: "arquivo",
+    dataUpload: a.dataUpload
+  }));
+
+  setListaArquivos([...subpastasFormatadas, ...arquivosFormatados]);
+}
 
   function abrirSeletor() {
     inputRef.current.click();
@@ -205,7 +287,7 @@ async function abrirPastasRaiz() {
         className="text-black m-90 max-h-2/3 overflow-y-auto"
         width="w-full h-full">
         <div className="p-4">
-          {tipomodalarquivos === "raiz" && (
+          {tipomodalarquivos === "raiz" && ( //modal de pastas raiz
             <>
               <h2 className="text-2xl font-bold mb-2">Lista de Arquivos</h2>
               <div className="my-4">
@@ -213,16 +295,13 @@ async function abrirPastasRaiz() {
                   setTipoOrdenacao("nome");
                   setOrdemDesc(!ordemDesc);
                 }} className="my-4 mr-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-sort-alpha-down-alt"></i> Ordenar por nome</p></button>
-                <button onClick={() => {
-                  setTipoOrdenacao("data");
-                  setOrdemDesc(!ordemDesc);
-                }} className="my-4 mr-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-sort-down-alt"></i> Ordenar por data</p></button>
               </div>
               <div className="w-full mx-auto overflow-y-auto max-h-96">
                 {listaPastasRaiz.map((arquivo) => (
                   <div className="w-full cursor-pointer flex justify-between items-center p-2 rounded hover:bg-gray-200"
                     key={arquivo.id}>
-                    <div className="flex-2 flex justify-between items-center">
+                    <div className="flex-2 flex justify-between items-center"
+                      onClick={() => mostrarArquivosPasta(arquivo)}>
                       <p><i className="bi bi-folder"></i>
                         {arquivo.nome}</p>
                     </div>
@@ -232,10 +311,11 @@ async function abrirPastasRaiz() {
             </>
           )}
 
-
-
           {tipomodalarquivos === "pastaprincipal" && ( //modal de arquivos principais
             <>
+              <button onClick={() => voltarPasta()}>
+                ← Voltar
+              </button>
               <div className="mb-4">
                 <h2 className="text-2xl font-bold mb-2">Lista de Arquivos</h2>
                 <div className="my-4">
@@ -297,67 +377,15 @@ async function abrirPastasRaiz() {
               </div>
             </>
           )}
-          {tipomodalarquivos === "pasta" && ( //modal de arquivos dentro da pasta
-            <>
-              <button onClick={() => setmodalArquivoPasta(false)}>
-                ← Voltar
-              </button>
-              <h2 className="text-2xl font-bold mb-2">Arquivos na Pasta</h2>
-              <button onClick={() => setmodalNovaPasta(true)} className="my-4 mr-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-folder"></i> Nova pasta</p></button>
-              <button onClick={() => abrirSeletor()} className="my-4 mr-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-file-earmark"></i> Novo arquivo</p></button>
-              <button onClick={() => {
-                setTipoOrdenacao("nome");
-                setOrdemDesc(!ordemDesc);
-              }} className="my-4 mr-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-sort-alpha-down-alt"></i> Ordenar por nome</p></button>
-              <button onClick={() => {
-                setTipoOrdenacao("data");
-                setOrdemDesc(!ordemDesc);
-              }} className="my-4 mr-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-sort-down-alt"></i> Ordenar por data</p></button>
-              <input
-                type="file"
-                ref={inputRef}
-                onChange={handleUpload}
-                className="hidden"
-              />
-              <div className="w-full mx-auto overflow-y-auto max-h-96">
-                {arquivosPastaOrdenados.map((arquivo) => (
-                  <div className="w-full cursor-pointer flex justify-between items-center p-2 rounded hover:bg-gray-200"
-
-                    key={arquivo.id}>
-                    <div className="flex-2 flex justify-between items-center"
-                      onClick={
-                        arquivo.tipo === "pasta"
-                          ? () => mostrarArquivosPasta(arquivo)
-                          : undefined
-                      }>
-                      <p
-                      >
-                        {arquivo.tipo === "arquivo" ? (
-                          <i className="bi bi-file-earmark"></i>
-                        ) : (
-                          <i className="bi bi-folder"></i>
-                        )}
-                        {arquivo.nome}
-                      </p>
-                      <p className="text-sm text-gray-500">{new Date(arquivo.dataUpload).toLocaleString("pt-BR", { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(",", "")}</p>
-                    </div>
-                    <ActionMenu className="flex-1"
-                      options={[
-                        {
-                          label: "Editar",
-                          onClick: () => { }
-                        },
-                        {
-                          label: "Excluir",
-                          onClick: () => { }
-                        }
-                      ]}
-                    />
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
+        </div>
+      </Modal>
+            <Modal //modal para criar nova pasta
+        isOpen={modalNovapasta}
+        onClose={() => setmodalNovaPasta(false)}
+        className="text-black">
+        <div className="flex flex-col items-center">
+          <input type="text" placeholder="Nome da nova pasta" className="border p-2 w-full mb-4" />
+          <button className="bg-blue-500 text-white px-4 py-2 rounded">Criar pasta</button>
         </div>
       </Modal>
 
@@ -468,19 +496,16 @@ async function abrirPastasRaiz() {
         isOpen={modalNovaEquipe}
         onClose={() => setmodalNovaEquipe(false)}>
         <div className="flex flex-col items-center">
-          <input type="text" placeholder="Nome da nova equipe" className="border p-2 w-full mb-4" />
-          <button className="bg-blue-500 text-white px-4 py-2 rounded">Criar equipe</button>
+          <input type="text" placeholder="Nome da nova equipe" className="border p-2 w-full mb-4"
+            value={nomeNovaEquipe}
+            onChange={(e) => setNomeNovaEquipe(e.target.value)}
+          />
+          <button className="bg-blue-500 text-white px-4 py-2 rounded"
+            onClick={() => criarNovaEquipe()}
+          >Criar equipe</button>
         </div>
       </Modal>
-      <Modal //modal para criar nova pasta
-        isOpen={modalNovapasta}
-        onClose={() => setmodalNovaPasta(false)}
-        className="text-black">
-        <div className="flex flex-col items-center">
-          <input type="text" placeholder="Nome da nova pasta" className="border p-2 w-full mb-4" />
-          <button className="bg-blue-500 text-white px-4 py-2 rounded">Criar pasta</button>
-        </div>
-      </Modal>
+
       <Modal //modal para adicionar novo membro a equipe
         isOpen={modalNovoMembro}
         onClose={() => setmodalNovoMembro(false)}>

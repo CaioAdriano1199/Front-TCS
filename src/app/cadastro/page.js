@@ -14,7 +14,7 @@ export default function Cadastro() {
   const [confirmSenha, setConfirmSenha] = useState("");
   const [cnpj, setCnpj] = useState("");
   const [nomeempresa, setNomeempresa] = useState("");
-  const BASe_URL = process.env.NEXT_PUBLIC_BASE_URL;
+  const BASe_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const usuario = {
     email: email,

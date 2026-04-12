@@ -1,10 +1,10 @@
  
- 
+ const BASe_URL = process.env.NEXT_PUBLIC_BASE_URL;
  
 export async function receberarquivos() {
 
  /* try {
-    const resposta = await fetch("http://localhost:8081/usuarios", {
+    const resposta = await fetch(`${BASe_URL}/usuarios`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json"

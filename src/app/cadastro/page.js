@@ -1,8 +1,11 @@
 "use client";
+import toast from "react-hot-toast";
 import Card from "../componentes/card/card";
 import {useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Cadastro() {
+  const router = useRouter();
   const [pgc, setPgc] = useState(0);
   const [compsenha,setcompsenha] = useState(false);
   const [email, setEmail] = useState("");
@@ -11,6 +14,7 @@ export default function Cadastro() {
   const [confirmSenha, setConfirmSenha] = useState("");
   const [cnpj, setCnpj] = useState("");
   const [nomeempresa, setNomeempresa] = useState("");
+  const BASe_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
   const usuario = {
     email: email,
@@ -36,7 +40,7 @@ const cadastro ={
 async function cadastroEmpresa() {
 
   try {
-    const resposta = await fetch("http://localhost:8081/empresas", {
+    const resposta = await fetch(`${BASe_URL}/empresas/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -46,10 +50,11 @@ async function cadastroEmpresa() {
 
     const dados = await resposta.json();
 
-    console.log("Sucesso no cadastro da empresa");
-    redirect("/login");
+    toast.success("Sucesso no cadastro da empresa");
+    router.push("/login");
   } catch (erro) {
     console.error("Erro:", erro);
+    toast.error("Erro no cadastro da empresa");
   }
 }
 

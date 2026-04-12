@@ -2,13 +2,17 @@
 import { receberarquivos } from "../servico/receberarquivos";
 import { receberEquipes } from "../servico/receberequipes";
 import { useState, useEffect, useRef } from "react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Modal from "../modal/modal";
 import toast from "react-hot-toast";
 import ActionMenu from "../menudeacao/menudeacao";
+import { receberPastasRaiz } from "../servico/receberpastasraiz";
 
 export default function Sidemenu({ setPgc }) {
   const [listaArquivos, setListaArquivos] = useState([]);
+  const [listaPastasRaiz, setListaPastasRaiz] = useState([]);
+  const router = useRouter();
+  const URL_BASE = process.env.NEXT_PUBLIC_BASE_URL;
   const [listaEquipes, setListaEquipes] = useState([]);
   const [membrosEquipe, setMembrosEquipe] = useState([]);
   const [modalArquivo, setmodalArquivo] = useState(false);
@@ -18,6 +22,7 @@ export default function Sidemenu({ setPgc }) {
   const [modalNovoMembro, setmodalNovoMembro] = useState(false);
   const [modalMembros, setmodalMembros] = useState(false);
   const [modalArquivoPasta, setmodalArquivoPasta] = useState(false);
+  const [modalArquivoPastaRaiz, setmodalArquivoPastaRaiz] = useState(false);
   const [modalMoverMembro, setmodalMoverMembro] = useState(false);
   const [modalEditarMembro, setmodalEditarMembro] = useState(false);
   const [arquivosPasta, setArquivosPasta] = useState([]);
@@ -36,6 +41,7 @@ export default function Sidemenu({ setPgc }) {
   const [tipoOrdenacao, setTipoOrdenacao] = useState("data");
   const [membro, setMembro] = useState({});
   const [equipeSelecionada, setEquipeSelecionada] = useState([]);
+  const [tipomodalarquivos, setTipomodalarquivos] = useState("lista");
   const colaboradorAtt = {
     email: emailAtt,
     nome: nomeAtt,
@@ -73,11 +79,12 @@ export default function Sidemenu({ setPgc }) {
     setmodalMembros(true);
   }
 
-
-  function mostrarArquivosPasta(arquivo) {
-    setArquivosPasta(arquivo.arquivos);
-    setmodalArquivoPasta(true);
-  }
+async function abrirPastasRaiz() {
+  const dados = await receberPastasRaiz();
+  setListaPastasRaiz(dados);
+  setTipomodalarquivos("raiz");
+  setmodalArquivo(true);
+}
 
   const arquivosPastaOrdenados = [...arquivosPasta].sort((a, b) => {
     if (tipoOrdenacao === "data") {
@@ -131,7 +138,7 @@ export default function Sidemenu({ setPgc }) {
   async function cadastroUsuario() {
 
     try {
-      const resposta = await fetch("http://localhost:8081/usuarios", {
+      const resposta = await fetch(`${URL_BASE}/usuarios`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -166,18 +173,9 @@ export default function Sidemenu({ setPgc }) {
               {arquivo.nome}
             </a>
           ))}
-          <a onClick={() => setmodalArquivo(true)} className="cursor-pointer px-4 py-2 hover:bg-lightgray-700">Mais arquivos...</a>
+          <a onClick={abrirPastasRaiz} className="cursor-pointer px-4 py-2 hover:bg-lightgray-700">Mais arquivos...</a>
         </nav>
         <div className="mt-auto p-4 text-sm text-gray-400">
-          <button onClick={() => {
-            if (isAdmin) {
-              setIsAdmin(false);
-              toast.error("Modo admin desativado");
-            } else {
-              setIsAdmin(true);
-              toast.success("Modo admin ativado");
-            }
-          }}>set admin</button>
           {isAdmin && (
 
             <button
@@ -189,9 +187,9 @@ export default function Sidemenu({ setPgc }) {
           <button
             onClick={() => {
               if (typeof window !== "undefined") {
-                localStorage.removeItem("token");
+                localStorage.clear();
               }
-              redirect("/login");
+              router.push("/login");
             }}
             className="w-full self-start text-white font-bold py-2 px-4 rounded-md"
           >
@@ -200,14 +198,43 @@ export default function Sidemenu({ setPgc }) {
 
         </div>
       </div>
-      <Modal
+      <Modal //modal de arquivos
         isOpen={modalArquivo}
         onClose={() => setmodalArquivo(false)}
         title="Meu Modal"
         className="text-black m-90 max-h-2/3 overflow-y-auto"
         width="w-full h-full">
         <div className="p-4">
-          {!modalArquivoPasta && ( //modal de arquivos principais
+          {tipomodalarquivos === "raiz" && (
+            <>
+              <h2 className="text-2xl font-bold mb-2">Lista de Arquivos</h2>
+              <div className="my-4">
+                <button onClick={() => {
+                  setTipoOrdenacao("nome");
+                  setOrdemDesc(!ordemDesc);
+                }} className="my-4 mr-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-sort-alpha-down-alt"></i> Ordenar por nome</p></button>
+                <button onClick={() => {
+                  setTipoOrdenacao("data");
+                  setOrdemDesc(!ordemDesc);
+                }} className="my-4 mr-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-sort-down-alt"></i> Ordenar por data</p></button>
+              </div>
+              <div className="w-full mx-auto overflow-y-auto max-h-96">
+                {listaPastasRaiz.map((arquivo) => (
+                  <div className="w-full cursor-pointer flex justify-between items-center p-2 rounded hover:bg-gray-200"
+                    key={arquivo.id}>
+                    <div className="flex-2 flex justify-between items-center">
+                      <p><i className="bi bi-folder"></i>
+                        {arquivo.nome}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+
+
+          {tipomodalarquivos === "pastaprincipal" && ( //modal de arquivos principais
             <>
               <div className="mb-4">
                 <h2 className="text-2xl font-bold mb-2">Lista de Arquivos</h2>
@@ -270,7 +297,7 @@ export default function Sidemenu({ setPgc }) {
               </div>
             </>
           )}
-          {modalArquivoPasta && ( //modal de arquivos dentro da pasta
+          {tipomodalarquivos === "pasta" && ( //modal de arquivos dentro da pasta
             <>
               <button onClick={() => setmodalArquivoPasta(false)}>
                 ← Voltar
@@ -412,11 +439,11 @@ export default function Sidemenu({ setPgc }) {
                       {
                         label: "Editar",
                         onClick: () => {
-                            setMembro(membro);
-                            setmodalEditarMembro(true);
-                            setEmailAtt(membro.email);
-                            setNomeAtt(membro.nome);
-                            setSenhaAtt(membro.senha);
+                          setMembro(membro);
+                          setmodalEditarMembro(true);
+                          setEmailAtt(membro.email);
+                          setNomeAtt(membro.nome);
+                          setSenhaAtt(membro.senha);
                         }
                       },
                       {
@@ -437,16 +464,16 @@ export default function Sidemenu({ setPgc }) {
           )}
         </div>
       </Modal>
-      <Modal
-        isOpen={modalNovaEquipe} //modal para criar nova equipe
+      <Modal //modal para criar nova equipe
+        isOpen={modalNovaEquipe}
         onClose={() => setmodalNovaEquipe(false)}>
         <div className="flex flex-col items-center">
           <input type="text" placeholder="Nome da nova equipe" className="border p-2 w-full mb-4" />
           <button className="bg-blue-500 text-white px-4 py-2 rounded">Criar equipe</button>
         </div>
       </Modal>
-      <Modal
-        isOpen={modalNovapasta} //modal para criar nova pasta
+      <Modal //modal para criar nova pasta
+        isOpen={modalNovapasta}
         onClose={() => setmodalNovaPasta(false)}
         className="text-black">
         <div className="flex flex-col items-center">
@@ -454,8 +481,8 @@ export default function Sidemenu({ setPgc }) {
           <button className="bg-blue-500 text-white px-4 py-2 rounded">Criar pasta</button>
         </div>
       </Modal>
-      <Modal
-        isOpen={modalNovoMembro} //modal para adicionar novo membro a equipe
+      <Modal //modal para adicionar novo membro a equipe
+        isOpen={modalNovoMembro}
         onClose={() => setmodalNovoMembro(false)}>
         <div className="flex flex-col items-center">
           <input
@@ -499,8 +526,8 @@ export default function Sidemenu({ setPgc }) {
           >Cadastrar</button>
         </div>
       </Modal>
-      <Modal
-        isOpen={modalMoverMembro} //modal para mover membro para outra equipe
+      <Modal //modal para mover membro para outra equipe
+        isOpen={modalMoverMembro}
         onClose={() => setmodalMoverMembro(false)} className="text-black">
         <div className="flex flex-col items-center">
           <h2 className="text-2xl font-bold mb-4">Mover para equipe:</h2>
@@ -513,8 +540,8 @@ export default function Sidemenu({ setPgc }) {
           <button className="bg-blue-500 text-white px-4 py-2 rounded">Salvar</button>
         </div>
       </Modal>
-      <Modal
-        isOpen={modalEditarMembro} //modal para editar informações do membro
+      <Modal //modal para editar informações do membro
+        isOpen={modalEditarMembro}
         onClose={() => setmodalEditarMembro(false)} className="text-black">
         <div className="flex flex-col items-center">
           <input

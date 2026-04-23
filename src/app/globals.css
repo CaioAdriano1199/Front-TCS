@@ -4,6 +4,15 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --bginput:#C7C8CB;
+  --bgbutton:#1056B2;
+  --bgbuttonhover:#1A78F4;
+  --bgdgazulc:#799FFC;
+  --bgazulescuro:#02193C;
+  --bgazulmescuro:#073675;
+  --phgray: rgba(87, 89, 94, 0.5);
+  --cinzaescuro:#37383B;
+  --preto:#191A1C;
 }
 
 @theme inline {
@@ -24,4 +33,51 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.gradient-vertical {
+  position: fixed;
+  top: 0;
+  width: 40px;
+  height: 100%;
+  pointer-events: none;
+
+  background: linear-gradient(
+    to bottom,
+    var(--bgazulescuro),
+    var(--bgazulmescuro),
+    var(--bgbutton),
+    var(--bgdgazulc),
+    var(--bgazulescuro)
+  );
+
+  background-size: 100% 300%;
+
+  mask-image: linear-gradient(to right, white 15%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, white 30%, transparent 100%);
+
+  animation: breathing 8s ease-in-out infinite;
+
+  opacity: 0.8;
+}
+
+.gradient-vertical.left-0 {
+  left: 0;
+}
+
+.gradient-vertical.right-0 {
+  right: 0;
+  transform: scaleX(-1); /* espelha o fade corretamente */
+}
+
+@keyframes breathing {
+  0% {
+    background-position: 50% 0%;
+  }
+  50% {
+    background-position: 50% 100%;
+  }
+  100% {
+    background-position: 50% 0%;
+  }
 }

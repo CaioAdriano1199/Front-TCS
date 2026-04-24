@@ -13,6 +13,7 @@
   --phgray: rgba(87, 89, 94, 0.5);
   --cinzaescuro:#37383B;
   --preto:#191A1C;
+  --branco:#F0F0F1;
 }
 
 @theme inline {

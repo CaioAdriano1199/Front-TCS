@@ -243,27 +243,36 @@ export default function Sidemenu({ setPgc }) {
 
   return (
     <>
-      <div className="w-64 h-screen bg-gray-800 text-white flex flex-col">
-        <div className="p-4 text-2xl font-bold">
+      <div className="w-64 h-screen bg-[var(--bgbutton)] text-white flex flex-col">
+        <h1 className="p-4 text-[var(--branco)] text-2xl font-bold">
           Relic
+        </h1>
+        <div className="mt-4 flex items-center px-4 py-2">
+        <i className="bi bi-folder"></i>
+        <h1 className="text-xl text-[var(--branco)] font-bold px-1">Documentos</h1>
         </div>
-
-        <h1 className="text-xl font-bold mt-4">Documentos</h1>
         <nav className="flex flex-col mt-4">
           {listaArquivos.map((arquivo) => (
-            <a key={arquivo.id} className="cursor-pointer px-4 py-2 hover:bg-gray-700">
+            <a key={arquivo.id} className="cursor-pointer text-[var(--branco)] px-4 py-2 hover:bg-gray-700">
               {arquivo.nome}
             </a>
           ))}
-          <a onClick={abrirPastasRaiz} className="cursor-pointer px-4 py-2 hover:bg-lightgray-700">Mais arquivos...</a>
+          <div className="px-4 py-2 hover:bg-[var(--bgbuttonhover)] cursor-pointer flex items-center" onClick={abrirPastasRaiz}>
+          <i className="bi bi-plus"></i>
+          <a className=" text-[var(--branco)] px-1 ">Mais arquivos...</a>
+        </div>
         </nav>
-        <div className="mt-auto p-4 text-sm text-gray-400">
+        <div className="mt-auto text-sm py-2 text-gray-400">
           {isAdmin && (
 
             <button
               onClick={() => setmodalEquipe(true)}
-              className="w-full self-start text-white font-bold py-2 px-4 rounded-md">
-              Equipes</button>
+              className="w-full self-start text-[var(--branco)] font-bold py-2 hover:bg-[var(--bgbuttonhover)] hover:cursor-pointer">
+             <div className="flex justify-center p-2">
+             <i className="bi bi-people"></i> 
+             <p className="px-1">Equipes</p>
+             </div>
+              </button>
 
           )}
           <button
@@ -273,9 +282,11 @@ export default function Sidemenu({ setPgc }) {
               }
               router.push("/login");
             }}
-            className="w-full self-start text-white font-bold py-2 px-4 rounded-md"
+            className="w-full self-start text-[var(--branco)] font-bold py-2 hover:bg-[var(--bgbuttonhover)] hover:cursor-pointer"
           >
-            Sair
+            <div className="flex justify-center p-2">
+           <i className="bi bi-box-arrow-left"></i> <p className="px-1"> Sair</p>
+           </div>
           </button>
 
         </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Typewriter from "typewriter-effect";
 
 export default function ChatCont() {
   const [mensagens, setMensagens] = useState([]);
@@ -27,9 +28,23 @@ export default function ChatCont() {
       {primeiraMensagem ? (
 
         <div className="flex flex-col flex-1 items-center justify-center">
-          <h1
-            className="text-2xl font-bold mb-4"
-          >Bem-vindo ao chat! Envie sua primeira mensagem para começar.</h1>
+          <h1 className="text-2xl font-bold mb-4">
+            Bem-vindo ao Relic!{" "}
+            <span className="inline">
+              <Typewriter
+                options={{
+                  strings: [
+                    "Envie sua primeira mensagem para começar.",
+                    "O que deseja encontrar?"
+                  ],
+                  autoStart: true,
+                  loop: true,
+                  delay: 40,
+                  deleteSpeed: 20,
+                }}
+              />
+            </span>
+          </h1>
           <div className="flex gap-2 w-full">
             <textarea
               type="text"
@@ -45,7 +60,7 @@ export default function ChatCont() {
               }}
               onChange={(e) => setTexto(e.target.value)}
               placeholder="Digite uma mensagem..."
-              className="flex-1 p-2 rounded border resize-none"
+              className="flex-1 p-2 rounded-xl border-transparent focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] bg-[var(--bginput)] resize-none"
             />
 
             <button
@@ -53,9 +68,9 @@ export default function ChatCont() {
                 setPrimeiraMensagem(false);
                 enviarMensagem();
               }}
-              className="bg-blue-500 text-white px-4 rounded"
+              className="bg-blue-500 text-white px-3 rounded-full hover:bg-[var(--bgbuttonhover)] transition-colors duration-300 hover:cursor-pointer"
             >
-              Enviar
+              <i className="bi bi-send"></i>
             </button>
           </div>
         </div>
@@ -68,7 +83,7 @@ export default function ChatCont() {
                 <div
                   key={msg.id}
                   className={`max-w-xs p-3 rounded-lg whitespace-pre-wrap ${msg.autor === "eu"
-                    ? "bg-blue-500 text-white self-end ml-auto"
+                    ? "bg-[var(--bgbuttonhover)] text-white self-end ml-auto"
                     : "bg-white text-black"
                     }`}
                 >
@@ -83,7 +98,7 @@ export default function ChatCont() {
                 type="text"
                 value={texto}
                 rows={1}
-                
+
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
@@ -92,14 +107,14 @@ export default function ChatCont() {
                 }}
                 onChange={(e) => setTexto(e.target.value)}
                 placeholder="Digite uma mensagem..."
-                className="flex-1 p-2 rounded border resize-none"
+                className="flex-1 p-2 rounded border-transparent focus:ring-[var(--bgbutton)] bg-[var(--bginput)] resize-none"
               />
 
               <button
                 onClick={enviarMensagem}
-                className="bg-blue-500 text-white px-4 rounded"
+                className="bg-[var(--bgbutton)] text-white rounded-full px-3 hover:bg-[var(--bgbuttonhover)] transition-colors duration-300 hover:cursor-pointer"
               >
-                Enviar
+                <i className="bi bi-send"></i>
               </button>
             </div>
           </>

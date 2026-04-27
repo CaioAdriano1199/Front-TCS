@@ -60,7 +60,7 @@ export default function Modal({
           {showCloseButton && (
             <button
               onClick={onClose}
-              className="absolute right-4 top-4 text-[var(--azulescuro)] text-xl font-bold hover:text-[var(--azulclaro)] focus:outline-none"
+              className="absolute right-4 top-4 text-[var(--preto)] text-xl font-bold hover:text-[var(--phgray)] hover:cursor-pointer"
             >
               X
             </button>

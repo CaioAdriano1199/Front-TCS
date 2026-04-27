@@ -46,13 +46,13 @@ export default function Modal({
 
       {/* Container do Modal */}
       <div
-        className={`relative bg-white rounded-lg shadow-xl w-full ${width} ${className}`}
+        className={`relative bg-[var(--bginput)] text-[var(--cinzaescuro)] rounded-lg shadow-xl w-full ${width} ${className}`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Cabeçalho */}
         <div className="flex items-center justify-between p-4">
           {title && (
-            <h3 className="text-xl text-[var(--azulescuro)] text-center w-full">
+            <h3 className="text-xl  text-center w-full">
               {title}
             </h3>
           )}

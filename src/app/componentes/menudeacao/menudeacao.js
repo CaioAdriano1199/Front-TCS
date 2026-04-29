@@ -34,7 +34,7 @@ export default function ActionMenu({ options = [] }) {
       {/* Botão */}
       <i
         onClick={toggleMenu}
-        className="p-2 rounded hover:bg-gray-200 bi bi-three-dots-vertical"></i>
+        className="p-2 rounded hover:text-[var(--branco)] hover:cursor-pointer bi bi-three-dots-vertical"></i>
 
 
       {/* Menu */}

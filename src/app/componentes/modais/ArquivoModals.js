@@ -164,21 +164,21 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
           {tipomodalarquivos === "pastaprincipal" && ( //modal de arquivos principais
             <>
               <button onClick={() => voltarPasta()}>
-                ← Voltar
+                <i className="bi bi-arrow-left text-lg hover:cursor-pointer hover:text-[var(--phgray)]"></i>
               </button>
               <div className="mb-4">
                 <h2 className="text-2xl font-bold mb-2">Lista de Arquivos</h2>
                 <div className="my-4">
-                  <button onClick={() => setmodalNovaPasta(true)} className="my-4 mr-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-folder"></i> Nova pasta</p></button>
-                  <button onClick={() => abrirSeletor()} className="my-4 mr-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-file-earmark"></i> Novo arquivo</p></button>
+                  <button onClick={() => setmodalNovaPasta(true)} className="my-4 mr-4 cursor-pointer"><p className="text-m font-semibold"><i className="bi bi-folder"></i> Nova pasta</p></button>
+                  <button onClick={() => abrirSeletor()} className="my-4 mr-4 cursor-pointer"><p className="text-m font-semibold"><i className="bi bi-file-earmark"></i> Novo arquivo</p></button>
                   <button onClick={() => {
                     setTipoOrdenacao("nome");
                     setOrdemDesc(!ordemDesc);
-                  }} className="my-4 mr-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-sort-alpha-down-alt"></i> Ordenar por nome</p></button>
+                  }} className="my-4 mr-4 cursor-pointer"><p className="text-m font-semibold"><i className="bi bi-sort-alpha-down-alt"></i> Ordenar por nome</p></button>
                   <button onClick={() => {
                     setTipoOrdenacao("data");
                     setOrdemDesc(!ordemDesc);
-                  }} className="my-4 mr-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-sort-down-alt"></i> Ordenar por data</p></button>
+                  }} className="my-4 mr-4 cursor-pointer"><p className="text-m font-semibold"><i className="bi bi-sort-down-alt"></i> Ordenar por data</p></button>
                   <input
                     type="file"
                     ref={inputRef}

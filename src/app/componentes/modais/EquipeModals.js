@@ -103,16 +103,16 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
             <>
               <h2 className="text-2xl font-bold mb-2">Lista de Equipes</h2>
               <div className="my-4">
-                <button onClick={() => setmodalNovaEquipe(true)} className="my-4 mr-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-people"></i> Nova equipe</p></button>
+                <button onClick={() => setmodalNovaEquipe(true)} className="my-4 mr-4 cursor-pointer"><p className="text-m font-semibold"><i className="bi bi-people"></i> Nova equipe</p></button>
               </div>
               <div className="flex flex-col">
                 {listaEquipes.map((equipe) => (
-                  <div key={equipe.id} className="flex justify-between items-center p-2 rounded hover:bg-gray-200">
+                  <div key={equipe.id} className="flex justify-between items-center p-2 rounded hover:bg-[var(--cinzaclaro)]">
                     <p
-                      className="cursor-pointer flex-2 hover:bg-gray-300 p-1 rounded"
+                      className="cursor-pointer flex-2 hover:bg-[var(--cinzaclaro)] p-1 rounded"
                       onClick={() => mostrarMembros(equipe)}
                     >
-                      <i className="bi bi-people"></i>
+                      <i className="bi bi-people px-1"></i>
                       {equipe.nome}
                     </p>
                     <ActionMenu className="flex-1"
@@ -140,9 +140,10 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
             <>
               <div className="flex justify-between items-center mb-4">
                 <button onClick={() => setmodalMembros(false)}>
-                  ← Voltar
+                  <i className="bi bi-arrow-left text-lg hover:cursor-pointer hover:text-[var(--phgray)]"></i>
                 </button>
                 <input
+                  className="bg-[var(--cinzaclaro)] rounded p-2 focus:outline-none"
                   type="text"
                   placeholder="Buscar membro..."
                   value={busca}
@@ -150,18 +151,18 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
                 />
               </div>
               <h2 className="text-2xl font-bold mb-2 ">Membros</h2>
-              <button onClick={() => setmodalNovoMembro(true)} className="my-4 text-l cursor-pointer"><p className="text-xl"><i className="bi bi-person"></i> Novo membro</p></button>
+              <button onClick={() => setmodalNovoMembro(true)} className="my-4 cursor-pointer"><p className="text-m font-semibold"><i className="bi bi-person"></i> Novo membro</p></button>
 
               <div className="flex flex-col">
                 {membrosFiltrados.map((membro, index) => (
-                  <div key={index} className="flex justify-between items-center p-2 rounded hover:bg-gray-200">
-                    <p className="cursor-pointer flex-2 hover:bg-gray-300 p-1 rounded">
+                  <div key={index} className="flex justify-between items-center p-2 rounded hover:bg-[var(--cinzaclaro)]">
+                    <p className="cursor-pointer flex-2 hover:bg-[var(--cinzaclaro)] p-1 rounded">
 
-                      <i className="bi bi-person"></i> {membro.nome}
+                      <i className="bi bi-person px-1"></i> {membro.nome}
 
 
                     </p>
-                    <ActionMenu className="flex-1"
+                    <ActionMenu className="flex-1 "
                       options={[{
                         label: "mover para...",
                         onClick: () => {
@@ -200,11 +201,11 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
         isOpen={modalNovaEquipe}
         onClose={() => setmodalNovaEquipe(false)}>
         <div className="flex flex-col items-center">
-          <input type="text" placeholder="Nome da nova equipe" className="border p-2 w-full mb-4"
+          <input type="text" placeholder="Nome da nova equipe" className="border-none bg-[var(--cinzaclaro)] focus:outline-none rounded p-2 w-full mb-4"
             value={nomeNovaEquipe}
             onChange={(e) => setNomeNovaEquipe(e.target.value)}
           />
-          <button className="bg-blue-500 text-white px-4 py-2 rounded"
+          <button className="bg-[var(--bgbutton)] text-[var(--branco)] hover:bg-[var(--bgbuttonhover)] hover:cursor-pointer px-4 py-2 rounded"
             onClick={() => criarNovaEquipe()}
           >Criar equipe</button>
         </div>

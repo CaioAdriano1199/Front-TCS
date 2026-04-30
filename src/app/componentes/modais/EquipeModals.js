@@ -213,13 +213,14 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
 
       <Modal //modal para adicionar novo membro a equipe
         isOpen={modalNovoMembro}
-        onClose={() => setmodalNovoMembro(false)}>
-        <div className="flex flex-col items-center">
+        onClose={() => setmodalNovoMembro(false)}
+        className="w-md">
+        <div className="flex flex-col w-full items-center px-6">
           <input
             type="email"
             placeholder="Email"
             value={email}
-            className="border bg-white text-black border-gray-300 rounded-md my-2.5 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="border bg-[var(--cinzaclaro)] text-black border-gray-300 rounded w-full my-2 mx-100 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={(e) => setEmail(e.target.value)}
             required
           />
@@ -227,7 +228,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
             type="text"
             placeholder="Nome"
             value={nome}
-            className="border text-black bg-white border-gray-300 rounded-md my-2.5 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="border text-black bg-[var(--cinzaclaro)] border-gray-300 rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={(e) => setNome(e.target.value)}
             required
           />
@@ -235,7 +236,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
             type="password"
             placeholder="Senha"
             value={senha}
-            className="border bg-white text-black border-gray-300 rounded-md my-2.5 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="border bg-[var(--cinzaclaro)] text-black border-gray-300 rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={(e) => setSenha(e.target.value)}
             required
           />
@@ -243,7 +244,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
             type="password"
             placeholder="Confirmar senha"
             value={confirmarSenha}
-            className="border bg-white text-black border-gray-300 rounded-md my-2.5 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="border bg-[var(--cinzaclaro)] text-black border-gray-300 rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={(e) => setConfirmarSenha(e.target.value)}
             required
           />
@@ -251,7 +252,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
             <p className="text-red-500 text-sm">As senhas não coincidem</p>
           ) : null}
           <button onClick={() => cadastroUsuario()}
-            className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="bg-[var(--bgbutton)] text-[var(--branco)] hover:bg-[var(--bgbuttonhover)] hover:cursor-pointer my-2 mx-10 px-4 py-2 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
             disabled={senha !== confirmarSenha || email === "" || nome === "" || senha === "" || confirmarSenha === ""}
           >Cadastrar</button>
         </div>
@@ -267,18 +268,18 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
               {equipe.nome}
             </label>
           ))}
-          <button className="bg-blue-500 text-white px-4 py-2 rounded">Salvar</button>
+          <button className="bg-[var(--bgbutton)] max-w-sm w-full text-[var(--branco)] hover:bg-[var(--bgbuttonhover)] hover:cursor-pointer px-4 py-2 rounded">Salvar</button>
         </div>
       </Modal>
       <Modal //modal para editar informações do membro
         isOpen={modalEditarMembro}
         onClose={() => setmodalEditarMembro(false)} className="text-black">
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col w-full items-center">
           <input
             type="email"
             placeholder="Email"
             value={emailAtt}
-            className="border bg-white text-black border-gray-300 rounded-md my-2.5 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="border bg-[var(--cinzaclaro)] text-black border-gray-300 rounded my-2 w-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={(e) => setEmailAtt(e.target.value)}
             required
           />
@@ -286,7 +287,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
             type="text"
             placeholder="Nome"
             value={nomeAtt}
-            className="border text-black bg-white border-gray-300 rounded-md my-2.5 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="border text-black bg-[var(--cinzaclaro)] border-gray-300 rounded-md w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={(e) => setNomeAtt(e.target.value)}
             required
           />
@@ -294,13 +295,13 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
             type="password"
             placeholder="Senha"
             value={senhaAtt}
-            className="border bg-white text-black border-gray-300 rounded-md my-2.5 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="border bg-[var(--cinzaclaro)] text-black border-gray-300 rounded-md w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={(e) => setSenhaAtt(e.target.value)}
             required
           />
 
           <button onClick={() => cadastroUsuario()}
-            className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="bg-[var(--bgbutton)] max-w-sm w-full text-[var(--branco)] hover:bg-[var(--bgbuttonhover)] hover:cursor-pointer my-2 px-4 py-2 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
             disabled={emailAtt === "" || nomeAtt === "" || senhaAtt === ""}
           >Atualizar</button>
         </div>

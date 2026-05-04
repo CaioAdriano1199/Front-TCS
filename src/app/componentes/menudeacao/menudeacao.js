@@ -41,7 +41,7 @@ export default function ActionMenu({ options = [] }) {
       {open &&
         createPortal(
           <div
-            className="fixed w-40 bg-white border rounded shadow-lg z-50"
+            className="fixed w-40 bg-white  rounded shadow-lg z-50"
             style={{
               top: position.top,
               left: position.left - 160, // ajusta pra não sair da tela
@@ -55,7 +55,8 @@ export default function ActionMenu({ options = [] }) {
                   opt.onClick();
                   setOpen(false);
                 }}
-                className="w-full text-black text-left px-4 py-2 hover:bg-gray-100"
+                className={`w-full text-left px-4 py-2 ${opt.className || "text-black hover:bg-gray-100 rounded"
+                  }`}
               >
                 {opt.label}
               </button>

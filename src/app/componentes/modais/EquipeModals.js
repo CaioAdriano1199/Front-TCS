@@ -162,12 +162,13 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
 
 
                     </p>
-                    <ActionMenu className="flex-1 "
+                    <ActionMenu className="flex-1 bg-[var(--bginput)] rounded"
                       options={[{
                         label: "mover para...",
                         onClick: () => {
                           setmodalMoverMembro(true);
-                        }
+                        },
+                        className: "bg-[var(--bginput)] hover:bg-[var(--cinzaclaro)] hover:cursor-pointer text-[var(--preto)]"
                       },
                       {
                         label: "Editar",
@@ -177,13 +178,15 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
                           setEmailAtt(membro.email);
                           setNomeAtt(membro.nome);
                           setSenhaAtt(membro.senha);
-                        }
+                        },
+                        className: "bg-[var(--bginput)] hover:bg-[var(--cinzaclaro)] hover:cursor-pointer text-[var(--preto)]"
                       },
                       {
                         label: "Excluir",
                         onClick: () => {
 
-                        }
+                        },
+                        className: "bg-[var(--bginput)] hover:bg-[var(--cinzaclaro)] hover:cursor-pointer text-[var(--preto)]"
                       }
                       ]}
                     />
@@ -220,7 +223,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
             type="email"
             placeholder="Email"
             value={email}
-            className="border bg-[var(--cinzaclaro)] text-black border-gray-300 rounded w-full my-2 mx-100 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="border bg-[var(--cinzaclaro)] text-black border-gray-300 rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={(e) => setEmail(e.target.value)}
             required
           />
@@ -252,19 +255,19 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
             <p className="text-red-500 text-sm">As senhas não coincidem</p>
           ) : null}
           <button onClick={() => cadastroUsuario()}
-            className="bg-[var(--bgbutton)] text-[var(--branco)] hover:bg-[var(--bgbuttonhover)] hover:cursor-pointer my-2 mx-10 px-4 py-2 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="bg-[var(--bgbutton)] max-w-sm w-full text-[var(--branco)] hover:bg-[var(--bgbuttonhover)] hover:cursor-pointer my-2 px-4 py-2 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
             disabled={senha !== confirmarSenha || email === "" || nome === "" || senha === "" || confirmarSenha === ""}
           >Cadastrar</button>
         </div>
       </Modal>
       <Modal //modal para mover membro para outra equipe
         isOpen={modalMoverMembro}
-        onClose={() => setmodalMoverMembro(false)} className="text-black">
-        <div className="flex flex-col items-center">
-          <h2 className="text-2xl font-bold mb-4">Mover para equipe:</h2>
+        onClose={() => setmodalMoverMembro(false)} className="text-black w-sm">
+        <div className="flex flex-col items-start px-6">
+          <h2 className="text-xl font-bold mb-4">Mover para equipe:</h2>
           {listaEquipes.map((equipe) => (
-            <label className="mb-2 cursor-pointer" key={equipe.id}>
-              <input type="checkbox" name="equipe" value={equipe.id} className="mr-2" />
+            <label className="mb-2 cursor-pointer text-base" key={equipe.id}>
+              <input type="checkbox" name="equipe" value={equipe.id} className="mr-2 accent-[var(--bgbutton)]" />
               {equipe.nome}
             </label>
           ))}
@@ -273,13 +276,13 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
       </Modal>
       <Modal //modal para editar informações do membro
         isOpen={modalEditarMembro}
-        onClose={() => setmodalEditarMembro(false)} className="text-black">
-        <div className="flex flex-col w-full items-center">
+        onClose={() => setmodalEditarMembro(false)} className="w-md">
+        <div className="flex flex-col w-full items-center px-6">
           <input
             type="email"
             placeholder="Email"
             value={emailAtt}
-            className="border bg-[var(--cinzaclaro)] text-black border-gray-300 rounded my-2 w-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="border bg-[var(--cinzaclaro)] text-black border-gray-300 rounded w-full my-2  py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={(e) => setEmailAtt(e.target.value)}
             required
           />
@@ -287,7 +290,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
             type="text"
             placeholder="Nome"
             value={nomeAtt}
-            className="border text-black bg-[var(--cinzaclaro)] border-gray-300 rounded-md w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="border bg-[var(--cinzaclaro)] text-black border-gray-300 rounded w-full my-2  py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={(e) => setNomeAtt(e.target.value)}
             required
           />
@@ -295,7 +298,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
             type="password"
             placeholder="Senha"
             value={senhaAtt}
-            className="border bg-[var(--cinzaclaro)] text-black border-gray-300 rounded-md w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="border bg-[var(--cinzaclaro)] text-black border-gray-300 rounded w-full my-2  py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={(e) => setSenhaAtt(e.target.value)}
             required
           />

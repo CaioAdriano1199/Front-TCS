@@ -4,6 +4,9 @@ import Modal from "../modal/modal";
 import ActionMenu from "../menudeacao/menudeacao";
 import { receberarquivos } from "../servico/receberarquivos";
 import { receberPastasRaiz } from "../servico/receberpastasraiz";
+import { criarPasta } from "../servico/criarpasta";
+import toast from "react-hot-toast";
+import { uploadArquivo } from "../servico/uploadarquivo";
 
 export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen, onClose, onOpen }) {
   const [historicoPastas, setHistoricoPastas] = useState([]);
@@ -19,6 +22,9 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
   const [tipomodalarquivos, setTipomodalarquivos] = useState("lista");
   const inputRef = useRef(null);
   const [ordem, setOrdem] = useState("asc");
+  const [nomepasta, setNomePasta] = useState("");
+ 
+
 
   async function abrirPastasRaiz() {
     const dados = await receberPastasRaiz();
@@ -27,9 +33,33 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
     onOpen();
   }
 
+  async function criarNovaPasta() {
+    const novaPastaData = {nome: nomepasta, parentId: historicoPastas.length > 0 ? historicoPastas[historicoPastas.length - 1].id : null};
+    await criarPasta(novaPastaData);
+    toast.success("Pasta criada com sucesso!");
+    setmodalNovaPasta(false);
+
+    const currentPasta = historicoPastas[historicoPastas.length - 1];
+    if (currentPasta) {
+      const dados = await receberarquivos(currentPasta.id);
+      const subpastasFormatadas = (dados.subpastas || []).map((p) => ({
+        ...p,
+        tipo: "pasta",
+        dataUpload: p.dataCriacao
+      }));
+      const arquivosFormatados = (dados.arquivos || []).map((a) => ({
+        ...a,
+        tipo: "arquivo",
+        dataUpload: a.dataUpload
+      }));
+      const tudo = [...subpastasFormatadas, ...arquivosFormatados];
+      setListaArquivos(tudo);
+    }
+    
+  }
+
   async function mostrarArquivosPasta(pasta) {
     const dados = await receberarquivos(pasta.id);
-
     const subpastasFormatadas = (dados.subpastas || []).map((p) => ({
       ...p,
       tipo: "pasta",
@@ -80,9 +110,36 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
     setListaArquivos([...subpastasFormatadas, ...arquivosFormatados]);
   }
 
-  function abrirSeletor() {
-    inputRef.current.click();
-  }
+function abrirSeletor() {
+  inputRef.current.click();
+}
+
+
+async function onFileChange(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+
+  setArquivonovo(file);
+
+ 
+  await uploadArquivo(historicoPastas[historicoPastas.length - 1].id, file);
+
+
+  const dados = await receberarquivos(historicoPastas[historicoPastas.length - 1].id);
+  const subpastasFormatadas = (dados.subpastas || []).map((p) => ({
+    ...p,
+    tipo: "pasta",
+    dataUpload: p.dataCriacao
+  }));
+  const arquivosFormatados = (dados.arquivos || []).map((a) => ({
+    ...a,
+    tipo: "arquivo",
+    dataUpload: a.dataUpload
+  }));
+  const tudo = [...subpastasFormatadas, ...arquivosFormatados];
+  setListaArquivos(tudo);
+}
 
   function handleUpload(event) {
     const file = event.target.files[0];
@@ -182,7 +239,7 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
                   <input
                     type="file"
                     ref={inputRef}
-                    onChange={handleUpload}
+                    onChange={onFileChange}
                     className="hidden"
                   />
                 </div>
@@ -234,8 +291,8 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
         onClose={() => setmodalNovaPasta(false)}
         className="text-black">
         <div className="flex flex-col items-center">
-          <input type="text" placeholder="Nome da nova pasta" className="border p-2 w-full mb-4" />
-          <button className="bg-blue-500 text-white px-4 py-2 rounded">Criar pasta</button>
+          <input type="text" placeholder="Nome da nova pasta" className="border p-2 w-full mb-4" value={nomepasta} onChange={(e) => setNomePasta(e.target.value)} />
+          <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={criarNovaPasta}>Criar pasta</button>
         </div>
       </Modal>
     </>

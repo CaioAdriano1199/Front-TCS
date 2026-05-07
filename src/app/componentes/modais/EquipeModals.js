@@ -113,7 +113,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
                       onClick={() => mostrarMembros(equipe)}
                     >
                       <i className="bi bi-people px-1"></i>
-                      {equipe.nome}
+                      {equipe.nomeEmpresa}
                     </p>
                     <ActionMenu className="flex-1"
                       options={[

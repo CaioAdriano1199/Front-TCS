@@ -50,7 +50,7 @@ export default function ChatCont() {
               type="text"
               value={texto}
               rows={1}
-              resize-none
+              
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
@@ -60,7 +60,7 @@ export default function ChatCont() {
               }}
               onChange={(e) => setTexto(e.target.value)}
               placeholder="Digite uma mensagem..."
-              className="flex-1 p-2 rounded-xl border-transparent focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] bg-[var(--bginput)] resize-none"
+              className="resize-none flex-1 p-2 rounded-xl border-transparent focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] bg-[var(--bginput)] resize-none"
             />
 
             <button

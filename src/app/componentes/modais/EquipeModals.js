@@ -6,6 +6,8 @@ import ActionMenu from "../menudeacao/menudeacao";
 import { receberEquipes } from "../servico/receberequipes";
 import { criarEquipe } from "../servico/criarequipe";
 import { receberMembrosEquipe } from "../servico/recebermembrosequipe";
+import { criarFuncionario } from "../servico/criarfuncionario";
+import { excluirFuncionario } from "../servico/excluirfuncionario";
 
 export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setListaEquipes, isOpen, onClose, onOpen }) {
   const [membrosEquipe, setMembrosEquipe] = useState([]);
@@ -25,27 +27,58 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
   const [nomeAtt, setNomeAtt] = useState("");
   const [busca, setBusca] = useState("");
   const [membro, setMembro] = useState({});
+  const [equipeAtual, setEquipeAtual] = useState(null);
+  const [equipesSelecionadas, setEquipesSelecionadas] = useState([]);
+  const [usuariorecebido, setUsuarioRecebido] = useState({});
 
   const colaborador = {
     email: email,
     senha: senha,
-    nome: nome
+    nome: nome,
+    idEquipe: equipeAtual,
+    idsEquipes: [equipeAtual],
+    admSistema: false
   };
 
   const colaboradorAtt = {
     email: emailAtt,
     nome: nomeAtt,
-    senha: senhaAtt
+    senha: senhaAtt,
   };
 
-  function mostrarMembros(equipe) {
-    setMembrosEquipe(equipe.membros);
+  function mostrarMembros(equipeId) {
+    carregarMembrosEquipe(equipeId);
+    setEquipeAtual(equipeId);
     setmodalMembros(true);
   }
 
-  async function receberMembrosEquipe(equipeId) {
+  async function carregarusuario(funcionarioId) {
+    try {
+      const usuario = await receberUsuarioPorId(funcionarioId);
+      setUsuarioRecebido(usuario);
+
+      setEquipesSelecionadas(usuario.idsEquipes || []);
+
+      setmodalMoverMembro(true);
+    } catch (error) {
+      toast.error("Erro ao carregar usuário");
+    }
+  }
+
+  async function carregarMembrosEquipe(equipeId) {
     const membros = await receberMembrosEquipe(equipeId);
-    setMembrosEquipe(membros);
+    console.log(membros);
+    setMembrosEquipe(membros.funcionarios || []);
+  }
+
+  async function excluirMembro(funcionarioId) {
+    try {
+      await excluirFuncionario(funcionarioId);
+      toast.success("Funcionário excluído com sucesso");
+      carregarMembrosEquipe(equipeAtual);
+    } catch (error) {
+      toast.error("Erro ao excluir funcionário");
+    }
   }
 
   async function criarNovaEquipe() {
@@ -61,21 +94,15 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
 
   async function cadastroUsuario() {
     try {
-      const resposta = await fetch(`${URL_BASE}/usuarios`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(colaborador)
-      });
-
-      const dados = await resposta.json();
+      await criarFuncionario(colaborador);
 
       toast.success("Sucesso no cadastro do usuário");
       setEmail("");
       setSenha("");
       setConfirmarSenha("");
       setNome("");
+      setmodalNovoMembro(false);
+      carregarMembrosEquipe(equipeAtual);
 
     } catch (erro) {
       toast.error("Erro no cadastro do usuário");
@@ -116,7 +143,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
                   <div key={equipe.id} className="flex justify-between items-center p-2 rounded hover:bg-[var(--cinzaclaro)]">
                     <p
                       className="cursor-pointer flex-2 hover:bg-[var(--cinzaclaro)] p-1 rounded"
-                      onClick={() => mostrarMembros(equipe)}
+                      onClick={() => mostrarMembros(equipe.id)}
                     >
                       <i className="bi bi-people px-1"></i>
                       {equipe.nomeEmpresa}
@@ -172,7 +199,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
                       options={[{
                         label: "mover para...",
                         onClick: () => {
-                          setmodalMoverMembro(true);
+                          carregarusuario(membro.id);
                         },
                         className: "bg-[var(--bginput)] hover:bg-[var(--cinzaclaro)] hover:cursor-pointer text-[var(--preto)]"
                       },
@@ -190,7 +217,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
                       {
                         label: "Excluir",
                         onClick: () => {
-
+                          excluirMembro(membro.id);
                         },
                         className: "bg-[var(--bginput)] hover:bg-[var(--cinzaclaro)] hover:cursor-pointer text-[var(--preto)]"
                       }
@@ -273,11 +300,28 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
           <h2 className="text-xl font-bold mb-4">Mover para equipe:</h2>
           {listaEquipes.map((equipe) => (
             <label className="mb-2 cursor-pointer text-base" key={equipe.id}>
-              <input type="checkbox" name="equipe" value={equipe.id} className="mr-2 accent-[var(--bgbutton)]" />
-              {equipe.nome}
+              <input
+                type="checkbox"
+                value={equipe.id}
+                className="mr-2 accent-[var(--bgbutton)]"
+                checked={equipesSelecionadas.includes(equipe.id)}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setEquipesSelecionadas([
+                      ...equipesSelecionadas,
+                      equipe.id
+                    ]);
+                  } else {
+                    setEquipesSelecionadas(
+                      equipesSelecionadas.filter(id => id !== equipe.id)
+                    );
+                  }
+                }}
+              />
+              {equipe.nomeEmpresa}
             </label>
           ))}
-          <button className="bg-[var(--bgbutton)] max-w-sm w-full text-[var(--branco)] hover:bg-[var(--bgbuttonhover)] hover:cursor-pointer px-4 py-2 rounded">Salvar</button>
+          <button disabled={equipesSelecionadas.length === 0} className="bg-[var(--bgbutton)] max-w-sm w-full text-[var(--branco)] hover:bg-[var(--bgbuttonhover)] hover:cursor-pointer px-4 py-2 rounded disabled:bg-gray-400 disabled:cursor-not-allowed" >Salvar</button>
         </div>
       </Modal>
       <Modal //modal para editar informações do membro

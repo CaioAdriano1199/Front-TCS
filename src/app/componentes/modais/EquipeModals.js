@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import ActionMenu from "../menudeacao/menudeacao";
 import { receberEquipes } from "../servico/receberequipes";
 import { criarEquipe } from "../servico/criarequipe";
+import { receberMembrosEquipe } from "../servico/recebermembrosequipe";
 
 export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setListaEquipes, isOpen, onClose, onOpen }) {
   const [membrosEquipe, setMembrosEquipe] = useState([]);
@@ -40,6 +41,11 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
   function mostrarMembros(equipe) {
     setMembrosEquipe(equipe.membros);
     setmodalMembros(true);
+  }
+
+  async function receberMembrosEquipe(equipeId) {
+    const membros = await receberMembrosEquipe(equipeId);
+    setMembrosEquipe(membros);
   }
 
   async function criarNovaEquipe() {

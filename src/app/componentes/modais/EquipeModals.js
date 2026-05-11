@@ -8,6 +8,8 @@ import { criarEquipe } from "../servico/criarequipe";
 import { receberMembrosEquipe } from "../servico/recebermembrosequipe";
 import { criarFuncionario } from "../servico/criarfuncionario";
 import { excluirFuncionario } from "../servico/excluirfuncionario";
+import { receberUsuarioPorId } from "../servico/reberusuarioporid";
+import { moverusuario } from "../servico/moverusuario";
 
 export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setListaEquipes, isOpen, onClose, onOpen }) {
   const [membrosEquipe, setMembrosEquipe] = useState([]);
@@ -51,6 +53,22 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
     setEquipeAtual(equipeId);
     setmodalMembros(true);
   }
+
+async function movarUsariofun() {
+  try {
+
+    await moverusuario(usuariorecebido.id, equipesSelecionadas);
+
+    toast.success("Usuário movido com sucesso");
+
+    setmodalMoverMembro(false);
+
+  } catch (error) {
+    console.log(error);
+
+    toast.error("Erro ao mover usuário");
+  }
+}
 
   async function carregarusuario(funcionarioId) {
     try {
@@ -321,7 +339,9 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
               {equipe.nomeEmpresa}
             </label>
           ))}
-          <button disabled={equipesSelecionadas.length === 0} className="bg-[var(--bgbutton)] max-w-sm w-full text-[var(--branco)] hover:bg-[var(--bgbuttonhover)] hover:cursor-pointer px-4 py-2 rounded disabled:bg-gray-400 disabled:cursor-not-allowed" >Salvar</button>
+          <button disabled={equipesSelecionadas.length === 0} className="bg-[var(--bgbutton)] max-w-sm w-full text-[var(--branco)] hover:bg-[var(--bgbuttonhover)] hover:cursor-pointer px-4 py-2 rounded disabled:bg-gray-400 disabled:cursor-not-allowed" 
+          onClick={() => movarUsariofun()}
+          >Salvar</button>
         </div>
       </Modal>
       <Modal //modal para editar informações do membro

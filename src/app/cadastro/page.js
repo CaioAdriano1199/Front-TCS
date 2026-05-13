@@ -71,7 +71,7 @@ export default function Cadastro() {
       <div className="gradient-vertical left-0"></div>
       <div className="gradient-vertical right-0"></div>
       <div className="relative z-10 max-w-5xl mx-auto p-4">
-        <div className="flex w-100 flex-col justify-center p-10 mt-6 bg-[var(--bginput)] rounded-lg shadow-md">
+        <div className="flex w-100 flex-col justify-center p-10 mt-6 bg-[var(--branco)] rounded-lg shadow-md">
           <div className=" self-center flex justifi-center flex-col p-5">
             <h2 className="self-center text-3xl font-semibold leading-10 tracking-tight text-[var(--preto)]">
               Relic

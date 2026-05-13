@@ -49,7 +49,7 @@ export default function Login() {
       <div className="gradient-vertical left-0"></div>
       <div className="gradient-vertical right-0"></div>
       <div className="relative z-10 max-w-5xl mx-auto p-4">
-      <div className="flex w-100 flex-col justify-center p-10 mt-6 bg-[var(--bginput)] rounded-lg shadow-md">
+      <div className="flex w-100 flex-col justify-center p-10 mt-6 bg-[var(--branco)] rounded-lg shadow-md">
         <h1 className="self-center p-5 text-3xl font-semibold text-black">
           Relic
         </h1>

@@ -2,24 +2,49 @@
 
 import { useState } from "react";
 import Typewriter from "typewriter-effect";
+import { respostadaia } from "../servico/respostadaia";
 
 export default function ChatCont() {
   const [mensagens, setMensagens] = useState([]);
   const [texto, setTexto] = useState("");
   const [primeiraMensagem, setPrimeiraMensagem] = useState(true);
 
-  function enviarMensagem() {
-    if (texto.trim() === "") return;
+async function enviarMensagem() {
+  if (texto.trim() === "") return;
 
-    const novaMensagem = {
-      id: Date.now(),
-      texto: texto,
-      autor: "eu"
+  const novaMensagem = {
+    id: crypto.randomUUID(),
+    texto: texto,
+    autor: "eu"
+  };
+
+  setMensagens((prev) => [...prev, novaMensagem]);
+
+  const textoenviado = texto;
+
+  setTexto("");
+
+  try {
+    const resposta = await respostadaia(textoenviado);
+
+    const primeiroDocumento = resposta.documents[0];
+
+    const novaMensagemIA = {
+      id: crypto.randomUUID(),
+      texto:
+        primeiroDocumento?.arquivo_nome ||
+        "Nenhum documento encontrado",
+      autor: "ia",
+
+      documento: primeiroDocumento
     };
 
-    setMensagens([...mensagens, novaMensagem]);
-    setTexto("");
+    setMensagens((prev) => [...prev, novaMensagemIA]);
+
+  } catch (error) {
+    console.error("Erro ao obter resposta da IA:", error);
   }
+}
 
   return (
 

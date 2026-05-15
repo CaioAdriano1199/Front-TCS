@@ -54,11 +54,7 @@ export default function Sidemenu({ setPgc }) {
         <h1 className="p-4 text-[var(--branco)] text-2xl font-bold">
           Relic
         </h1>
-        <div className="mt-4 flex items-start px-4 py-2">
-        <i className="bi bi-folder"></i>
-        <h1 className="text-xl text-[var(--branco)] font-bold px-1">Documentos</h1>
-        </div>
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1">
         
         <ArquivoModals listaArquivos={listaArquivos} setListaArquivos={setListaArquivos} isOpen={modalArquivoAberto} onClose={() => setModalArquivoAberto(false)} onOpen={() => setModalArquivoAberto(true)} />
        </div>

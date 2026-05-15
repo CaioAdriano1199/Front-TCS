@@ -23,7 +23,7 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
   const inputRef = useRef(null);
   const [ordem, setOrdem] = useState("asc");
   const [nomepasta, setNomePasta] = useState("");
-  const [modalRenomearPasta, setmodalRenomearPasta] = useState(false);
+  const [modalRenomearpasta, setmodalRenomearPasta] = useState(false);
 
   async function renomearpasta() {
     const dados = await receberarquivos(historicoPastas[historicoPastas.length - 1].id);
@@ -32,6 +32,7 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
       tipo: "pasta",
       dataUpload: p.dataCriacao
     }));
+  }
 
     async function abrirPastasRaiz() {
       const dados = await receberPastasRaiz();
@@ -193,7 +194,8 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
       <>
         <div className="px-4 py-2 hover:bg-[var(--bgbuttonhover)] cursor-pointer flex items-center" onClick={abrirPastasRaiz}>
           <i className="bi bi-plus"></i>
-          <a className=" text-[var(--branco)] px-1 ">Mais arquivos...</a>
+          <i className="bi bi-folder"></i>
+          <h1 className="text-xl text-[var(--branco)] font-bold px-1">Documentos</h1>
         </div>
 
         <Modal //modal de arquivos
@@ -308,10 +310,9 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
           className="text-black">
           <div className="flex flex-col items-center">
             <input type="text" placeholder="Nome da pasta" className="border p-2 w-full mb-4" value={nomepasta} onChange={(e) => setNomePasta(e.target.value)} />
-            <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={renomearPasta}>Renomear pasta</button>
+            <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={renomearpasta}>Renomear pasta</button>
           </div>
         </Modal>
       </>
     );
   }
-}

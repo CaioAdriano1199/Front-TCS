@@ -8,7 +8,7 @@ export async function criarPasta(novapasta) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "bypass-tunnel-reminder": "true",
+        "ngrok-skip-browser-warning": "true",
         Authorization: `Bearer ${localStorage.getItem("token")}`
       },
       body: JSON.stringify(novapasta)

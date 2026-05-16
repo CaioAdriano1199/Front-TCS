@@ -9,6 +9,44 @@ export default function ChatCont() {
   const [texto, setTexto] = useState("");
   const [primeiraMensagem, setPrimeiraMensagem] = useState(true);
 
+  async function baixarArquivo(documento) {
+    if (!documento?.document_id) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/arquivos/download/${documento.document_id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Erro ao baixar arquivo: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      const objectUrl = window.URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+
+      anchor.href = objectUrl;
+      anchor.download = documento.arquivo_nome || documento.nome || "arquivo";
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      window.URL.revokeObjectURL(objectUrl);
+    } catch (error) {
+      console.error("Erro ao baixar arquivo:", error);
+    }
+  }
+
   async function enviarMensagem() {
     if (texto.trim() === "") return;
 
@@ -103,26 +141,29 @@ export default function ChatCont() {
         (
           <>
             {/* 📩 Lista de mensagens */}
-            <div
-              key={msg.id}
-              className={`max-w-xs p-3 rounded-lg whitespace-pre-wrap ${msg.autor === "eu"
-                  ? "bg-[var(--bgbuttonhover)] text-white self-end ml-auto"
-                  : "bg-white text-black"
-                }`}
-            >
-              {msg.documento ? (
-                <a
-                  href={`${process.env.NEXT_PUBLIC_API_URL}/arquivos/download/${msg.documento.document_id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 underline break-all flex items-center gap-1"
+            <div className="flex flex-1 flex-col gap-3 overflow-y-auto mb-4">
+              {mensagens.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`max-w-xs p-3 rounded-lg whitespace-pre-wrap ${msg.autor === "eu"
+                      ? "bg-[var(--bgbuttonhover)] text-white self-end ml-auto"
+                      : "bg-white text-black"
+                    }`}
                 >
-                  <i className="bi bi-file-earmark-text"></i>
-                  {msg.texto}
-                </a>
-              ) : (
-                msg.texto
-              )}
+                  {msg.documento ? (
+                    <button
+                      type="button"
+                      onClick={() => baixarArquivo(msg.documento)}
+                      className="text-left text-blue-500 underline break-all flex items-center gap-1"
+                    >
+                      <i className="bi bi-file-earmark-text"></i>
+                      {msg.texto}
+                    </button>
+                  ) : (
+                    msg.texto
+                  )}
+                </div>
+              ))}
             </div>
 
             {/* ✍️ Input */}

@@ -7,7 +7,7 @@ export async function moverusuario(usuarioId, equipesIds) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "bypass-tunnel-reminder": "true",
+                "ngrok-skip-browser-warning": "true",
                 Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({

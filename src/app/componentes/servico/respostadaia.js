@@ -9,13 +9,16 @@ export async function respostadaia(pergunta) {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ pergunta })
+            body: JSON.stringify({
+                description: pergunta,
+                limit: 5
+            })
         });
         if (!resposta.ok) {
             const errorData = await resposta.json();
             throw new Error(errorData.message || "Erro ao obter resposta da IA");
         }
-        
+
         return await resposta.json();
     } catch (error) {
         console.error("Erro ao obter resposta da IA:", error);

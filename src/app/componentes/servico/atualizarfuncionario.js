@@ -7,6 +7,7 @@ export async function atualizarFuncionario(funcionarioId, funcionarioData) {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                "bypass-tunnel-reminder": "true",
                 Authorization: `Bearer ${token}`
             },
             body: JSON.stringify(funcionarioData)

@@ -8,6 +8,7 @@ export async function receberarquivos(folderId) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "bypass-tunnel-reminder": "true",
         "Authorization": `Bearer ${localStorage.getItem("token")}`
       }
     });

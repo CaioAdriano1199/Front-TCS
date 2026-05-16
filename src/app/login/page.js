@@ -17,6 +17,7 @@ export default function Login() {
 
   async function login() {
     try {
+      setLoading(true);
       const resposta = await fetch(`${BASE_URL}/usuarios/login`, {
         method: "POST",
         headers: {
@@ -41,6 +42,9 @@ export default function Login() {
       console.error("Erro no login:", erro);
       toast.error("Erro no login");
       console.log("BASE_URL:", BASE_URL);
+    }
+    finally {
+      setLoading(false);
     }
   }
 
@@ -71,9 +75,17 @@ export default function Login() {
             <button
               type="submit"
               className="bg-[var(--bgbutton)] hover:bg-[var(--bgbuttonhover)] my-2.5 text-[var(--branco)] font-bold py-2 px-4 rounded-md hover:cursor-pointer transition-colors duration-300"
+              disabled={loading}
               onClick={login}
             >
-              Login
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <span className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></span>
+                  Entrando...
+                </span>
+              ) : (
+                "Login"
+              )}
             </button>
             <p className="self-center p-5 text-sm text-[var(--cinzaescuro)] font-semibold">
               Não tem uma conta? <a href="/cadastro" className="text-[var(--bgbutton)] hover:underline">Cadastre-se</a>

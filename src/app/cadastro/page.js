@@ -14,6 +14,7 @@ export default function Cadastro() {
   const [confirmSenha, setConfirmSenha] = useState("");
   const [cnpj, setCnpj] = useState("");
   const [nomeempresa, setNomeempresa] = useState("");
+  const [loading, setLoading] = useState(false);
   const BASe_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const usuario = {
@@ -40,6 +41,7 @@ export default function Cadastro() {
   async function cadastroEmpresa() {
 
     try {
+      setLoading(true);
       const resposta = await fetch(`${BASe_URL}/empresas/create`, {
         method: "POST",
         headers: {
@@ -55,6 +57,8 @@ export default function Cadastro() {
     } catch (erro) {
       console.error("Erro:", erro);
       toast.error("Erro no cadastro da empresa");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -154,9 +158,15 @@ export default function Cadastro() {
                 type="button"
                 className="bg-[var(--bgbutton)] hover:bg-[var(--bgbuttonhover)] text-white font-bold py-2 px-4 rounded-md hover:cursor-pointer transition-colors duration-300 disabled:bg-[var(--phgray)] disabled:cursor-not-allowed"
                 onClick={() => cadastroEmpresa()}
-                disabled={cnpj === "" || nomeempresa === ""}
+                disabled={cnpj === "" || nomeempresa === "" || loading}
               >
-                Cadastrar
+                              {loading ? (
+                <span className="flex items-center justify-center">
+                  <span className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></span>
+                </span>
+              ) : (
+                "Cadastrar"
+              )}
               </button>
             </form>
           )}

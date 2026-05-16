@@ -79,9 +79,8 @@ export default function Login() {
               onClick={login}
             >
               {loading ? (
-                <span className="flex items-center gap-2">
+                <span className="flex items-center justify-center">
                   <span className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></span>
-                  Entrando...
                 </span>
               ) : (
                 "Login"

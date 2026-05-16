@@ -11,6 +11,7 @@ export async function uploadArquivo(folderId, file) {
   const response = await fetch(`${BASE_URL}/arquivos/upload`, {
     method: "POST",
     headers: {
+      "ngrok-skip-browser-warning": "true",
       Authorization: `Bearer ${token}`
     },
     body: formData

@@ -6,6 +6,8 @@ export async function receberUsuarioPorId(usuarioId) {
         const resposta = await fetch(`${BASE_URL}/usuarios/${usuarioId}`, {
             method: "GET",
             headers: {
+                "Content-Type": "application/json",
+                "ngrok-skip-browser-warning": "true",
                 Authorization: `Bearer ${token}`
             }
         });

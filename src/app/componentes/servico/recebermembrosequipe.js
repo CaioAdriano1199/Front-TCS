@@ -7,7 +7,7 @@ export async function receberMembrosEquipe(equipeId) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "bypass-tunnel-reminder": "true",
+        "ngrok-skip-browser-warning": "true",
         Authorization: `Bearer ${token}`
       }
     });

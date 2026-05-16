@@ -8,6 +8,8 @@ export async function excluirFuncionario(funcionarioId) {
         const resposta = await fetch(`${BASE_URL}/usuarios/${funcionarioId}`, {
             method: "DELETE",
             headers: {
+                "Content-Type": "application/json",
+                "ngrok-skip-browser-warning": "true",
                 Authorization: `Bearer ${token}`
             }
         });

@@ -21,7 +21,8 @@ export default function ChatCont() {
         {
           method: "GET",
           headers: {
-            "bypass-tunnel-reminder": "true",
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
             Authorization: `Bearer ${token}`
           }
         }

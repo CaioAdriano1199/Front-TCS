@@ -112,7 +112,7 @@ export default function ChatCont() {
             >
               {msg.documento ? (
                 <a
-                  href={`${process.env.NEXT_PUBLIC_API_URL}/arquivos/download/${msg.documento.download_url}`}
+                  href={`${process.env.NEXT_PUBLIC_API_URL}/arquivos/download/${msg.documento.document_id}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-500 underline break-all flex items-center gap-1"

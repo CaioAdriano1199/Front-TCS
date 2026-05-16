@@ -6,6 +6,7 @@ try {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "bypass-tunnel-reminder": "true",
         "Authorization": `Bearer ${localStorage.getItem("token")}`
       }
     });

@@ -7,6 +7,7 @@ export async function receberMembrosEquipe(equipeId) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "bypass-tunnel-reminder": "true",
         Authorization: `Bearer ${token}`
       }
     });

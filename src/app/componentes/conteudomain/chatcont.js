@@ -9,42 +9,42 @@ export default function ChatCont() {
   const [texto, setTexto] = useState("");
   const [primeiraMensagem, setPrimeiraMensagem] = useState(true);
 
-async function enviarMensagem() {
-  if (texto.trim() === "") return;
+  async function enviarMensagem() {
+    if (texto.trim() === "") return;
 
-  const novaMensagem = {
-    id: crypto.randomUUID(),
-    texto: texto,
-    autor: "eu"
-  };
-
-  setMensagens((prev) => [...prev, novaMensagem]);
-
-  const textoenviado = texto;
-
-  setTexto("");
-
-  try {
-    const resposta = await respostadaia(textoenviado);
-
-    const primeiroDocumento = resposta.documents[0];
-
-    const novaMensagemIA = {
+    const novaMensagem = {
       id: crypto.randomUUID(),
-      texto:
-        primeiroDocumento?.arquivo_nome ||
-        "Nenhum documento encontrado",
-      autor: "ia",
-
-      documento: primeiroDocumento
+      texto: texto,
+      autor: "eu"
     };
 
-    setMensagens((prev) => [...prev, novaMensagemIA]);
+    setMensagens((prev) => [...prev, novaMensagem]);
 
-  } catch (error) {
-    console.error("Erro ao obter resposta da IA:", error);
+    const textoenviado = texto;
+
+    setTexto("");
+
+    try {
+      const resposta = await respostadaia(textoenviado);
+
+      const primeiroDocumento = resposta.documents[0];
+
+      const novaMensagemIA = {
+        id: crypto.randomUUID(),
+        texto:
+          primeiroDocumento?.arquivo_nome ||
+          "Nenhum documento encontrado",
+        autor: "ia",
+
+        documento: primeiroDocumento
+      };
+
+      setMensagens((prev) => [...prev, novaMensagemIA]);
+
+    } catch (error) {
+      console.error("Erro ao obter resposta da IA:", error);
+    }
   }
-}
 
   return (
 
@@ -75,7 +75,7 @@ async function enviarMensagem() {
               type="text"
               value={texto}
               rows={1}
-              
+
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
@@ -103,18 +103,26 @@ async function enviarMensagem() {
         (
           <>
             {/* 📩 Lista de mensagens */}
-            <div className="flex-1 overflow-y-auto space-y-2 mb-4 justify-end flex flex-col">
-              {mensagens.map((msg) => (
-                <div
-                  key={msg.id}
-                  className={`max-w-xs p-3 rounded-lg whitespace-pre-wrap ${msg.autor === "eu"
-                    ? "bg-[var(--bgbuttonhover)] text-white self-end ml-auto"
-                    : "bg-white text-black"
-                    }`}
+            <div
+              key={msg.id}
+              className={`max-w-xs p-3 rounded-lg whitespace-pre-wrap ${msg.autor === "eu"
+                  ? "bg-[var(--bgbuttonhover)] text-white self-end ml-auto"
+                  : "bg-white text-black"
+                }`}
+            >
+              {msg.documento ? (
+                <a
+                  href={`${process.env.NEXT_PUBLIC_API_URL}/arquivos/download/${msg.documento.download_url}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 underline break-all flex items-center gap-1"
                 >
+                  <i className="bi bi-file-earmark-text"></i>
                   {msg.texto}
-                </div>
-              ))}
+                </a>
+              ) : (
+                msg.texto
+              )}
             </div>
 
             {/* ✍️ Input */}

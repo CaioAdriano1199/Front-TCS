@@ -193,7 +193,6 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
     return (
       <>
         <div className="px-4 py-2 hover:bg-[var(--bgbuttonhover)] cursor-pointer flex items-center" onClick={abrirPastasRaiz}>
-          <i className="bi bi-plus"></i>
           <i className="bi bi-folder"></i>
           <h1 className="text-xl text-[var(--branco)] font-bold px-1">Documentos</h1>
         </div>

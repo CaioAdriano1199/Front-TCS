@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
 @import "tailwindcss";
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
 :root {
+  /* Modern system font stack with Inter as primary */
+  --font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
   --background: #ffffff;
   --foreground: #171717;
   --bginput:#C7C8CB;
@@ -35,7 +38,9 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .gradient-vertical {
@@ -83,4 +88,207 @@ body {
   100% {
     background-position: 50% 0%;
   }
+}
+
+/* Design system additions: radii, shadows, transitions, components */
+:root {
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --focus-ring: 4px;
+  --transition-fast: 180ms;
+  --transition-medium: 260ms;
+  /* shadow using existing --preto via color-mix for controlled opacity */
+  --shadow-xs: color-mix(in srgb, var(--preto) 6%, transparent);
+  --shadow-sm: color-mix(in srgb, var(--preto) 8%, transparent);
+  --shadow-md: color-mix(in srgb, var(--preto) 10%, transparent);
+}
+
+/* Lightweight reset for interactive visuals (keeps structure intact) */
+button, a.button, .btn {
+  background: var(--bgbutton);
+  color: var(--branco);
+  border: 1px solid transparent;
+  padding: 0.45rem 0.8rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+  transition: transform var(--transition-fast) ease, box-shadow var(--transition-fast) ease, background-color var(--transition-fast) ease, opacity var(--transition-fast) ease;
+  box-shadow: 0 4px 12px var(--shadow-sm);
+}
+
+button:hover, a.button:hover, .btn:hover {
+  background: var(--bgbuttonhover);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px var(--shadow-md);
+}
+
+button:active, a.button:active, .btn:active {
+  transform: translateY(0);
+}
+
+button[disabled], .btn[disabled], .btn.disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Primary focus/focus-visible states */
+button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--focus-ring) color-mix(in srgb, var(--bgbutton) 14%, transparent);
+  border-radius: var(--radius-md);
+}
+
+/* Inputs */
+input, textarea, select {
+  background: var(--branco);
+  border: 1px solid color-mix(in srgb, var(--bgbutton) 20%, var(--branco));
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-sm);
+  transition: box-shadow var(--transition-fast) ease, border-color var(--transition-fast) ease, transform var(--transition-fast) ease;
+  color: var(--preto);
+  box-shadow: inset 0 1px 2px color-mix(in srgb, var(--preto) 6%, transparent);
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--bgbutton);
+  box-shadow: 0 0 0 var(--focus-ring) color-mix(in srgb, var(--bgbutton) 12%, transparent);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--phgray);
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--bgbutton);
+  box-shadow: 0 6px 20px var(--shadow-xs), 0 0 0 var(--focus-ring) color-mix(in srgb, var(--bgbutton) 10%, transparent);
+}
+
+/* Card surfaces */
+.card, .box, .panel {
+  background: color-mix(in srgb, var(--background) 96%, var(--azultransp) 4%);
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in srgb, var(--cinzaclaro) 8%, transparent);
+  padding: 1rem;
+  box-shadow: 0 8px 30px var(--shadow-xs);
+  transition: transform var(--transition-fast) ease, box-shadow var(--transition-fast) ease;
+}
+
+.card:hover, .box:hover, .panel:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px var(--shadow-sm);
+}
+
+/* Modal refinements */
+.modal-content button,
+.modal-content input[type="submit"] {
+  transition: background-color var(--transition-fast) ease, color var(--transition-fast) ease;
+}
+
+.modal-button {
+  background: color-mix(in srgb, var(--bgbutton) 12%, var(--background));
+  color: var(--bgbutton);
+  border: 1px solid color-mix(in srgb, var(--bgbutton) 30%, var(--background));
+  padding: 0.55rem 0.9rem;
+  border-radius: var(--radius-md);
+}
+
+.modal-button:hover {
+  background: color-mix(in srgb, var(--bgbutton) 16%, var(--background));
+}
+
+.modal-button:disabled {
+  opacity: 0.64;
+  cursor: not-allowed;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: color-mix(in srgb, var(--background) 60%, var(--preto) 20%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--background);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  max-width: min(95vw, 920px);
+  width: calc(100% - 2rem);
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 30px 60px var(--shadow-md);
+  border: 1px solid color-mix(in srgb, var(--cinzaescuro) 6%, transparent);
+}
+
+.modal-content button {
+  padding: 0.55rem 0.9rem;
+  font-size: 0.95rem;
+}
+
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+  width: 100%;
+}
+
+/* Skeleton loaders */
+.skeleton {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--azultransp) 30%, transparent) 0%, color-mix(in srgb, var(--azultransp) 10%, transparent) 50%, color-mix(in srgb, var(--azultransp) 30%, transparent) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s linear infinite;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Empty / placeholder states */
+.empty-state {
+  text-align: center;
+  color: var(--phgray);
+  padding: 2rem 1rem;
+}
+
+.empty-state .title { color: color-mix(in srgb, var(--foreground) 80%, transparent); font-weight: 600; margin-bottom: .5rem; }
+.empty-state .subtitle { color: var(--phgray); font-size: .95rem; }
+
+/* Table / list subtle divider */
+.list, table {
+  border-collapse: collapse;
+}
+table tr td, table tr th {
+  border-bottom: 1px solid color-mix(in srgb, var(--cinzaclaro) 6%, transparent);
+  padding: .6rem .75rem;
+}
+
+/* Small helpers */
+.muted { color: var(--phgray); }
+.accent { color: var(--bgbutton); }
+
+/* Spinner (inline) */
+.spinner {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--branco) 30%, transparent);
+  border-top-color: var(--bgbutton);
+  animation: spin 800ms linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Responsiveness tweaks for visual density */
+@media (max-width: 768px) {
+  .card, .modal-content { padding: .85rem; }
+  button, .btn { padding: .45rem .7rem; }
 }

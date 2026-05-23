@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "cross-env PORT=3000 NEXT_DISABLE_TURBOPACK=1 next dev",
     "build": "NEXT_DISABLE_TURBOPACK=1 next build",
     "start": "next start",
     "lint": "biome check",
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "bootstrap-icons": "^1.13.1",
-    "next": "16.2.1",
+    "next": "^16.2.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-hot-toast": "^2.6.0",
@@ -21,10 +21,11 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
-    "@opennextjs/cloudflare": "^1.18.0",
+    "@opennextjs/cloudflare": "^1.14.1",
     "@tailwindcss/postcss": "^4",
     "babel-plugin-react-compiler": "1.0.0",
     "tailwindcss": "^4.2.2",
     "wrangler": "^4.80.0"
+    ,"cross-env": "^7.0.3"
   }
 }

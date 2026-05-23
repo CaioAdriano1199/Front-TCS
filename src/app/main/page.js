@@ -9,9 +9,9 @@ export default function Main() {
 
 
   return (
-    <main className="flex min-h-screen bg-white">
+    <main className="flex flex-col md:flex-row min-h-screen bg-white">
       <Sidemenu className="flex-1"/>
-    <Chatcont/>
+      <Chatcont/>
     </main>
   );
 }

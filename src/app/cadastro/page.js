@@ -75,9 +75,9 @@ export default function Cadastro() {
             <div className="flex min-h-screen flex-col items-center justify-center bg-[var(--azultransp)] backdrop-blur-sm w-full h-full absolute top-0 left-0">
       <div className="gradient-vertical left-0"></div>
       <div className="gradient-vertical right-0"></div>
-      <div className="relative z-10 max-w-5xl mx-auto p-4">
-        <div className="flex w-100 flex-col justify-center p-10 mt-6 bg-[var(--branco)] rounded-lg shadow-md">
-          <div className=" self-center flex justifi-center flex-col p-5">
+      <div className="relative z-10 max-w-xl mx-auto p-4">
+        <div className="w-full mx-auto flex flex-col justify-center p-8 md:p-10 mt-6 bg-[var(--branco)] rounded-[var(--radius-lg)] shadow-xl">
+          <div className="self-center flex justify-center flex-col p-5">
             <h2 className="self-center text-3xl font-semibold leading-10 tracking-tight text-[var(--preto)]">
               Relic
             </h2>
@@ -90,13 +90,13 @@ export default function Cadastro() {
               <input
                 type="email"
                 placeholder="Email"
-                className="border bg-[var(--cinzaclaro)] border-gray-300 rounded-md my-2.5 py-2 px-4 text-[var(--preto)] focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] placeholder:text-[var(--phgray)]"
+                className="border border-[var(--cinzaclaro)] bg-[var(--branco)] shadow-sm rounded-md my-2.5 py-2.5 px-4 text-[var(--preto)] focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] placeholder:text-[var(--phgray)]"
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
               <button
                 type="button"
-                className="bg-[var(--bgbutton)] hover:bg-[var(--bgbuttonhover)] text-white font-bold py-2 px-4 rounded-md hover:cursor-pointer transition-colors duration-300 disabled:bg-[var(--phgray)] disabled:cursor-not-allowed" 
+                className="bg-[var(--bgbutton)] hover:bg-[var(--bgbuttonhover)] text-[var(--branco)] font-bold py-2 px-4 rounded-md hover:cursor-pointer transition-all duration-200 ease-out shadow-sm disabled:bg-[var(--phgray)] disabled:cursor-not-allowed" 
                 onClick={() => setPgc(1)}
                 disabled={email === ""}
               >
@@ -109,21 +109,21 @@ export default function Cadastro() {
               <input
                 type="text"
                 placeholder="Nome"
-                className="border bg-[var(--cinzaclaro)] border-gray-300 rounded-md my-2.5 py-2 px-4 text-[var(--preto)] focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] placeholder:text-[var(--phgray)]"
+                className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] shadow-sm rounded-md my-2.5 py-2.5 px-4 text-[var(--preto)] focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] placeholder:text-[var(--phgray)]"
                 onChange={(e) => setNome(e.target.value)}
                 required
               />
               <input
                 type="password"
                 placeholder="Senha"
-                className="border bg-[var(--cinzaclaro)] border-gray-300 rounded-md my-2.5 py-2 px-4 text-[var(--preto)] focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] placeholder:text-[var(--phgray)]"
+                className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] shadow-sm rounded-md my-2.5 py-2.5 px-4 text-[var(--preto)] focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] placeholder:text-[var(--phgray)]"
                 onChange={(e) => setSenha(e.target.value)}
                 required
               />
               <input
                 type="password"
                 placeholder="Confirmar senha"
-                className="border bg-[var(--cinzaclaro)] border-gray-300 rounded-md my-2.5 py-2 px-4 text-[var(--preto)] focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] placeholder:text-[var(--phgray)]"
+                className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] shadow-sm rounded-md my-2.5 py-2.5 px-4 text-[var(--preto)] focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] placeholder:text-[var(--phgray)]"
                 onChange={(e) => compararsenha(e)}
                 required
               />
@@ -144,14 +144,14 @@ export default function Cadastro() {
               <input
                 type="text"
                 placeholder="CNPJ"
-                className="border bg-[var(--cinzaclaro)] border-gray-300 rounded-md my-2.5 py-2 px-4 text-[var(--preto)] focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] placeholder:text-[var(--phgray)]"
+                className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] shadow-sm rounded-md my-2.5 py-2.5 px-4 text-[var(--preto)] focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] placeholder:text-[var(--phgray)]"
                 onChange={(e) => setCnpj(e.target.value)}
                 required
               />
               <input
                 type="text"
                 placeholder="Nome da empresa"
-                className="border bg-[var(--cinzaclaro)] border-gray-300 rounded-md my-2.5 py-2 px-4 text-[var(--preto)] focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] placeholder:text-[var(--phgray)]"
+                className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] shadow-sm rounded-md my-2.5 py-2.5 px-4 text-[var(--preto)] focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] placeholder:text-[var(--phgray)]"
                 onChange={(e) => setNomeempresa(e.target.value)}
                 required
               />

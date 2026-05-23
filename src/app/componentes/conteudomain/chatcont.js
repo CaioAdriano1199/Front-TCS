@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Typewriter from "typewriter-effect";
 import { respostadaia } from "../servico/respostadaia";
 
 export default function ChatCont() {
@@ -86,27 +85,13 @@ export default function ChatCont() {
 
   return (
 
-    <div className="flex text-black flex-col h-screen w-full p-4 max-w-3xl mx-auto">
+    <div className="flex text-black flex-col min-h-screen w-full p-4 md:p-6 max-w-full mx-auto">
 
       {primeiraMensagem ? (
 
         <div className="flex flex-col flex-1 items-center justify-center">
           <h1 className="text-2xl font-bold mb-4">
-            Bem-vindo ao Relic!{" "}
-            <span className="inline">
-              <Typewriter
-                options={{
-                  strings: [
-                    "Envie sua primeira mensagem para começar.",
-                    "O que deseja encontrar?"
-                  ],
-                  autoStart: true,
-                  loop: true,
-                  delay: 40,
-                  deleteSpeed: 20,
-                }}
-              />
-            </span>
+            Bem-vindo ao Relic! Envie sua primeira mensagem para começar.
           </h1>
           <div className="flex gap-2 w-full">
             <textarea
@@ -123,29 +108,27 @@ export default function ChatCont() {
               }}
               onChange={(e) => setTexto(e.target.value)}
               placeholder="Digite uma mensagem..."
-              className="resize-none flex-1 p-2 rounded-xl border-transparent focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] bg-[var(--bginput)] resize-none"
+              className="resize-none flex-1 p-2 rounded-xl border-transparent focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] bg-[var(--branco)] resize-none"
             />
-
             <button
               onClick={() => {
                 setPrimeiraMensagem(false);
                 enviarMensagem();
               }}
-              className="bg-blue-500 text-white px-3 rounded-full hover:bg-[var(--bgbuttonhover)] transition-colors duration-300 hover:cursor-pointer"
+              className="bg-[var(--bgbutton)] text-[var(--branco)] px-3 rounded-full hover:bg-[var(--bgbuttonhover)] transition-colors duration-300 hover:cursor-pointer"
             >
               <i className="bi bi-send"></i>
             </button>
           </div>
         </div>
-      ) :
-        (
-          <>
-            {/* 📩 Lista de mensagens */}
+      ) : (
+        <>
+          {/* 📩 Lista de mensagens */}
             <div className="flex flex-1 flex-col gap-3 overflow-y-auto mb-4">
               {mensagens.map((msg) => (
                 <div
                   key={msg.id}
-                  className={`max-w-xs p-3 rounded-lg whitespace-pre-wrap ${msg.autor === "eu"
+                  className={`max-w-[80%] md:max-w-[60%] p-3 rounded-lg whitespace-pre-wrap ${msg.autor === "eu"
                       ? "bg-[var(--bgbuttonhover)] text-white self-end ml-auto"
                       : "bg-white text-black"
                     }`}
@@ -154,7 +137,7 @@ export default function ChatCont() {
                     <button
                       type="button"
                       onClick={() => baixarArquivo(msg.documento)}
-                      className="text-left text-blue-500 underline break-all flex items-center gap-1"
+                      className="text-left text-[var(--bgbutton)] underline break-all flex items-center gap-1"
                     >
                       <i className="bi bi-file-earmark-text"></i>
                       {msg.texto}
@@ -181,7 +164,7 @@ export default function ChatCont() {
                 }}
                 onChange={(e) => setTexto(e.target.value)}
                 placeholder="Digite uma mensagem..."
-                className="flex-1 p-2 rounded border-transparent focus:ring-[var(--bgbutton)] bg-[var(--bginput)] resize-none"
+                className="flex-1 p-2 rounded border-transparent focus:ring-[var(--bgbutton)] bg-[var(--branco)] resize-none"
               />
 
               <button

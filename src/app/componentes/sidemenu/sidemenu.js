@@ -50,7 +50,7 @@ export default function Sidemenu({ setPgc }) {
 
   return (
     <>
-      <div className="w-64 h-screen bg-[var(--bgbutton)] text-white flex flex-col">
+      <div className="w-full md:w-64 md:h-screen bg-[var(--bgbutton)] text-white flex flex-col">
         <h1 className="p-4 text-[var(--branco)] text-2xl font-bold">
           Relic
         </h1>

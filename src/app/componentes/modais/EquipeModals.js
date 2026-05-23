@@ -39,7 +39,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
     nome: nome,
     idEquipe: equipeAtual,
     idsEquipes: [equipeAtual],
-    admSistema: false
+    admSistema: false,
   };
 
   const colaboradorAtt = {
@@ -48,45 +48,37 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
     senha: senhaAtt,
   };
 
+  async function carregarMembrosEquipe(equipeId) {
+    const membros = await receberMembrosEquipe(equipeId);
+    setMembrosEquipe(membros.funcionarios || []);
+  }
+
   function mostrarMembros(equipeId) {
     carregarMembrosEquipe(equipeId);
     setEquipeAtual(equipeId);
     setmodalMembros(true);
   }
 
-async function movarUsariofun() {
-  try {
-
-    await moverusuario(usuariorecebido.id, equipesSelecionadas);
-
-    toast.success("Usuário movido com sucesso");
-
-    setmodalMoverMembro(false);
-
-  } catch (error) {
-    console.log(error);
-
-    toast.error("Erro ao mover usuário");
+  async function movarUsariofun() {
+    try {
+      await moverusuario(usuariorecebido.id, equipesSelecionadas);
+      toast.success("Usuário movido com sucesso");
+      setmodalMoverMembro(false);
+    } catch (error) {
+      console.error(error);
+      toast.error("Erro ao mover usuário");
+    }
   }
-}
 
   async function carregarusuario(funcionarioId) {
     try {
       const usuario = await receberUsuarioPorId(funcionarioId);
       setUsuarioRecebido(usuario);
-
       setEquipesSelecionadas(usuario.idsEquipes || []);
-
       setmodalMoverMembro(true);
     } catch (error) {
       toast.error("Erro ao carregar usuário");
     }
-  }
-
-  async function carregarMembrosEquipe(equipeId) {
-    const membros = await receberMembrosEquipe(equipeId);
-    console.log(membros);
-    setMembrosEquipe(membros.funcionarios || []);
   }
 
   async function excluirMembro(funcionarioId) {
@@ -100,12 +92,9 @@ async function movarUsariofun() {
   }
 
   async function criarNovaEquipe() {
-    const equipeData = {
-      nomeEmpresa: nomeNovaEquipe
-    };
+    const equipeData = { nomeEmpresa: nomeNovaEquipe };
     await criarEquipe(equipeData);
     setmodalNovaEquipe(false);
-    // Recarregar equipes
     const dados = await receberEquipes();
     setListaEquipes(dados);
   }
@@ -113,7 +102,6 @@ async function movarUsariofun() {
   async function cadastroUsuario() {
     try {
       await criarFuncionario(colaborador);
-
       toast.success("Sucesso no cadastro do usuário");
       setEmail("");
       setSenha("");
@@ -121,7 +109,6 @@ async function movarUsariofun() {
       setNome("");
       setmodalNovoMembro(false);
       carregarMembrosEquipe(equipeAtual);
-
     } catch (erro) {
       toast.error("Erro no cadastro do usuário");
     }
@@ -148,7 +135,7 @@ async function movarUsariofun() {
         isOpen={isOpen}
         onClose={onClose}
         className="text-black m-90 max-h-2/3 overflow-y-auto"
-        width="w-full h-full">
+        width="w-full">
         <div className="p-4">
           {!modalMembros && (
             <>
@@ -170,16 +157,12 @@ async function movarUsariofun() {
                       options={[
                         {
                           label: "Editar",
-                          onClick: () => {
-
-                          }
+                          onClick: () => {},
                         },
                         {
                           label: "Excluir",
-                          onClick: () => {
-
-                          }
-                        }
+                          onClick: () => {},
+                        },
                       ]}
                     />
                   </div>
@@ -187,7 +170,7 @@ async function movarUsariofun() {
               </div>
             </>
           )}
-          {modalMembros && ( //modal de membros da equipe
+          {modalMembros && (
             <>
               <div className="flex justify-between items-center mb-4">
                 <button onClick={() => setmodalMembros(false)}>
@@ -205,52 +188,44 @@ async function movarUsariofun() {
               <button onClick={() => setmodalNovoMembro(true)} className="my-4 cursor-pointer"><p className="text-m font-semibold"><i className="bi bi-person"></i> Novo membro</p></button>
 
               <div className="flex flex-col">
-                {membrosFiltrados.map((membro, index) => (
+                {membrosFiltrados.map((membroItem, index) => (
                   <div key={index} className="flex justify-between items-center p-2 rounded hover:bg-[var(--cinzaclaro)]">
                     <p className="cursor-pointer flex-2 hover:bg-[var(--cinzaclaro)] p-1 rounded">
-
-                      <i className="bi bi-person px-1"></i> {membro.nome}
-
-
+                      <i className="bi bi-person px-1"></i> {membroItem.nome}
                     </p>
                     <ActionMenu className="flex-1 bg-[var(--bginput)] rounded"
-                      options={[{
-                        label: "mover para...",
-                        onClick: () => {
-                          carregarusuario(membro.id);
+                      options={[
+                        {
+                          label: "mover para...",
+                          onClick: () => carregarusuario(membroItem.id),
+                          className: "bg-[var(--bginput)] hover:bg-[var(--cinzaclaro)] hover:cursor-pointer text-[var(--preto)]",
                         },
-                        className: "bg-[var(--bginput)] hover:bg-[var(--cinzaclaro)] hover:cursor-pointer text-[var(--preto)]"
-                      },
-                      {
-                        label: "Editar",
-                        onClick: () => {
-                          setMembro(membro);
-                          setmodalEditarMembro(true);
-                          setEmailAtt(membro.email);
-                          setNomeAtt(membro.nome);
-                          setSenhaAtt(membro.senha);
+                        {
+                          label: "Editar",
+                          onClick: () => {
+                            setMembro(membroItem);
+                            setmodalEditarMembro(true);
+                            setEmailAtt(membroItem.email);
+                            setNomeAtt(membroItem.nome);
+                            setSenhaAtt(membroItem.senha);
+                          },
+                          className: "bg-[var(--bginput)] hover:bg-[var(--cinzaclaro)] hover:cursor-pointer text-[var(--preto)]",
                         },
-                        className: "bg-[var(--bginput)] hover:bg-[var(--cinzaclaro)] hover:cursor-pointer text-[var(--preto)]"
-                      },
-                      {
-                        label: "Excluir",
-                        onClick: () => {
-                          excluirMembro(membro.id);
+                        {
+                          label: "Excluir",
+                          onClick: () => excluirMembro(membroItem.id),
+                          className: "bg-[var(--bginput)] hover:bg-[var(--cinzaclaro)] hover:cursor-pointer text-[var(--preto)]",
                         },
-                        className: "bg-[var(--bginput)] hover:bg-[var(--cinzaclaro)] hover:cursor-pointer text-[var(--preto)]"
-                      }
                       ]}
                     />
                   </div>
-
-
                 ))}
-
               </div>
             </>
           )}
         </div>
       </Modal>
+
       <Modal //modal para criar nova equipe
         isOpen={modalNovaEquipe}
         onClose={() => setmodalNovaEquipe(false)}>
@@ -259,9 +234,7 @@ async function movarUsariofun() {
             value={nomeNovaEquipe}
             onChange={(e) => setNomeNovaEquipe(e.target.value)}
           />
-          <button className="bg-[var(--bgbutton)] text-[var(--branco)] hover:bg-[var(--bgbuttonhover)] hover:cursor-pointer px-4 py-2 rounded"
-            onClick={() => criarNovaEquipe()}
-          >Criar equipe</button>
+          <button className="modal-button w-full" onClick={() => criarNovaEquipe()}>Criar equipe</button>
         </div>
       </Modal>
 
@@ -270,47 +243,15 @@ async function movarUsariofun() {
         onClose={() => setmodalNovoMembro(false)}
         className="w-md">
         <div className="flex flex-col w-full items-center px-6">
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            className="border bg-[var(--cinzaclaro)] text-black border-gray-300 rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="text"
-            placeholder="Nome"
-            value={nome}
-            className="border text-black bg-[var(--cinzaclaro)] border-gray-300 rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onChange={(e) => setNome(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Senha"
-            value={senha}
-            className="border bg-[var(--cinzaclaro)] text-black border-gray-300 rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onChange={(e) => setSenha(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Confirmar senha"
-            value={confirmarSenha}
-            className="border bg-[var(--cinzaclaro)] text-black border-gray-300 rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onChange={(e) => setConfirmarSenha(e.target.value)}
-            required
-          />
-          {senha !== confirmarSenha && confirmarSenha !== "" ? (
-            <p className="text-red-500 text-sm">As senhas não coincidem</p>
-          ) : null}
-          <button onClick={() => cadastroUsuario()}
-            className="bg-[var(--bgbutton)] max-w-sm w-full text-[var(--branco)] hover:bg-[var(--bgbuttonhover)] hover:cursor-pointer my-2 px-4 py-2 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
-            disabled={senha !== confirmarSenha || email === "" || nome === "" || senha === "" || confirmarSenha === ""}
-          >Cadastrar</button>
+          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
+          <input type="text" placeholder="Nome" value={nome} onChange={(e) => setNome(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
+          <input type="password" placeholder="Senha" value={senha} onChange={(e) => setSenha(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
+          <input type="password" placeholder="Confirmar senha" value={confirmarSenha} onChange={(e) => setConfirmarSenha(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
+          {senha !== confirmarSenha && confirmarSenha !== "" ? (<p className="text-red-500 text-sm">As senhas não coincidem</p>) : null}
+          <button onClick={() => cadastroUsuario()} className="modal-button max-w-sm w-full my-2" disabled={senha !== confirmarSenha || email === "" || nome === "" || senha === "" || confirmarSenha === ""}>Cadastrar</button>
         </div>
       </Modal>
+
       <Modal //modal para mover membro para outra equipe
         isOpen={modalMoverMembro}
         onClose={() => setmodalMoverMembro(false)} className="text-black w-sm">
@@ -318,65 +259,25 @@ async function movarUsariofun() {
           <h2 className="text-xl font-bold mb-4">Mover para equipe:</h2>
           {listaEquipes.map((equipe) => (
             <label className="mb-2 cursor-pointer text-base" key={equipe.id}>
-              <input
-                type="checkbox"
-                value={equipe.id}
-                className="mr-2 accent-[var(--bgbutton)]"
-                checked={equipesSelecionadas.includes(equipe.id)}
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    setEquipesSelecionadas([
-                      ...equipesSelecionadas,
-                      equipe.id
-                    ]);
-                  } else {
-                    setEquipesSelecionadas(
-                      equipesSelecionadas.filter(id => id !== equipe.id)
-                    );
-                  }
-                }}
-              />
+              <input type="checkbox" value={equipe.id} className="mr-2 accent-[var(--bgbutton)]" checked={equipesSelecionadas.includes(equipe.id)} onChange={(e) => {
+                if (e.target.checked) setEquipesSelecionadas([...equipesSelecionadas, equipe.id]);
+                else setEquipesSelecionadas(equipesSelecionadas.filter(id => id !== equipe.id));
+              }} />
               {equipe.nomeEmpresa}
             </label>
           ))}
-          <button disabled={equipesSelecionadas.length === 0} className="bg-[var(--bgbutton)] max-w-sm w-full text-[var(--branco)] hover:bg-[var(--bgbuttonhover)] hover:cursor-pointer px-4 py-2 rounded disabled:bg-gray-400 disabled:cursor-not-allowed" 
-          onClick={() => movarUsariofun()}
-          >Salvar</button>
+          <button disabled={equipesSelecionadas.length === 0} className="modal-button max-w-sm w-full" onClick={() => movarUsariofun()}>Salvar</button>
         </div>
       </Modal>
+
       <Modal //modal para editar informações do membro
         isOpen={modalEditarMembro}
         onClose={() => setmodalEditarMembro(false)} className="w-md">
         <div className="flex flex-col w-full items-center px-6">
-          <input
-            type="email"
-            placeholder="Email"
-            value={emailAtt}
-            className="border bg-[var(--cinzaclaro)] text-black border-gray-300 rounded w-full my-2  py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onChange={(e) => setEmailAtt(e.target.value)}
-            required
-          />
-          <input
-            type="text"
-            placeholder="Nome"
-            value={nomeAtt}
-            className="border bg-[var(--cinzaclaro)] text-black border-gray-300 rounded w-full my-2  py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onChange={(e) => setNomeAtt(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Senha"
-            value={senhaAtt}
-            className="border bg-[var(--cinzaclaro)] text-black border-gray-300 rounded w-full my-2  py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onChange={(e) => setSenhaAtt(e.target.value)}
-            required
-          />
-
-          <button onClick={() => cadastroUsuario()}
-            className="bg-[var(--bgbutton)] max-w-sm w-full text-[var(--branco)] hover:bg-[var(--bgbuttonhover)] hover:cursor-pointer my-2 px-4 py-2 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
-            disabled={emailAtt === "" || nomeAtt === "" || senhaAtt === ""}
-          >Atualizar</button>
+          <input type="email" placeholder="Email" value={emailAtt} onChange={(e) => setEmailAtt(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
+          <input type="text" placeholder="Nome" value={nomeAtt} onChange={(e) => setNomeAtt(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
+          <input type="password" placeholder="Senha" value={senhaAtt} onChange={(e) => setSenhaAtt(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
+          <button onClick={() => cadastroUsuario()} className="modal-button max-w-sm w-full my-2" disabled={emailAtt === "" || nomeAtt === "" || senhaAtt === ""}>Atualizar</button>
         </div>
       </Modal>
     </>

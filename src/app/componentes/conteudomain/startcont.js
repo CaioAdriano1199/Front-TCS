@@ -35,7 +35,7 @@ useEffect(() => {
 }, []);
     return(
         <>
-           <Card className="flex-1 flex flex-col bg-gray-300 items-center justify-center w-full m-25">
+           <Card className="flex-1 flex flex-col bg-[var(--branco)] items-center justify-center w-full m-6 p-4 md:p-6">
         <input
           type="file"
           ref={inputRef}
@@ -44,16 +44,16 @@ useEffect(() => {
         />
 
 
-        <div className="flex flex-row text-2xl font-bold w-full h-full justify-between text-black gap-8">
-          <button className=" flex-1 bg-gray-500 hover:bg-gray-400 hover:cursor-pointer w-full h-full rounded-md max-w-1/2"
+        <div className="flex flex-col md:flex-row text-2xl font-bold w-full h-full justify-between text-[var(--preto)] gap-4">
+          <button className="flex-1 bg-[var(--bgbutton)] hover:bg-[var(--bgbuttonhover)] text-[var(--branco)] hover:cursor-pointer rounded-md min-h-[12rem] flex flex-col items-center justify-center gap-3 p-6"
             onClick={abrirSeletor}>
-            <h1 className="p-8">Adicionar arquivo</h1>
-            <i className="bi bi-file-earmark-arrow-up text-8xl"></i>
+            <h1 className="text-lg font-semibold">Adicionar arquivo</h1>
+            <i className="bi bi-file-earmark-arrow-up text-7xl"></i>
           </button>
-          <button className="flex-1 bg-gray-500 hover:bg-gray-400 hover:cursor-pointer w-full h-full rounded-md max-w-1/2"
+          <button className="flex-1 bg-[var(--bgbutton)] hover:bg-[var(--bgbuttonhover)] text-[var(--branco)] hover:cursor-pointer rounded-md min-h-[12rem] flex flex-col items-center justify-center gap-3 p-6"
           onClick={() => setmodalArquivo(true)}>
-            <h1 className="p-8">Selecionar arquivo</h1>
-            <i className="bi bi-file-earmark text-8xl"></i>
+            <h1 className="text-lg font-semibold">Selecionar arquivo</h1>
+            <i className="bi bi-file-earmark text-7xl"></i>
           </button>
         </div>
 

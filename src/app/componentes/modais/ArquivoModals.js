@@ -201,7 +201,7 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
           isOpen={isOpen}
           onClose={onClose}
           className=" m-90 max-h-2/3 overflow-y-auto"
-          width="w-full h-full">
+          width="w-full">
           <div className="p-4">
             {tipomodalarquivos === "raiz" && ( //modal de pastas raiz
               <>
@@ -299,8 +299,8 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
           onClose={() => setmodalNovaPasta(false)}
           className="text-black">
           <div className="flex flex-col items-center">
-            <input type="text" placeholder="Nome da nova pasta" className="border p-2 w-full mb-4" value={nomepasta} onChange={(e) => setNomePasta(e.target.value)} />
-            <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={criarNovaPasta}>Criar pasta</button>
+            <input type="text" placeholder="Nome da nova pasta" className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] shadow-sm rounded-md p-2 w-full mb-4" value={nomepasta} onChange={(e) => setNomePasta(e.target.value)} />
+            <button className="modal-button w-full" onClick={criarNovaPasta}>Criar pasta</button>
           </div>
         </Modal>
         <Modal
@@ -308,8 +308,8 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
           onClose={() => setmodalRenomearPasta(false)}
           className="text-black">
           <div className="flex flex-col items-center">
-            <input type="text" placeholder="Nome da pasta" className="border p-2 w-full mb-4" value={nomepasta} onChange={(e) => setNomePasta(e.target.value)} />
-            <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={renomearpasta}>Renomear pasta</button>
+            <input type="text" placeholder="Nome da pasta" className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] shadow-sm rounded-md p-2 w-full mb-4" value={nomepasta} onChange={(e) => setNomePasta(e.target.value)} />
+            <button className="modal-button w-full" onClick={renomearpasta}>Renomear pasta</button>
           </div>
         </Modal>
       </>

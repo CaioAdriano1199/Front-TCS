@@ -1,4 +1,4 @@
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -11,7 +11,11 @@ export async function criarPasta(novapasta) {
         "ngrok-skip-browser-warning": "true",
         Authorization: `Bearer ${localStorage.getItem("token")}`
       },
-      body: JSON.stringify(novapasta)
+      body: JSON.stringify({
+        nome: novapasta.nome,
+        parentPath: novapasta.parentPath || null,
+        caminhoEquipe: novapasta.caminhoEquipe
+      })
     });
 
     const data = await response.json();
@@ -24,8 +28,10 @@ export async function criarPasta(novapasta) {
 
     console.error("Erro da API:", data);
     toast.error(data.message || "Erro ao criar pasta. Tente novamente.");
+    return null;
   } catch (error) {
     console.error("Erro ao criar pasta:", error);
     toast.error("Erro ao criar pasta. Tente novamente.");
+    return null;
   }
 }

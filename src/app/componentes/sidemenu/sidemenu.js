@@ -16,29 +16,11 @@ export default function Sidemenu({ setPgc }) {
   const [modalArquivoAberto, setModalArquivoAberto] = useState(false);
 
   useEffect(() => {
-    async function carregar() {
-      const dados = await receberarquivos();
-      const subpastasFormatadas = (dados.subpastas || []).map((p) => ({
-        ...p,
-        tipo: "pasta",
-        dataUpload: p.dataCriacao
-      }));
-
-      const arquivosFormatados = (dados.arquivos || []).map((a) => ({
-        ...a,
-        tipo: "arquivo",
-        dataUpload: a.dataUpload
-      }));
-
-      setListaArquivos([...subpastasFormatadas, ...arquivosFormatados]);
-    }
-
     async function carregarEquipes() {
       const dados = await receberEquipes();
       setListaEquipes(dados);
     }
 
-    carregar();
     carregarEquipes();
 
 

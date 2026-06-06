@@ -1,26 +1,31 @@
- 
- const BASe_URL = process.env.NEXT_PUBLIC_API_URL;
- 
-export async function receberarquivos(folderId) {
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
+export async function receberarquivos(path) {
   try {
-    const resposta = await fetch(`${BASe_URL}/folders/content/${folderId}`, {
-      method: "GET",
+    if (!path) {
+      return { subpastas: [], arquivos: [] };
+    }
+
+    const resposta = await fetch(`${BASE_URL}/folders/content`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         "ngrok-skip-browser-warning": "true",
-        "Authorization": `Bearer ${localStorage.getItem("token")}`
-      }
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      },
+      body: JSON.stringify({ path })
     });
 
-    const dados = await resposta.json();
+    if (!resposta.ok) {
+      const errorData = await resposta.json();
+      console.error("Erro ao receber arquivos:", errorData);
+      return { subpastas: [], arquivos: [] };
+    }
 
+    const dados = await resposta.json();
     return dados;
-    console.log("Sucesso no cadastro do usuário");
   } catch (erro) {
     console.error("Erro:", erro);
+    return { subpastas: [], arquivos: [] };
   }
-    
-
-  
-}
+} 

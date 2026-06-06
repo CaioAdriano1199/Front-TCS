@@ -130,8 +130,10 @@ button:active, a.button:active, .btn:active {
   transform: translateY(0);
 }
 
-button[disabled], .btn[disabled], .btn.disabled {
-  opacity: 0.65;
+button[disabled], a.button[disabled], .btn[disabled], .btn.disabled {
+  background: var(--phgray);
+  color: var(--branco);
+  opacity: 1;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;

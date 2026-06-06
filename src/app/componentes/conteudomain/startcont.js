@@ -28,7 +28,7 @@ export default function StartContent() {
 useEffect(() => {
   async function carregar() {
     const dados = await receberarquivos();
-    setListaArquivos(dados);
+    setListaArquivos(Array.isArray(dados) ? dados : dados.arquivos || []);
   }
 
   carregar();

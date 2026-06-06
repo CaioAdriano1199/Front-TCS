@@ -162,7 +162,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
                       onClick={() => mostrarMembros(equipe.id)}
                     >
                       <i className="bi bi-people px-1"></i>
-                      {equipe.nomeEmpresa}
+                      {equipe.nomeEmpresa || equipe.nome}
                     </p>
                     <ActionMenu className="flex-1"
                       options={[
@@ -278,7 +278,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
                 if (e.target.checked) setEquipesSelecionadas([...equipesSelecionadas, equipe.id]);
                 else setEquipesSelecionadas(equipesSelecionadas.filter(id => id !== equipe.id));
               }} />
-              {equipe.nomeEmpresa}
+              {equipe.nomeEmpresa || equipe.nome}
             </label>
           ))}
           <button disabled={equipesSelecionadas.length === 0} className="modal-button max-w-sm w-full" onClick={() => movarUsariofun()}>Salvar</button>

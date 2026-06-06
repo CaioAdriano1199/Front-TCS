@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 import Modal from "../modal/modal";
 import ActionMenu from "../menudeacao/menudeacao";
 import { receberarquivos } from "../servico/receberarquivos";
-import { receberPastasRaiz } from "../servico/receberpastasraiz";
+import { receberEquipes } from "../servico/receberequipes";
 import { criarPasta } from "../servico/criarpasta";
 import toast from "react-hot-toast";
 import { uploadArquivo } from "../servico/uploadarquivo";
@@ -35,41 +35,65 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
   }
 
     async function abrirPastasRaiz() {
-      const dados = await receberPastasRaiz();
-      setListaPastasRaiz(dados);
+      const dados = await receberEquipes();
+      const equipesFormatadas = (dados || []).map((equipe) => ({
+        id: equipe.id,
+        nome: equipe.nomeEmpresa || equipe.nome,
+        path: equipe.caminho || equipe.caminhoBase || equipe.path
+      }));
+
+      setListaPastasRaiz(equipesFormatadas);
       setTipomodalarquivos("raiz");
       onOpen();
     }
 
     async function criarNovaPasta() {
-      const novaPastaData = { nome: nomepasta, parentId: historicoPastas.length > 0 ? historicoPastas[historicoPastas.length - 1].id : null };
+      if (!nomepasta.trim()) {
+        toast.error("Informe um nome para a nova pasta.");
+        return;
+      }
+
+      const currentFolder = historicoPastas[historicoPastas.length - 1];
+      if (!currentFolder?.path) {
+        toast.error("Selecione uma equipe antes de criar uma pasta.");
+        return;
+      }
+
+      const equipeRootPath = historicoPastas[0]?.path || currentFolder.path;
+      const novaPastaData = {
+        nome: nomepasta,
+        parentPath: currentFolder.path,
+        caminhoEquipe: equipeRootPath
+      };
+
       await criarPasta(novaPastaData);
       toast.success("Pasta criada com sucesso!");
       setmodalNovaPasta(false);
+      setNomePasta("");
 
-      const currentPasta = historicoPastas[historicoPastas.length - 1];
-      if (currentPasta) {
-        const dados = await receberarquivos(currentPasta.id);
-        const subpastasFormatadas = (dados.subpastas || []).map((p) => ({
-          ...p,
-          tipo: "pasta",
-          dataUpload: p.dataCriacao
-        }));
-        const arquivosFormatados = (dados.arquivos || []).map((a) => ({
-          ...a,
-          tipo: "arquivo",
-          dataUpload: a.dataUpload
-        }));
-        const tudo = [...subpastasFormatadas, ...arquivosFormatados];
-        setListaArquivos(tudo);
-      }
-
+      const dados = await receberarquivos(currentFolder.path);
+      const subpastasFormatadas = (dados.subpastas || []).map((p) => ({
+        ...p,
+        nome: p.name || p.nome,
+        tipo: "pasta",
+        dataUpload: p.dataCriacao
+      }));
+      const arquivosFormatados = (dados.arquivos || []).map((a) => ({
+        ...a,
+        tipo: "arquivo",
+        dataUpload: a.dataUpload
+      }));
+      const tudo = [...subpastasFormatadas, ...arquivosFormatados];
+      setListaArquivos(tudo);
     }
 
     async function mostrarArquivosPasta(pasta) {
-      const dados = await receberarquivos(pasta.id);
+      if (!pasta?.path) return;
+
+      const dados = await receberarquivos(pasta.path);
       const subpastasFormatadas = (dados.subpastas || []).map((p) => ({
         ...p,
+        nome: p.name || p.nome,
         tipo: "pasta",
         dataUpload: p.dataCriacao
       }));
@@ -101,10 +125,11 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
         return;
       }
 
-      const dados = await receberarquivos(pastaAnterior.id);
+      const dados = await receberarquivos(pastaAnterior.path);
 
       const subpastasFormatadas = (dados.subpastas || []).map((p) => ({
         ...p,
+        nome: p.name || p.nome,
         tipo: "pasta",
         dataUpload: p.dataCriacao
       }));
@@ -127,16 +152,19 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
       const file = event.target.files?.[0];
       if (!file) return;
 
+      const currentFolder = historicoPastas[historicoPastas.length - 1];
+      if (!currentFolder?.path) {
+        toast.error("Selecione uma pasta antes de enviar o arquivo.");
+        return;
+      }
 
       setArquivonovo(file);
+      await uploadArquivo(currentFolder.path, file);
 
-
-      await uploadArquivo(historicoPastas[historicoPastas.length - 1].id, file);
-
-
-      const dados = await receberarquivos(historicoPastas[historicoPastas.length - 1].id);
+      const dados = await receberarquivos(currentFolder.path);
       const subpastasFormatadas = (dados.subpastas || []).map((p) => ({
         ...p,
+        nome: p.name || p.nome,
         tipo: "pasta",
         dataUpload: p.dataCriacao
       }));

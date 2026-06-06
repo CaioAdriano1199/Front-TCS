@@ -50,9 +50,9 @@ export default function Modal({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Cabeçalho */}
-        <div className="flex items-center justify-between p-4">
+        <div className="flex items-center justify-between gap-4 p-4">
           {title && (
-            <h3 className="text-xl  text-center w-full">
+            <h3 className="text-xl font-semibold text-[var(--cinzaescuro)]">
               {title}
             </h3>
           )}
@@ -60,7 +60,8 @@ export default function Modal({
           {showCloseButton && (
             <button
               onClick={onClose}
-              className="absolute right-4 top-4 text-[var(--preto)] text-xl font-bold hover:text-[var(--phgray)] hover:cursor-pointer"
+              className="text-red-600 text-xl font-bold hover:text-red-500 hover:cursor-pointer"
+              aria-label="Fechar modal"
             >
               X
             </button>

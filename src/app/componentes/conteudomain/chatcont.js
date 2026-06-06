@@ -9,23 +9,24 @@ export default function ChatCont() {
   const [primeiraMensagem, setPrimeiraMensagem] = useState(true);
 
   async function baixarArquivo(documento) {
-    if (!documento?.document_id) {
+    const path = documento?.path || documento?.arquivo_path || documento?.filePath;
+    if (!path) {
+      console.error("Caminho do arquivo não encontrado para download.");
       return;
     }
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/arquivos/download/${documento.document_id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "true",
-            Authorization: `Bearer ${token}`
-          }
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/arquivos/download?path=${encodeURIComponent(path)}`;
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true",
+          Authorization: `Bearer ${token}`
         }
-      );
+      });
 
       if (!response.ok) {
         throw new Error(`Erro ao baixar arquivo: ${response.status}`);

@@ -20,6 +20,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
   const [modalMoverMembro, setmodalMoverMembro] = useState(false);
   const [modalEditarMembro, setmodalEditarMembro] = useState(false);
   const [nomeNovaEquipe, setNomeNovaEquipe] = useState("");
+  const [caminhoBase, setCaminhoBase] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
@@ -92,9 +93,19 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
   }
 
   async function criarNovaEquipe() {
-    const equipeData = { nomeEmpresa: nomeNovaEquipe };
+    if (!nomeNovaEquipe.trim()) {
+      toast.error("Por favor, informe o nome da empresa");
+      return;
+    }
+    if (!caminhoBase.trim()) {
+      toast.error("Por favor, informe o caminho da pasta raiz");
+      return;
+    }
+    const equipeData = { nomeEmpresa: nomeNovaEquipe, caminhoBase: caminhoBase };
     await criarEquipe(equipeData);
     setmodalNovaEquipe(false);
+    setNomeNovaEquipe("");
+    setCaminhoBase("");
     const dados = await receberEquipes();
     setListaEquipes(dados);
   }
@@ -230,11 +241,15 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
         isOpen={modalNovaEquipe}
         onClose={() => setmodalNovaEquipe(false)}>
         <div className="flex flex-col items-center">
-          <input type="text" placeholder="Nome da nova equipe" className="border-none bg-[var(--cinzaclaro)] focus:outline-none rounded p-2 w-full mb-4"
+          <input type="text" placeholder="Nome da empresa" className="border-none bg-[var(--cinzaclaro)] focus:outline-none rounded p-2 w-full mb-4"
             value={nomeNovaEquipe}
             onChange={(e) => setNomeNovaEquipe(e.target.value)}
           />
-          <button className="modal-button w-full" onClick={() => criarNovaEquipe()}>Criar equipe</button>
+          <input type="text" placeholder="Caminho da pasta raiz" className="border-none bg-[var(--cinzaclaro)] focus:outline-none rounded p-2 w-full mb-4"
+            value={caminhoBase}
+            onChange={(e) => setCaminhoBase(e.target.value)}
+          />
+          <button className="modal-button w-full" onClick={() => criarNovaEquipe()} disabled={!nomeNovaEquipe.trim() || !caminhoBase.trim()}>Criar equipe</button>
         </div>
       </Modal>
 

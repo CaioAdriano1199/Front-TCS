@@ -11,7 +11,11 @@ export async function criarEquipe(equipeData) {
         "ngrok-skip-browser-warning": "true",
         Authorization: `Bearer ${localStorage.getItem("token")}`
       },
-      body: JSON.stringify(equipeData)
+      body: JSON.stringify({
+        nomeEmpresa: equipeData.nome,
+        caminhoBase: equipeData.caminhoBase
+      }
+      )
     });
 
 

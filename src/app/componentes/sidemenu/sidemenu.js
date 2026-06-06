@@ -36,10 +36,27 @@ export default function Sidemenu({ setPgc }) {
         <h1 className="p-4 text-[var(--branco)] text-2xl font-bold">
           Relic
         </h1>
-        <div className="flex-1">
+        <div className="flex-1 overflow-y-auto">
+          <div className="px-4 py-2">
+            <h2 className="text-lg text-[var(--branco)] font-bold mb-3">Documentos</h2>
+            <div className="space-y-2">
+              {listaEquipes.map((equipe) => (
+                <button
+                  key={equipe.id}
+                  onClick={() => {
+                    setModalArquivoAberto(true);
+                  }}
+                  className="w-full text-left px-3 py-2 rounded hover:bg-[var(--bgbuttonhover)] transition-colors flex items-center gap-2 text-sm font-medium"
+                >
+                  <i className="bi bi-folder"></i>
+                  <span className="truncate">{equipe.nomeEmpresa || equipe.nome}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
         
         <ArquivoModals listaArquivos={listaArquivos} setListaArquivos={setListaArquivos} isOpen={modalArquivoAberto} onClose={() => setModalArquivoAberto(false)} onOpen={() => setModalArquivoAberto(true)} />
-       </div>
         <div className="mt-auto text-sm py-2 text-gray-400">
           <EquipeModals URL_BASE={URL_BASE} isAdmin={isAdmin} listaEquipes={listaEquipes} setListaEquipes={setListaEquipes} isOpen={modalEquipeAberto} onClose={() => setModalEquipeAberto(false)} onOpen={() => setModalEquipeAberto(true)} />
           

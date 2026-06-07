@@ -209,13 +209,12 @@ input:focus, textarea:focus, select:focus {
 .modal-button {
   background:var(--bgbutton);
   color: var(--branco);
-  border: 1px solid color-mix(in srgb, var(--bgbutton) 30%, var(--background));
   padding: 0.55rem 0.9rem;
   border-radius: var(--radius-md);
 }
 
 .modal-button:hover {
-  background: var(--cinzaclaro);
+  background: var(--buttonhover);
 }
 
 .modal-button:disabled {

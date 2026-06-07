@@ -223,12 +223,12 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
         <Modal //modal de arquivos
           isOpen={isOpen}
           onClose={onClose}
+          title="Lista de Arquivos"
           className=" m-90 max-h-2/3 overflow-y-auto"
           width="w-full">
           <div className="p-4">
             {tipomodalarquivos === "raiz" && ( //modal de pastas raiz
               <>
-                <h2 className="text-2xl font-bold mb-2">Lista de Arquivos</h2>
                 <div className="my-4">
                   <button onClick={() => setOrdem(ordem === "asc" ? "desc" : "asc")}
 
@@ -255,7 +255,6 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
                   <i className="bi bi-arrow-left text-lg hover:cursor-pointer hover:text-[var(--phgray)]"></i>
                 </button>
                 <div className="mb-4">
-                  <h2 className="text-2xl font-bold mb-2">Lista de Arquivos</h2>
                   <div className="my-4">
                     <button onClick={() => setmodalNovaPasta(true)} className="my-4 mr-4 cursor-pointer"><p className="text-m font-semibold"><i className="bi bi-folder"></i> Nova pasta</p></button>
                     <button onClick={() => abrirSeletor()} className="my-4 mr-4 cursor-pointer"><p className="text-m font-semibold"><i className="bi bi-file-earmark"></i> Novo arquivo</p></button>
@@ -320,6 +319,7 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
         <Modal //modal para criar nova pasta
           isOpen={modalNovapasta}
           onClose={() => setmodalNovaPasta(false)}
+          title="Nova Pasta"
           className="text-black">
           <div className="flex flex-col items-center">
             <input type="text" placeholder="Nome da nova pasta" className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] shadow-sm rounded-md p-2 w-full mb-4" value={nomepasta} onChange={(e) => setNomePasta(e.target.value)} />
@@ -329,6 +329,7 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
         <Modal
           isOpen={modalRenomearpasta}
           onClose={() => setmodalRenomearPasta(false)}
+          title="Renomear Pasta"
           className="text-black">
           <div className="flex flex-col items-center">
             <input type="text" placeholder="Nome da pasta" className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] shadow-sm rounded-md p-2 w-full mb-4" value={nomepasta} onChange={(e) => setNomePasta(e.target.value)} />

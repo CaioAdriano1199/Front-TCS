@@ -145,12 +145,12 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
       <Modal //modal de equipes
         isOpen={isOpen}
         onClose={onClose}
+        title={modalMembros ? "Membros" : "Lista de Equipes"}
         className="text-black m-90 max-h-2/3 overflow-y-auto"
         width="w-full">
         <div className="p-4">
           {!modalMembros && (
             <>
-              <h2 className="text-2xl font-bold mb-2">Lista de Equipes</h2>
               <div className="my-4">
                 <button onClick={() => setmodalNovaEquipe(true)} className="my-4 mr-4 cursor-pointer"><p className="text-m font-semibold"><i className="bi bi-people"></i> Nova equipe</p></button>
               </div>
@@ -195,7 +195,6 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
                   onChange={(e) => setBusca(e.target.value)}
                 />
               </div>
-              <h2 className="text-2xl font-bold mb-2 ">Membros</h2>
               <button onClick={() => setmodalNovoMembro(true)} className="my-4 cursor-pointer"><p className="text-m font-semibold"><i className="bi bi-person"></i> Novo membro</p></button>
 
               <div className="flex flex-col">
@@ -239,7 +238,8 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
 
       <Modal //modal para criar nova equipe
         isOpen={modalNovaEquipe}
-        onClose={() => setmodalNovaEquipe(false)}>
+        onClose={() => setmodalNovaEquipe(false)}
+        title="Nova Equipe">
         <div className="flex flex-col items-center">
           <input type="text" placeholder="Nome da empresa" className="border-none bg-[var(--cinzaclaro)] focus:outline-none rounded p-2 w-full mb-4"
             value={nomeNovaEquipe}
@@ -256,6 +256,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
       <Modal //modal para adicionar novo membro a equipe
         isOpen={modalNovoMembro}
         onClose={() => setmodalNovoMembro(false)}
+        title="Novo Membro"
         className="w-md">
         <div className="flex flex-col w-full items-center px-6">
           <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
@@ -269,9 +270,8 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
 
       <Modal //modal para mover membro para outra equipe
         isOpen={modalMoverMembro}
-        onClose={() => setmodalMoverMembro(false)} className="text-black w-sm">
-        <div className="flex flex-col items-start px-6">
-          <h2 className="text-xl font-bold mb-4">Mover para equipe:</h2>
+        title="Mover para equipe"
+        className="text-black w-sm"
           {listaEquipes.map((equipe) => (
             <label className="mb-2 cursor-pointer text-base" key={equipe.id}>
               <input type="checkbox" value={equipe.id} className="mr-2 accent-[var(--bgbutton)]" checked={equipesSelecionadas.includes(equipe.id)} onChange={(e) => {
@@ -288,7 +288,9 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
       <Modal //modal para editar informações do membro
         isOpen={modalEditarMembro}
         onClose={() => setmodalEditarMembro(false)} className="w-md">
-        <div className="flex flex-col w-full items-center px-6">
+        <div className="flex flex-col w-full items-
+        title="Editar Membro"
+       center px-6">
           <input type="email" placeholder="Email" value={emailAtt} onChange={(e) => setEmailAtt(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
           <input type="text" placeholder="Nome" value={nomeAtt} onChange={(e) => setNomeAtt(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
           <input type="password" placeholder="Senha" value={senhaAtt} onChange={(e) => setSenhaAtt(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />

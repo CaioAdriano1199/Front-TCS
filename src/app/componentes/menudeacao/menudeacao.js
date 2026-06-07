@@ -55,8 +55,7 @@ export default function ActionMenu({ options = [] }) {
                   opt.onClick();
                   setOpen(false);
                 }}
-                className={`w-full text-left px-4 py-2 ${opt.className || "text-black hover:bg-gray-100 rounded"
-                  }`}
+                className={`action-menu-option ${opt.className || ""}`}
               >
                 {opt.label}
               </button>

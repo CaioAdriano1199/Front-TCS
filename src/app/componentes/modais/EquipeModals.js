@@ -270,8 +270,10 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
 
       <Modal //modal para mover membro para outra equipe
         isOpen={modalMoverMembro}
+        onClose={() => setmodalMoverMembro(false)}
         title="Mover para equipe"
-        className="text-black w-sm"
+        className="text-black w-sm">
+        <div className="flex flex-col items-start px-6">
           {listaEquipes.map((equipe) => (
             <label className="mb-2 cursor-pointer text-base" key={equipe.id}>
               <input type="checkbox" value={equipe.id} className="mr-2 accent-[var(--bgbutton)]" checked={equipesSelecionadas.includes(equipe.id)} onChange={(e) => {
@@ -287,10 +289,10 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
 
       <Modal //modal para editar informações do membro
         isOpen={modalEditarMembro}
-        onClose={() => setmodalEditarMembro(false)} className="w-md">
-        <div className="flex flex-col w-full items-
+        onClose={() => setmodalEditarMembro(false)}
         title="Editar Membro"
-       center px-6">
+        className="w-md">
+        <div className="flex flex-col w-full items-center px-6">
           <input type="email" placeholder="Email" value={emailAtt} onChange={(e) => setEmailAtt(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
           <input type="text" placeholder="Nome" value={nomeAtt} onChange={(e) => setNomeAtt(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
           <input type="password" placeholder="Senha" value={senhaAtt} onChange={(e) => setSenhaAtt(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />

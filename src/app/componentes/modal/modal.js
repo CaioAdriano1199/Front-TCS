@@ -60,7 +60,7 @@ export default function Modal({
           {showCloseButton && (
             <button
               onClick={onClose}
-              className="flex-shrink-0 text-red-600 text-xl font-bold hover:bg-red-100 rounded p-1 hover:cursor-pointer transition-colors"
+              className="close-modal-button flex-shrink-0 text-red-600 text-xl font-bold hover:bg-red-100 rounded p-1 hover:cursor-pointer transition-colors"
               aria-label="Fechar modal"
             >
               X

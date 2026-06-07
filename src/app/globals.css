@@ -14,7 +14,7 @@
   --bgazulescuro:#02193C;
   --bgazulmescuro:#073675;
   --phgray: rgba(87, 89, 94, 0.5);
-  --azultransp: rgba(16,86,178, 0.03);
+  --azultransp: rgba(16, 86, 178, 0.03);
   --cinzaclaro:#a0a1a7;
   --cinzaescuro:#37383B;
   --preto:#191A1C;
@@ -128,6 +128,20 @@ button:hover, a.button:hover, .btn:hover {
 
 button:active, a.button:active, .btn:active {
   transform: translateY(0);
+  background: var(--bgbuttonhover);
+}
+
+button.close-modal-button {
+  background: transparent !important;
+  color: #dc2626 !important;
+}
+
+button.close-modal-button:hover {
+  background: rgba(220, 38, 38, 0.12) !important;
+}
+
+button.close-modal-button:active {
+  background: rgba(220, 38, 38, 0.18) !important;
 }
 
 button[disabled], a.button[disabled], .btn[disabled], .btn.disabled {

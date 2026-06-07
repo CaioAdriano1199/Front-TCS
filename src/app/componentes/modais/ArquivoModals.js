@@ -323,7 +323,7 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
           className="text-black">
           <div className="flex flex-col items-center">
             <input type="text" placeholder="Nome da nova pasta" className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] shadow-sm rounded-md p-2 w-full mb-4" value={nomepasta} onChange={(e) => setNomePasta(e.target.value)} />
-            <button className="modal-button w-full" onClick={criarNovaPasta}>Criar pasta</button>
+            <button className=" max-w-sm w-full my-2" onClick={criarNovaPasta}>Criar pasta</button>
           </div>
         </Modal>
         <Modal
@@ -333,7 +333,7 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
           className="text-black">
           <div className="flex flex-col items-center">
             <input type="text" placeholder="Nome da pasta" className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] shadow-sm rounded-md p-2 w-full mb-4" value={nomepasta} onChange={(e) => setNomePasta(e.target.value)} />
-            <button className="modal-button w-full" onClick={renomearpasta}>Renomear pasta</button>
+            <button className=" w-full" onClick={renomearpasta}>Renomear pasta</button>
           </div>
         </Modal>
       </>

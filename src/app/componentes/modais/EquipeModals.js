@@ -249,7 +249,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
             value={caminhoBase}
             onChange={(e) => setCaminhoBase(e.target.value)}
           />
-          <button className="modal-button w-full" onClick={() => criarNovaEquipe()} disabled={!nomeNovaEquipe.trim() || !caminhoBase.trim()}>Criar equipe</button>
+          <button className=" max-w-sm w-full my-2" onClick={() => criarNovaEquipe()} disabled={!nomeNovaEquipe.trim() || !caminhoBase.trim()}>Criar equipe</button>
         </div>
       </Modal>
 
@@ -264,7 +264,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
           <input type="password" placeholder="Senha" value={senha} onChange={(e) => setSenha(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
           <input type="password" placeholder="Confirmar senha" value={confirmarSenha} onChange={(e) => setConfirmarSenha(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
           {senha !== confirmarSenha && confirmarSenha !== "" ? (<p className="text-red-500 text-sm">As senhas não coincidem</p>) : null}
-          <button onClick={() => cadastroUsuario()} className="modal-button max-w-sm w-full my-2" disabled={senha !== confirmarSenha || email === "" || nome === "" || senha === "" || confirmarSenha === ""}>Cadastrar</button>
+          <button onClick={() => cadastroUsuario()} className=" max-w-sm w-full my-2" disabled={senha !== confirmarSenha || email === "" || nome === "" || senha === "" || confirmarSenha === ""}>Cadastrar</button>
         </div>
       </Modal>
 
@@ -283,7 +283,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
               {equipe.nomeEmpresa || equipe.nome}
             </label>
           ))}
-          <button disabled={equipesSelecionadas.length === 0} className="modal-button max-w-sm w-full" onClick={() => movarUsariofun()}>Salvar</button>
+          <button disabled={equipesSelecionadas.length === 0} className=" max-w-sm w-full" onClick={() => movarUsariofun()}>Salvar</button>
         </div>
       </Modal>
 
@@ -296,7 +296,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
           <input type="email" placeholder="Email" value={emailAtt} onChange={(e) => setEmailAtt(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
           <input type="text" placeholder="Nome" value={nomeAtt} onChange={(e) => setNomeAtt(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
           <input type="password" placeholder="Senha" value={senhaAtt} onChange={(e) => setSenhaAtt(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
-          <button onClick={() => cadastroUsuario()} className="modal-button max-w-sm w-full my-2" disabled={emailAtt === "" || nomeAtt === "" || senhaAtt === ""}>Atualizar</button>
+          <button onClick={() => cadastroUsuario()} className=" max-w-sm w-full my-2" disabled={emailAtt === "" || nomeAtt === "" || senhaAtt === ""}>Atualizar</button>
         </div>
       </Modal>
     </>

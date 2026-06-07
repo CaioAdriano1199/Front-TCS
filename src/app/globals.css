@@ -132,8 +132,8 @@ button:active, a.button:active, .btn:active {
 }
 
 button.close-modal-button {
-  background: transparent !important;
-  color: #dc2626 !important;
+  background: #dc2626 !important;
+  color: var(--branco) !important;
 }
 
 button.close-modal-button:hover {
@@ -207,8 +207,8 @@ input:focus, textarea:focus, select:focus {
 }
 
 .modal-button {
-  background: color-mix(in srgb, var(--bgbutton) 12%, var(--background));
-  color: var(--bgbutton);
+  background:var(--bgbutton);
+  color: var(--white);
   border: 1px solid color-mix(in srgb, var(--bgbutton) 30%, var(--background));
   padding: 0.55rem 0.9rem;
   border-radius: var(--radius-md);

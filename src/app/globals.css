@@ -137,7 +137,7 @@ button.close-modal-button {
 }
 
 button.close-modal-button:hover {
-  background: rgba(220, 38, 38, 0.12) !important;
+  background: #c34646!important;
 }
 
 button.close-modal-button:active {
@@ -208,14 +208,14 @@ input:focus, textarea:focus, select:focus {
 
 .modal-button {
   background:var(--bgbutton);
-  color: var(--white);
+  color: var(--branco);
   border: 1px solid color-mix(in srgb, var(--bgbutton) 30%, var(--background));
   padding: 0.55rem 0.9rem;
   border-radius: var(--radius-md);
 }
 
 .modal-button:hover {
-  background: color-mix(in srgb, var(--bgbutton) 16%, var(--background));
+  background: var(--cinzaclaro);
 }
 
 .modal-button:disabled {

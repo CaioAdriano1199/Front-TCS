@@ -108,7 +108,7 @@ export default function ChatCont() {
                 }
               }}
               onChange={(e) => setTexto(e.target.value)}
-              placeholder="Digite uma mensagem..."
+              placeholder="Localize o relatório de alta da UTI da semana passada..."
               className="resize-none flex-1 p-2 rounded-xl border-transparent focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] bg-[var(--branco)] resize-none"
             />
             <button

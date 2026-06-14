@@ -29,7 +29,6 @@ export async function criarEquipe(equipeData) {
       },
       body: JSON.stringify({
         nomeEmpresa: equipeData.nomeEmpresa,
-        idUser,
         caminhoBase: equipeData.caminhoBase
       })
     });

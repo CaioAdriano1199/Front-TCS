@@ -7,6 +7,8 @@ export default function ChatCont() {
   const [mensagens, setMensagens] = useState([]);
   const [texto, setTexto] = useState("");
   const [primeiraMensagem, setPrimeiraMensagem] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   async function baixarArquivo(documento) {
     try {
@@ -77,6 +79,8 @@ export default function ChatCont() {
     const textoenviado = texto;
 
     setTexto("");
+    setLoading(true);
+    setError(null);
 
     try {
       const resposta = await respostadaia(textoenviado);
@@ -90,11 +94,10 @@ export default function ChatCont() {
       let textoFinal = textoResposta;
       if ((!textoFinal || String(textoFinal).trim() === "") && Array.isArray(documentosResposta) && documentosResposta.length > 0) {
         const textosDocs = documentosResposta
-          .map(d => d.chunk_text || d.chunkText || d.text || d.content || d.arquivo_nome || d.arquivo_nome)
+          .map(d => d.chunk_text || d.chunkText || d.text || d.content || d.arquivo_nome)
           .filter(Boolean);
 
         if (textosDocs.length > 0) {
-          // usar primeiro trecho e truncar para 1200 caracteres
           textoFinal = textosDocs.join('\n\n').slice(0, 1200) + (textosDocs.join('\n\n').length > 1200 ? '...' : '');
         }
       }
@@ -107,9 +110,18 @@ export default function ChatCont() {
       };
 
       setMensagens((prev) => [...prev, novaMensagemIA]);
-
-    } catch (error) {
-      console.error("Erro ao obter resposta da IA:", error);
+    } catch (err) {
+      console.error("Erro ao obter resposta da IA:", err);
+      setError("Não foi possível buscar a resposta. Tente novamente.");
+      const novaMensagemErro = {
+        id: crypto.randomUUID(),
+        texto: "Não foi possível buscar a resposta.",
+        autor: "ia",
+        documentos: []
+      };
+      setMensagens((prev) => [...prev, novaMensagemErro]);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -128,8 +140,8 @@ export default function ChatCont() {
               type="text"
               value={texto}
               rows={1}
-
               onKeyDown={(e) => {
+                if (loading) return;
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
                   setPrimeiraMensagem(false);
@@ -142,12 +154,14 @@ export default function ChatCont() {
             />
             <button
               onClick={() => {
+                if (loading) return;
                 setPrimeiraMensagem(false);
                 enviarMensagem();
               }}
-              className="bg-[var(--bgbutton)] text-[var(--branco)] px-3 rounded-full hover:bg-[var(--bgbuttonhover)] transition-colors duration-300 hover:cursor-pointer"
+              disabled={loading}
+              className={`px-3 rounded-full transition-colors duration-300 ${loading ? 'bg-gray-400 text-white cursor-not-allowed' : 'bg-[var(--bgbutton)] text-[var(--branco)] hover:bg-[var(--bgbuttonhover)] hover:cursor-pointer'}`}
             >
-              <i className="bi bi-send"></i>
+              {loading ? <i className="bi bi-arrow-repeat animate-spin"></i> : <i className="bi bi-send"></i>}
             </button>
           </div>
         </div>
@@ -155,6 +169,9 @@ export default function ChatCont() {
         <>
           {/* 📩 Lista de mensagens */}
           <div className="flex flex-1 flex-col gap-3 overflow-hidden mb-4">
+            {error && (
+              <div className="text-red-600 bg-red-100 p-2 rounded mb-2">{error}</div>
+            )}
             <div className="w-full overflow-y-auto pr-2" style={{ maxHeight: '60vh' }}>
               {mensagens.map((msg) => (
                 <div
@@ -196,6 +213,7 @@ export default function ChatCont() {
               rows={1}
 
               onKeyDown={(e) => {
+                if (loading) return;
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
                   enviarMensagem();
@@ -207,10 +225,11 @@ export default function ChatCont() {
             />
 
             <button
-              onClick={enviarMensagem}
-              className="bg-[var(--bgbutton)] text-white rounded-full px-3 hover:bg-[var(--bgbuttonhover)] transition-colors duration-300 hover:cursor-pointer"
+              onClick={() => { if (!loading) enviarMensagem(); }}
+              disabled={loading}
+              className={`rounded-full px-3 transition-colors duration-300 ${loading ? 'bg-gray-400 text-white cursor-not-allowed' : 'bg-[var(--bgbutton)] text-white hover:bg-[var(--bgbuttonhover)] hover:cursor-pointer'}`}
             >
-              <i className="bi bi-send"></i>
+              {loading ? <i className="bi bi-arrow-repeat animate-spin"></i> : <i className="bi bi-send"></i>}
             </button>
           </div>
         </>

@@ -191,7 +191,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
                       options={[
                         {
                           label: "Excluir",
-                          onClick: () => {setEquipeParaExcluir(equipe.id); setModalExcluirEquipe(true);},
+                          onClick: () => {setEquipeParaExcluir(equipe.idEmpresa); setModalExcluirEquipe(true);},
                         },
                       ]}
                     />

@@ -127,7 +127,7 @@ async function baixarArquivo(documento) {
 
   return (
 
-    <div className="flex text-black flex-col min-h-screen w-full p-4 md:p-6 max-w-3xl mx-auto">
+    <div className="flex text-black flex-col min-h-screen w-full p-4 md:p-6 max-w-3xl mx-auto overflow-hidden">
 
       {primeiraMensagem ? (
 

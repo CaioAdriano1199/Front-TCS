@@ -5,6 +5,7 @@ import Card from "../card/card";
 import Sidemenu from "../sidemenu/sidemenu";
 import Modal from "../modal/modal";
 import { receberarquivos } from "../servico/receberarquivos";
+import { receberEquipes } from "../servico/receberequipes";
 
 export default function StartContent() {
       const [arquivonovo, setArquivonovo] = useState(null);
@@ -27,7 +28,9 @@ export default function StartContent() {
 
 useEffect(() => {
   async function carregar() {
-    const dados = await receberarquivos();
+    const equipes = await receberEquipes();
+    const rootPath = (equipes?.[0]?.caminho || equipes?.[0]?.caminhoBase || equipes?.[0]?.path || "");
+    const dados = await receberarquivos(rootPath);
     setListaArquivos(Array.isArray(dados) ? dados : dados.arquivos || []);
   }
 

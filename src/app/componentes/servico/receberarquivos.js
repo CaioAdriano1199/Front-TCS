@@ -1,11 +1,7 @@
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export async function receberarquivos(path) {
+export async function receberarquivos(path = "") {
   try {
-    if (!path) {
-      return { subpastas: [], arquivos: [] };
-    }
-
     const resposta = await fetch(`${BASE_URL}/folders/content`, {
       method: "POST",
       headers: {

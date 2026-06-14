@@ -127,7 +127,7 @@ async function baixarArquivo(documento) {
 
   return (
 
-    <div className="flex text-black flex-col min-h-screen w-full p-4 md:p-6 max-w-full mx-auto">
+    <div className="flex text-black flex-col min-h-screen w-full p-4 md:p-6 max-w-3xl mx-auto">
 
       {primeiraMensagem ? (
 
@@ -168,11 +168,11 @@ async function baixarArquivo(documento) {
       ) : (
         <>
           {/* 📩 Lista de mensagens */}
-          <div className="flex flex-1 flex-col gap-3 overflow-hidden mb-4">
+          <div className="flex flex-1 flex-col gap-3 overflow-hidden">
             {error && (
               <div className="text-red-600 bg-red-100 p-2 rounded mb-2">{error}</div>
             )}
-            <div className="w-full overflow-y-auto pr-2" style={{ maxHeight: '60vh' }}>
+            <div className="w-full flex-1 overflow-y-auto pr-2">
               {mensagens.map((msg) => (
                 <div
                   key={msg.id}

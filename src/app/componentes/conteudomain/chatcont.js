@@ -70,9 +70,22 @@ export default function ChatCont() {
 
       const documentosResposta = resposta?.sources || resposta?.documents || resposta?.results?.sources || resposta?.data?.sources || [];
 
+      // Se não houver texto da IA, usar trecho(s) dos documentos como fallback
+      let textoFinal = textoResposta;
+      if ((!textoFinal || String(textoFinal).trim() === "") && Array.isArray(documentosResposta) && documentosResposta.length > 0) {
+        const textosDocs = documentosResposta
+          .map(d => d.chunk_text || d.chunkText || d.text || d.content || d.arquivo_nome || d.arquivo_nome)
+          .filter(Boolean);
+
+        if (textosDocs.length > 0) {
+          // usar primeiro trecho e truncar para 1200 caracteres
+          textoFinal = textosDocs.join('\n\n').slice(0, 1200) + (textosDocs.join('\n\n').length > 1200 ? '...' : '');
+        }
+      }
+
       const novaMensagemIA = {
         id: crypto.randomUUID(),
-        texto: textoResposta,
+        texto: textoFinal || "Nenhuma resposta encontrada",
         autor: "ia",
         documentos: Array.isArray(documentosResposta) ? documentosResposta : []
       };

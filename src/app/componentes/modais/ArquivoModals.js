@@ -63,7 +63,7 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
   // Faz download direto a partir do modal usando a URL base fixa
   function downloadDirect(path, nome) {
     if (!path) return;
-    const url = `${URL_BASE}/arquivos/download?path=${encodeURIComponent(path)}`;
+    const url = `${BASE_URL}/arquivos/download?path=${encodeURIComponent(path)}`;
     const anchor = document.createElement("a");
     anchor.href = url;
     anchor.target = "_blank";

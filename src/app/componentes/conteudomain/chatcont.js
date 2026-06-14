@@ -12,52 +12,52 @@ export default function ChatCont() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-async function baixarArquivo(documento) {
-  try {
-    const path =
-      documento?.path ||
-      documento?.arquivo_path ||
-      documento?.filePath;
+  async function baixarArquivo(documento) {
+    try {
+      const path =
+        documento?.path ||
+        documento?.arquivo_path ||
+        documento?.filePath;
 
-    if (!path) {
-      toast.error("Arquivo não encontrado.");
-      return;
+      if (!path) {
+        toast.error("Arquivo não encontrado.");
+        return;
+      }
+
+      const {
+        blob,
+        contentDisposition
+      } = await downloadArquivo(path);
+
+      let nomeArquivo =
+        documento?.arquivo_nome ||
+        documento?.nome ||
+        "arquivo";
+
+      const match = contentDisposition.match(
+        /filename="?([^"]+)"?/
+      );
+
+      if (match?.[1]) {
+        nomeArquivo = match[1];
+      }
+
+      const url = window.URL.createObjectURL(blob);
+
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = nomeArquivo;
+
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+
+      window.URL.revokeObjectURL(url);
+
+    } catch (error) {
+      console.error("Erro ao baixar arquivo:", error);
     }
-
-    const {
-      blob,
-      contentDisposition
-    } = await downloadArquivo(path);
-
-    let nomeArquivo =
-      documento?.arquivo_nome ||
-      documento?.nome ||
-      "arquivo";
-
-    const match = contentDisposition.match(
-      /filename="?([^"]+)"?/
-    );
-
-    if (match?.[1]) {
-      nomeArquivo = match[1];
-    }
-
-    const url = window.URL.createObjectURL(blob);
-
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = nomeArquivo;
-
-    document.body.appendChild(anchor);
-    anchor.click();
-    anchor.remove();
-
-    window.URL.revokeObjectURL(url);
-
-  } catch (error) {
-    console.error("Erro ao baixar arquivo:", error);
   }
-}
 
   async function enviarMensagem() {
     if (texto.trim() === "") return;
@@ -127,8 +127,7 @@ async function baixarArquivo(documento) {
 
   return (
 
-    <div className="flex text-black flex-col min-h-screen w-full p-4 md:p-6 max-w-3xl mx-auto overflow-hidden">
-
+    <div className="flex text-black flex-col h-screen w-full p-4 md:p-6 max-w-3xl mx-auto overflow-hidden">s
       {primeiraMensagem ? (
 
         <div className="flex flex-col flex-1 items-center justify-center">
@@ -168,11 +167,11 @@ async function baixarArquivo(documento) {
       ) : (
         <>
           {/* 📩 Lista de mensagens */}
-          <div className="flex flex-1 flex-col gap-3 overflow-hidden">
+          <div className="flex flex-1 flex-col min-h-0">
             {error && (
               <div className="text-red-600 bg-red-100 p-2 rounded mb-2">{error}</div>
             )}
-            <div className="w-full flex-1 overflow-y-auto pr-2">
+             <div className="flex-1 overflow-y-auto pr-2">
               {mensagens.map((msg) => (
                 <div
                   key={msg.id}

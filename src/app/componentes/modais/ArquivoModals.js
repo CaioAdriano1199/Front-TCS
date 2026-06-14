@@ -7,6 +7,7 @@ import { receberEquipes } from "../servico/receberequipes";
 import { criarPasta } from "../servico/criarpasta";
 import toast from "react-hot-toast";
 import { uploadArquivo } from "../servico/uploadarquivo";
+import { downloadArquivo } from "../servico/downloadarquivo";
 
 export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen, onClose, onOpen, modalLoading = false }) {
   const [historicoPastas, setHistoricoPastas] = useState([]);
@@ -60,18 +61,36 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
     onOpen();
   }
 
-  // Faz download direto a partir do modal usando a URL base fixa
-  function downloadDirect(path, nome) {
-    if (!path) return;
-    const url = `${BASE_URL}/arquivos/download?path=${encodeURIComponent(path)}`;
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.target = "_blank";
-    anchor.rel = "noopener noreferrer";
-    anchor.download = nome || "arquivo";
-    document.body.appendChild(anchor);
-    anchor.click();
-    anchor.remove();
+  // Faz download direto a partir do modal usando o serviço downloadArquivo
+  async function downloadDirect(path, nome) {
+    if (!path) {
+      toast.error("Caminho de download não informado.");
+      return;
+    }
+
+    try {
+      const { blob, contentDisposition } = await downloadArquivo(path);
+      let fileName = nome || "arquivo";
+
+      const match = contentDisposition?.match(/filename\*?=(?:UTF-8''")?"?([^";]+)"?/i);
+      if (match?.[1]) {
+        fileName = decodeURIComponent(match[1]);
+      }
+
+      const url = window.URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = fileName;
+      anchor.target = "_blank";
+      anchor.rel = "noopener noreferrer";
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Erro ao baixar arquivo:", error);
+      toast.error("Não foi possível baixar o arquivo.");
+    }
   }
 
   // Funcionalidade de criar nova pasta desabilitada

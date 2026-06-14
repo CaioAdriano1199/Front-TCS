@@ -21,8 +21,9 @@ export async function receberarquivos(path) {
       console.error("Erro ao receber arquivos:", errorData);
       return { subpastas: [], arquivos: [] };
     }
-
+    console.log("Status:", resposta.status);
     const dados = await resposta.json();
+    console.log("Resposta folders/content:", dados);
     return dados;
   } catch (erro) {
     console.error("Erro:", erro);

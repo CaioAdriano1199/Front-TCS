@@ -10,7 +10,7 @@ import { criarFuncionario } from "../servico/criarfuncionario";
 import { excluirFuncionario } from "../servico/excluirfuncionario";
 import { receberUsuarioPorId } from "../servico/reberusuarioporid";
 import { moverusuario } from "../servico/moverusuario";
-import { excluirEquipe } from "../servico/excluirempresa";
+import { excluirEmpresa } from "../servico/excluirempresa";
 
 export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setListaEquipes, isOpen, onClose, onOpen }) {
   const [membrosEquipe, setMembrosEquipe] = useState([]);
@@ -136,7 +136,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
     }
 
     try {
-      await excluirEquipe(equipeparaexcluir);
+      await excluirEmpresa(equipeparaexcluir);
       toast.success("Equipe excluída com sucesso");
       setModalExcluirEquipe(false);
       setEquipeParaExcluir("");

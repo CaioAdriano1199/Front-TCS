@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Modal from "../modal/modal";
 import ActionMenu from "../menudeacao/menudeacao";
 import { receberarquivos } from "../servico/receberarquivos";
@@ -24,6 +24,17 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
   const [ordem, setOrdem] = useState("asc");
   const [nomepasta, setNomePasta] = useState("");
   const [modalRenomearpasta, setmodalRenomearPasta] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setTipomodalarquivos("lista");
+      return;
+    }
+
+    if (listaArquivos && listaArquivos.length > 0) {
+      setTipomodalarquivos("pastaprincipal");
+    }
+  }, [isOpen, listaArquivos]);
 
   // Funcionalidade de renomear pasta desabilitada
   // async function renomearpasta() {

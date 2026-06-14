@@ -3,6 +3,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { respostadaia } from "../servico/respostadaia";
+import { downloadArquivo } from "../servico/downloadarquivo";
 
 export default function ChatCont() {
   const [mensagens, setMensagens] = useState([]);
@@ -11,60 +12,52 @@ export default function ChatCont() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  async function baixarArquivo(documento) {
-    try {
-      // Prioriza path (como o modal): path, arquivo_path ou filePath
-      const path = documento?.path || documento?.arquivo_path || documento?.filePath;
+async function baixarArquivo(documento) {
+  try {
+    const path =
+      documento?.path ||
+      documento?.arquivo_path ||
+      documento?.filePath;
 
-      if (path) {
-        const url = `http://localhost:8081/arquivos/download?path=${encodeURIComponent(path)}`;
-        const anchor = document.createElement("a");
-        anchor.href = url;
-        anchor.target = "_blank";
-        anchor.rel = "noopener noreferrer";
-        anchor.download = documento.arquivo_nome || documento.nome || "arquivo";
-        document.body.appendChild(anchor);
-        anchor.click();
-        anchor.remove();
-        return;
-      }
-
-      // Fallback: se não houver path, tenta usar download_url ou o comportamento anterior via API
-      const token = localStorage.getItem("token");
-      let urlFallback;
-      if (documento?.download_url) {
-        urlFallback = `${process.env.NEXT_PUBLIC_API_URL}${documento.download_url}`;
-      } else {
-        console.error("Caminho do arquivo não encontrado para download.");
-        return;
-      }
-
-      const response = await fetch(urlFallback, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true",
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`Erro ao baixar arquivo: ${response.status}`);
-      }
-
-      const blob = await response.blob();
-      const objectUrl = window.URL.createObjectURL(blob);
-      const anchor = document.createElement("a");
-      anchor.href = objectUrl;
-      anchor.download = documento.arquivo_nome || documento.nome || "arquivo";
-      document.body.appendChild(anchor);
-      anchor.click();
-      anchor.remove();
-      window.URL.revokeObjectURL(objectUrl);
-    } catch (error) {
-      console.error("Erro ao baixar arquivo:", error);
+    if (!path) {
+      toast.error("Arquivo não encontrado.");
+      return;
     }
+
+    const {
+      blob,
+      contentDisposition
+    } = await downloadArquivo(path);
+
+    let nomeArquivo =
+      documento?.arquivo_nome ||
+      documento?.nome ||
+      "arquivo";
+
+    const match = contentDisposition.match(
+      /filename="?([^"]+)"?/
+    );
+
+    if (match?.[1]) {
+      nomeArquivo = match[1];
+    }
+
+    const url = window.URL.createObjectURL(blob);
+
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = nomeArquivo;
+
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+
+    window.URL.revokeObjectURL(url);
+
+  } catch (error) {
+    console.error("Erro ao baixar arquivo:", error);
   }
+}
 
   async function enviarMensagem() {
     if (texto.trim() === "") return;

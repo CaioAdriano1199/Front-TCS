@@ -186,12 +186,13 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
 
   return (
     <>
-      <Modal //modal de arquivos
+      <Modal
         isOpen={isOpen}
         onClose={onClose}
         title="Lista de Arquivos"
         className=" m-90 max-h-2/3"
-        width="w-full">
+        width="w-full"
+      >
         <div className="p-4 relative">
           {modalLoading ? (
             <div className="w-full h-48 flex items-center justify-center">
@@ -199,21 +200,37 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
             </div>
           ) : (
             <>
-              {tipomodalarquivos === "raiz" && ( //modal de pastas raiz
+              {tipomodalarquivos === "raiz" && (
                 <>
                   <div className="my-4">
-                    <button onClick={() => setOrdem(ordem === "asc" ? "desc" : "asc")}
-
-                      className="my-4 mr-4 cursor-pointer"><p className="text-m font-semibold">{ordem === "asc" ? <i className="bi bi-sort-alpha-down-alt"></i> : <i className="bi bi-sort-alpha-up-alt"></i>}  Ordenar por nome</p></button>
+                    <button
+                      onClick={() => setOrdem(ordem === "asc" ? "desc" : "asc")}
+                      className="my-4 mr-4 cursor-pointer"
+                    >
+                      <p className="text-m font-semibold">
+                        {ordem === "asc" ? (
+                          <i className="bi bi-sort-alpha-down-alt"></i>
+                        ) : (
+                          <i className="bi bi-sort-alpha-up-alt"></i>
+                        )}
+                        Ordenar por nome
+                      </p>
+                    </button>
                   </div>
                   <div className="w-full mx-auto overflow-y-auto max-h-[60vh]">
                     {raizordenada.map((arquivo) => (
-                      <div className="w-full cursor-pointer flex justify-between items-center p-2 rounded hover:bg-[var(--cinzaclaro)]"
-                        key={arquivo.path}>
-                        <div className="flex-2 flex justify-between items-center"
-                          onClick={() => mostrarArquivosPasta(arquivo)}>
-                          <p className="font-medium"><i className="bi bi-folder px-1"></i>
-                            {arquivo.nome}</p>
+                      <div
+                        className="w-full cursor-pointer flex justify-between items-center p-2 rounded hover:bg-[var(--cinzaclaro)]"
+                        key={arquivo.path}
+                      >
+                        <div
+                          className="flex-2 flex justify-between items-center"
+                          onClick={() => mostrarArquivosPasta(arquivo)}
+                        >
+                          <p className="font-medium">
+                            <i className="bi bi-folder px-1"></i>
+                            {arquivo.nome}
+                          </p>
                         </div>
                       </div>
                     ))}
@@ -221,59 +238,91 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
                 </>
               )}
 
-              {tipomodalarquivos === "pastaprincipal" && ( //modal de arquivos principais
+              {tipomodalarquivos === "pastaprincipal" && (
                 <>
-                  <button onClick={() => voltarPasta()}>
-                <i className="bi bi-arrow-left text-lg hover:cursor-pointer hover:text-[var(--phgray)]"></i>
-              </button>
-              <div className="mb-4">
-                <div className="my-4">
-                  <button onClick={() => {
-                    setTipoOrdenacao("nome");
-                    setOrdemDesc(!ordemDesc);
-                  }} className="my-4 mr-4 cursor-pointer"><p className="text-m font-semibold">{ordemDesc === true ? <i className="bi bi-sort-alpha-down-alt"></i> : <i className="bi bi-sort-alpha-up-alt"></i>} Ordenar por nome</p></button>
-                  <button onClick={() => {
-                    setTipoOrdenacao("data");
-                    setOrdemDesc(!ordemDesc);
-                  }} className="my-4 mr-4 cursor-pointer"><p className="text-m font-semibold">{ordemDesc === true ? <i className="bi bi-sort-down-alt"></i> : <i className="bi bi-sort-up-alt"></i>} Ordenar por data</p></button>
-                </div>
-              </div>
-              <div className="w-full mx-auto overflow-y-auto max-h-96">
-                {arquivosOrdenados.map((arquivo) => (
-                  <div className="w-full cursor-pointer flex justify-between items-center p-2 rounded hover:bg-[var(--cinzaclaro)]"
-
-                    key={arquivo.path}>
-                    <div className="flex-2 flex justify-between items-center"
-                      onClick={
-                        arquivo.tipo === "pasta"
-                          ? () => mostrarArquivosPasta(arquivo)
-                          : () => downloadDirect(arquivo.path || arquivo.caminho || arquivo.arquivo_path || arquivo.filePath, arquivo.nome || arquivo.name || arquivo.arquivo_nome)
-                      }>
-                      <p>
-                        {arquivo.tipo === "arquivo" ? (
-                          <i className="bi bi-file-earmark"></i>
-                        ) : (
-                          <i className="bi bi-folder"></i>
-                        )}
-                        {arquivo.nome}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        {arquivo.dataUpload
-                          ? new Date(arquivo.dataUpload).toLocaleString("pt-BR", {
-                            day: "2-digit",
-                            month: "2-digit",
-                            year: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          }).replace(",", "")
-                          : "-"}
-                      </p>
+                  <div className="mb-4 flex items-center gap-3">
+                    <button onClick={() => voltarPasta()}>
+                      <i className="bi bi-arrow-left text-lg hover:cursor-pointer hover:text-[var(--phgray)]"></i>
+                    </button>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => {
+                          setTipoOrdenacao("nome");
+                          setOrdemDesc(!ordemDesc);
+                        }}
+                        className="my-4 mr-4 cursor-pointer"
+                      >
+                        <p className="text-m font-semibold">
+                          {ordemDesc === true ? (
+                            <i className="bi bi-sort-alpha-down-alt"></i>
+                          ) : (
+                            <i className="bi bi-sort-alpha-up-alt"></i>
+                          )}
+                          Ordenar por nome
+                        </p>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setTipoOrdenacao("data");
+                          setOrdemDesc(!ordemDesc);
+                        }}
+                        className="my-4 mr-4 cursor-pointer"
+                      >
+                        <p className="text-m font-semibold">
+                          {ordemDesc === true ? (
+                            <i className="bi bi-sort-down-alt"></i>
+                          ) : (
+                            <i className="bi bi-sort-up-alt"></i>
+                          )}
+                          Ordenar por data
+                        </p>
+                      </button>
                     </div>
-                    {/* ActionMenu desabilitado */}
-
                   </div>
-                ))}
-              </div>
+                  <div className="w-full mx-auto overflow-y-auto max-h-96">
+                    {arquivosOrdenados.map((arquivo) => (
+                      <div
+                        className="w-full cursor-pointer flex justify-between items-center p-2 rounded hover:bg-[var(--cinzaclaro)]"
+                        key={arquivo.path}
+                      >
+                        <div
+                          className="flex-2 flex justify-between items-center"
+                          onClick={
+                            arquivo.tipo === "pasta"
+                              ? () => mostrarArquivosPasta(arquivo)
+                              : () =>
+                                  downloadDirect(
+                                    arquivo.path || arquivo.caminho || arquivo.arquivo_path || arquivo.filePath,
+                                    arquivo.nome || arquivo.name || arquivo.arquivo_nome
+                                  )
+                          }
+                        >
+                          <p>
+                            {arquivo.tipo === "arquivo" ? (
+                              <i className="bi bi-file-earmark"></i>
+                            ) : (
+                              <i className="bi bi-folder"></i>
+                            )}
+                            {arquivo.nome}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            {arquivo.dataUpload
+                              ? new Date(arquivo.dataUpload).toLocaleString("pt-BR", {
+                                  day: "2-digit",
+                                  month: "2-digit",
+                                  year: "numeric",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                }).replace(",", "")
+                              : "-"}
+                          </p>
+                        </div>
+                        {/* ActionMenu desabilitado */}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>

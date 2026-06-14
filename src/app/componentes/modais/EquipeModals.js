@@ -10,6 +10,7 @@ import { criarFuncionario } from "../servico/criarfuncionario";
 import { excluirFuncionario } from "../servico/excluirfuncionario";
 import { receberUsuarioPorId } from "../servico/reberusuarioporid";
 import { moverusuario } from "../servico/moverusuario";
+import { excluirEquipe } from "../servico/excluirEquipe";
 
 export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setListaEquipes, isOpen, onClose, onOpen }) {
   const [membrosEquipe, setMembrosEquipe] = useState([]);
@@ -33,6 +34,8 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
   const [equipeAtual, setEquipeAtual] = useState(null);
   const [equipesSelecionadas, setEquipesSelecionadas] = useState([]);
   const [usuariorecebido, setUsuarioRecebido] = useState({});
+  const [modalexcluirEquipe, setModalExcluirEquipe] = useState(false);
+  const [modalExcluirMembro, setModalExcluirMembro] = useState(false);
 
   const colaborador = {
     email: email,
@@ -167,12 +170,8 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
                     <ActionMenu className="flex-1"
                       options={[
                         {
-                          label: "Editar",
-                          onClick: () => {},
-                        },
-                        {
                           label: "Excluir",
-                          onClick: () => {},
+                          onClick: () => {excluirEquipe(equipe.id)},
                         },
                       ]}
                     />
@@ -299,6 +298,35 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
           <button onClick={() => cadastroUsuario()} className=" max-w-sm w-full my-2" disabled={emailAtt === "" || nomeAtt === "" || senhaAtt === ""}>Atualizar</button>
         </div>
       </Modal>
+
+      <Modal //modal para confirmar exclusão de equipe
+        isOpen={modalexcluirEquipe}
+        onClose={() => setModalExcluirEquipe(false)}
+        title="Confirmar exclusão"
+        className="w-sm">
+        <div className="flex flex-col items-center px-6">
+          <p className="mb-4">Tem certeza que deseja excluir esta equipe? Esta ação não pode ser desfeita.</p>
+          <div className="flex gap-4">
+            <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded" onClick={() => {}}>Cancelar</button>
+            <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => {}}>Excluir</button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal //modal para confirmar exclusão de membro
+        isOpen={modalExcluirMembro}
+        onClose={() => setModalExcluirMembro(false)}
+        title="Confirmar exclusão"
+        className="w-sm">
+        <div className="flex flex-col items-center px-6">
+          <p className="mb-4">Tem certeza que deseja excluir este membro? Esta ação não pode ser desfeita.</p>
+          <div className="flex gap-4">
+            <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded" onClick={() => {}}>Cancelar</button>
+            <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => {}}>Excluir</button>
+          </div>
+        </div>
+      </Modal>
+
     </>
   );
 }

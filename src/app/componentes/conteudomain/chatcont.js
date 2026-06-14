@@ -10,23 +10,33 @@ export default function ChatCont() {
 
   async function baixarArquivo(documento) {
     try {
-      const token = localStorage.getItem("token");
-      
-      // Se houver download_url, usar diretamente
-      let url;
-      if (documento?.download_url) {
-        url = `${process.env.NEXT_PUBLIC_API_URL}${documento.download_url}`;
-      } else {
-        // Fallback para o formato anterior com path
-        const path = documento?.path || documento?.arquivo_path || documento?.filePath;
-        if (!path) {
-          console.error("Caminho do arquivo não encontrado para download.");
-          return;
-        }
-        url = `${process.env.NEXT_PUBLIC_API_URL}/arquivos/download?path=${encodeURIComponent(path)}`;
+      // Prioriza path (como o modal): path, arquivo_path ou filePath
+      const path = documento?.path || documento?.arquivo_path || documento?.filePath;
+
+      if (path) {
+        const url = `http://localhost:8081/arquivos/download?path=${encodeURIComponent(path)}`;
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.target = "_blank";
+        anchor.rel = "noopener noreferrer";
+        anchor.download = documento.arquivo_nome || documento.nome || "arquivo";
+        document.body.appendChild(anchor);
+        anchor.click();
+        anchor.remove();
+        return;
       }
 
-      const response = await fetch(url, {
+      // Fallback: se não houver path, tenta usar download_url ou o comportamento anterior via API
+      const token = localStorage.getItem("token");
+      let urlFallback;
+      if (documento?.download_url) {
+        urlFallback = `${process.env.NEXT_PUBLIC_API_URL}${documento.download_url}`;
+      } else {
+        console.error("Caminho do arquivo não encontrado para download.");
+        return;
+      }
+
+      const response = await fetch(urlFallback, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -42,7 +52,6 @@ export default function ChatCont() {
       const blob = await response.blob();
       const objectUrl = window.URL.createObjectURL(blob);
       const anchor = document.createElement("a");
-
       anchor.href = objectUrl;
       anchor.download = documento.arquivo_nome || documento.nome || "arquivo";
       document.body.appendChild(anchor);

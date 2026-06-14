@@ -15,6 +15,29 @@ export default function Sidemenu({ setPgc }) {
   const [modalEquipeAberto, setModalEquipeAberto] = useState(false);
   const [modalArquivoAberto, setModalArquivoAberto] = useState(false);
 
+  async function abrirArquivosDaEquipe(equipe) {
+    const path = equipe.caminho || equipe.caminhoBase || equipe.path;
+    if (!path) return;
+
+    const dados = await receberarquivos(path);
+    const subpastasFormatadas = (dados.subpastas || []).map((p) => ({
+      ...p,
+      nome: p.name || p.nome,
+      tipo: "pasta",
+      dataUpload: p.dataCriacao || p.date
+    }));
+
+    const arquivosFormatados = (dados.arquivos || []).map((a) => ({
+      ...a,
+      nome: a.name || a.nome,
+      tipo: "arquivo",
+      dataUpload: a.date || a.dataCriacao
+    }));
+
+    setListaArquivos([...subpastasFormatadas, ...arquivosFormatados]);
+    setModalArquivoAberto(true);
+  }
+
   useEffect(() => {
     async function carregarEquipes() {
       const dados = await receberEquipes();
@@ -43,9 +66,7 @@ export default function Sidemenu({ setPgc }) {
               {listaEquipes.map((equipe) => (
                 <button
                   key={equipe.id}
-                  onClick={() => {
-                    setModalArquivoAberto(true);
-                  }}
+                  onClick={() => abrirArquivosDaEquipe(equipe)}
                   className="w-full text-left px-3 py-2 rounded hover:bg-[var(--bgbuttonhover)] transition-colors flex items-center gap-2 text-sm font-medium"
                 >
                   <i className="bi bi-folder"></i>

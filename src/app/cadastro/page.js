@@ -14,6 +14,7 @@ export default function Cadastro() {
   const [confirmSenha, setConfirmSenha] = useState("");
   const [cnpj, setCnpj] = useState("");
   const [nomeempresa, setNomeempresa] = useState("");
+  const [caminhoBase, setCaminhoBase] = useState("");
   const [loading, setLoading] = useState(false);
   const BASe_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -25,7 +26,8 @@ export default function Cadastro() {
 
   const empresa = {
     cnpj: cnpj,
-    nome: nomeempresa
+    nome: nomeempresa,
+    caminhoBase: caminhoBase
   }
 
   const cadastro = {
@@ -156,6 +158,13 @@ export default function Cadastro() {
                 placeholder="Nome da empresa"
                 className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] shadow-sm rounded-md my-2.5 py-2.5 px-4 text-[var(--preto)] focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] placeholder:text-[var(--phgray)]"
                 onChange={(e) => setNomeempresa(e.target.value)}
+                required
+              />
+              <input
+                type="text"
+                placeholder="Caminho da base"
+                className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] shadow-sm rounded-md my-2.5 py-2.5 px-4 text-[var(--preto)] focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] placeholder:text-[var(--phgray)]"
+                onChange={(e) => setCaminhoBase(e.target.value)}
                 required
               />
               <button

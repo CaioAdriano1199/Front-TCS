@@ -10,7 +10,7 @@ import { criarFuncionario } from "../servico/criarfuncionario";
 import { excluirFuncionario } from "../servico/excluirfuncionario";
 import { receberUsuarioPorId } from "../servico/reberusuarioporid";
 import { moverusuario } from "../servico/moverusuario";
-import { excluirEmpresa } from "../servico/excluirempresa";
+import { excluirEquipe } from "../servico/excluirempresa";
 
 export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setListaEquipes, isOpen, onClose, onOpen }) {
   const [membrosEquipe, setMembrosEquipe] = useState([]);
@@ -45,6 +45,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
     idsEquipes: [equipeAtual],
     admSistema: false,
   };
+  const [equipeparaexcluir, setEquipeParaExcluir] = useState("");
 
   const colaboradorAtt = {
     email: emailAtt,
@@ -128,6 +129,25 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
     }
   }
 
+  async function confirmarExcluirEquipe() {
+    if (!equipeparaexcluir) {
+      toast.error("Nenhuma equipe selecionada para exclusão.");
+      return;
+    }
+
+    try {
+      await excluirEquipe(equipeparaexcluir);
+      toast.success("Equipe excluída com sucesso");
+      setModalExcluirEquipe(false);
+      setEquipeParaExcluir("");
+      const dados = await receberEquipes();
+      setListaEquipes(dados);
+    } catch (error) {
+      console.error("Erro ao excluir equipe no modal:", error);
+      toast.error(error.message || "Não foi possível excluir a equipe.");
+    }
+  }
+
   const membrosFiltrados = membrosEquipe.filter((membro) =>
     !busca || membro.nome.toLowerCase().includes(busca.toLowerCase())
   );
@@ -171,7 +191,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
                       options={[
                         {
                           label: "Excluir",
-                          onClick: () => {setEquipeAtual(equipe.id); setModalExcluirEquipe(true);},
+                          onClick: () => {setEquipeParaExcluir(equipe.id); setModalExcluirEquipe(true);},
                         },
                       ]}
                     />
@@ -308,7 +328,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
           <p className="mb-4">Tem certeza que deseja excluir esta equipe? Esta ação não pode ser desfeita.</p>
           <div className="flex gap-4">
             <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded" onClick={() => {setModalExcluirEquipe(false)}}>Cancelar</button>
-            <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => {excluirEmpresa(equipeAtual)}}>Excluir</button>
+            <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => {confirmarExcluirEquipe()}}>Excluir</button>
           </div>
         </div>
       </Modal>
@@ -322,7 +342,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
           <p className="mb-4">Tem certeza que deseja excluir este membro? Esta ação não pode ser desfeita.</p>
           <div className="flex gap-4">
             <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded" onClick={() => {setModalExcluirMembro(false)}}>Cancelar</button>
-            <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => {excluirMembro(membroAtual)}}>Excluir</button>
+            <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => {excluirMembro(membro.id)}}>Excluir</button>
           </div>
         </div>
       </Modal>

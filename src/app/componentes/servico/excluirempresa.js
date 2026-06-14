@@ -2,10 +2,10 @@ import toast from "react-hot-toast";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export async function excluirEmpresa(id) {
+export async function excluirEquipe(id) {
   try {
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    const resposta = await fetch(`${BASE_URL}/empresas/${id}`, {
+    const resposta = await fetch(`${BASE_URL}/equipes/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { respostadaia } from "../servico/respostadaia";
 
 export default function ChatCont() {
@@ -82,7 +83,9 @@ export default function ChatCont() {
     setLoading(true);
     setError(null);
 
+    let toastId;
     try {
+      toastId = toast.loading("Buscando resposta...");
       const resposta = await respostadaia(textoenviado);
 
       // Normaliza possíveis formatos de resposta da API
@@ -110,6 +113,7 @@ export default function ChatCont() {
       };
 
       setMensagens((prev) => [...prev, novaMensagemIA]);
+      toast.dismiss(toastId);
     } catch (err) {
       console.error("Erro ao obter resposta da IA:", err);
       setError("Não foi possível buscar a resposta. Tente novamente.");
@@ -120,6 +124,9 @@ export default function ChatCont() {
         documentos: []
       };
       setMensagens((prev) => [...prev, novaMensagemErro]);
+      // dismiss loading toast and show error
+      if (toastId) toast.dismiss(toastId);
+      toast.error("Não foi possível buscar a resposta.");
     } finally {
       setLoading(false);
     }

@@ -46,7 +46,7 @@ export default function Modal({
 
       {/* Container do Modal */}
       <div
-        className={`relative bg-[var(--branco)] text-[var(--cinzaescuro)] rounded-lg shadow-xl w-full max-w-[95vw] max-h-[90vh] overflow-y-auto ${width} ${className}`}
+        className={`relative bg-[var(--branco)] text-[var(--cinzaescuro)] rounded-lg shadow-xl w-full max-w-[95vw] max-h-[90vh] ${width} ${className}`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Cabeçalho */}

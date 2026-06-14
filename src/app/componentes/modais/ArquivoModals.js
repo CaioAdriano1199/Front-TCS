@@ -8,7 +8,7 @@ import { criarPasta } from "../servico/criarpasta";
 import toast from "react-hot-toast";
 import { uploadArquivo } from "../servico/uploadarquivo";
 
-export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen, onClose, onOpen }) {
+export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen, onClose, onOpen, modalLoading = false }) {
   const [historicoPastas, setHistoricoPastas] = useState([]);
   const [listaPastasRaiz, setListaPastasRaiz] = useState([]);
   const [modalArquivo, setmodalArquivo] = useState(false);
@@ -190,34 +190,40 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
         isOpen={isOpen}
         onClose={onClose}
         title="Lista de Arquivos"
-        className=" m-90 max-h-2/3 overflow-y-auto"
+        className=" m-90 max-h-2/3"
         width="w-full">
-        <div className="p-4">
-          {tipomodalarquivos === "raiz" && ( //modal de pastas raiz
+        <div className="p-4 relative">
+          {modalLoading ? (
+            <div className="w-full h-48 flex items-center justify-center">
+              <i className="bi bi-arrow-repeat animate-spin text-4xl text-[var(--bgbutton)]"></i>
+            </div>
+          ) : (
             <>
-              <div className="my-4">
-                <button onClick={() => setOrdem(ordem === "asc" ? "desc" : "asc")}
+              {tipomodalarquivos === "raiz" && ( //modal de pastas raiz
+                <>
+                  <div className="my-4">
+                    <button onClick={() => setOrdem(ordem === "asc" ? "desc" : "asc")}
 
-                  className="my-4 mr-4 cursor-pointer"><p className="text-m font-semibold">{ordem === "asc" ? <i className="bi bi-sort-alpha-down-alt"></i> : <i className="bi bi-sort-alpha-up-alt"></i>}  Ordenar por nome</p></button>
-              </div>
-              <div className="w-full mx-auto overflow-y-auto max-h-96">
-                {raizordenada.map((arquivo) => (
-                  <div className="w-full cursor-pointer flex justify-between items-center p-2 rounded hover:bg-[var(--cinzaclaro)]"
-                    key={arquivo.path}>
-                    <div className="flex-2 flex justify-between items-center"
-                      onClick={() => mostrarArquivosPasta(arquivo)}>
-                      <p className="font-medium"><i className="bi bi-folder px-1"></i>
-                        {arquivo.nome}</p>
-                    </div>
+                      className="my-4 mr-4 cursor-pointer"><p className="text-m font-semibold">{ordem === "asc" ? <i className="bi bi-sort-alpha-down-alt"></i> : <i className="bi bi-sort-alpha-up-alt"></i>}  Ordenar por nome</p></button>
                   </div>
-                ))}
-              </div>
-            </>
-          )}
+                  <div className="w-full mx-auto overflow-y-auto max-h-[60vh]">
+                    {raizordenada.map((arquivo) => (
+                      <div className="w-full cursor-pointer flex justify-between items-center p-2 rounded hover:bg-[var(--cinzaclaro)]"
+                        key={arquivo.path}>
+                        <div className="flex-2 flex justify-between items-center"
+                          onClick={() => mostrarArquivosPasta(arquivo)}>
+                          <p className="font-medium"><i className="bi bi-folder px-1"></i>
+                            {arquivo.nome}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
 
-          {tipomodalarquivos === "pastaprincipal" && ( //modal de arquivos principais
-            <>
-              <button onClick={() => voltarPasta()}>
+              {tipomodalarquivos === "pastaprincipal" && ( //modal de arquivos principais
+                <>
+                  <button onClick={() => voltarPasta()}>
                 <i className="bi bi-arrow-left text-lg hover:cursor-pointer hover:text-[var(--phgray)]"></i>
               </button>
               <div className="mb-4">

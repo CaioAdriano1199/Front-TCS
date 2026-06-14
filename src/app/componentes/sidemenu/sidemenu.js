@@ -2,6 +2,7 @@
 import { receberarquivos } from "../servico/receberarquivos";
 import { receberEquipes } from "../servico/receberequipes";
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import EquipeModals from "../modais/EquipeModals";
 import ArquivoModals from "../modais/ArquivoModals";
@@ -14,28 +15,37 @@ export default function Sidemenu({ setPgc }) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [modalEquipeAberto, setModalEquipeAberto] = useState(false);
   const [modalArquivoAberto, setModalArquivoAberto] = useState(false);
+  const [modalLoading, setModalLoading] = useState(false);
 
   async function abrirArquivosDaEquipe(equipe) {
     const path = equipe.caminho || equipe.caminhoBase || equipe.path;
     if (!path) return;
 
-    const dados = await receberarquivos(path);
-    const subpastasFormatadas = (dados.subpastas || []).map((p) => ({
-      ...p,
-      nome: p.name || p.nome,
-      tipo: "pasta",
-      dataUpload: p.dataCriacao || p.date
-    }));
-
-    const arquivosFormatados = (dados.arquivos || []).map((a) => ({
-      ...a,
-      nome: a.name || a.nome,
-      tipo: "arquivo",
-      dataUpload: a.date || a.dataCriacao
-    }));
-
-    setListaArquivos([...subpastasFormatadas, ...arquivosFormatados]);
     setModalArquivoAberto(true);
+    setModalLoading(true);
+    try {
+      const dados = await receberarquivos(path);
+      const subpastasFormatadas = (dados.subpastas || []).map((p) => ({
+        ...p,
+        nome: p.name || p.nome,
+        tipo: "pasta",
+        dataUpload: p.dataCriacao || p.date
+      }));
+
+      const arquivosFormatados = (dados.arquivos || []).map((a) => ({
+        ...a,
+        nome: a.name || a.nome,
+        tipo: "arquivo",
+        dataUpload: a.date || a.dataCriacao
+      }));
+
+      setListaArquivos([...subpastasFormatadas, ...arquivosFormatados]);
+    } catch (err) {
+      console.error("Erro ao carregar arquivos da equipe:", err);
+      toast.error('Erro ao carregar arquivos.');
+    } finally {
+      setModalLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -77,7 +87,7 @@ export default function Sidemenu({ setPgc }) {
           </div>
         </div>
         
-        <ArquivoModals listaArquivos={listaArquivos} setListaArquivos={setListaArquivos} isOpen={modalArquivoAberto} onClose={() => setModalArquivoAberto(false)} onOpen={() => setModalArquivoAberto(true)} />
+        <ArquivoModals listaArquivos={listaArquivos} setListaArquivos={setListaArquivos} isOpen={modalArquivoAberto} onClose={() => setModalArquivoAberto(false)} onOpen={() => setModalArquivoAberto(true)} modalLoading={modalLoading} />
         <div className="mt-auto text-sm py-2 text-gray-400">
           <EquipeModals URL_BASE={URL_BASE} isAdmin={isAdmin} listaEquipes={listaEquipes} setListaEquipes={setListaEquipes} isOpen={modalEquipeAberto} onClose={() => setModalEquipeAberto(false)} onOpen={() => setModalEquipeAberto(true)} />
           

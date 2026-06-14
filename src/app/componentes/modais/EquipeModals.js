@@ -10,7 +10,7 @@ import { criarFuncionario } from "../servico/criarfuncionario";
 import { excluirFuncionario } from "../servico/excluirfuncionario";
 import { receberUsuarioPorId } from "../servico/reberusuarioporid";
 import { moverusuario } from "../servico/moverusuario";
-import { excluirempresa } from "../servico/excluirempresa";
+import { excluirEmpresa } from "../servico/excluirempresa";
 
 export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setListaEquipes, isOpen, onClose, onOpen }) {
   const [membrosEquipe, setMembrosEquipe] = useState([]);
@@ -171,7 +171,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
                       options={[
                         {
                           label: "Excluir",
-                          onClick: () => {excluirEmpresa(equipe.id)},
+                          onClick: () => {setEquipeAtual(equipe.id); setModalExcluirEquipe(true);},
                         },
                       ]}
                     />
@@ -222,7 +222,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
                         },
                         {
                           label: "Excluir",
-                          onClick: () => excluirMembro(membroItem.id),
+                          onClick: () => setModalExcluirMembro(true) || setMembro(membroItem),
                           className: "bg-[var(--bginput)] hover:bg-[var(--cinzaclaro)] hover:cursor-pointer text-[var(--preto)]",
                         },
                       ]}
@@ -307,8 +307,8 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
         <div className="flex flex-col items-center px-6">
           <p className="mb-4">Tem certeza que deseja excluir esta equipe? Esta ação não pode ser desfeita.</p>
           <div className="flex gap-4">
-            <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded" onClick={() => {}}>Cancelar</button>
-            <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => {}}>Excluir</button>
+            <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded" onClick={() => {setModalExcluirEquipe(false)}}>Cancelar</button>
+            <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => {excluirEmpresa(equipeAtual)}}>Excluir</button>
           </div>
         </div>
       </Modal>
@@ -321,8 +321,8 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
         <div className="flex flex-col items-center px-6">
           <p className="mb-4">Tem certeza que deseja excluir este membro? Esta ação não pode ser desfeita.</p>
           <div className="flex gap-4">
-            <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded" onClick={() => {}}>Cancelar</button>
-            <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => {}}>Excluir</button>
+            <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded" onClick={() => {setModalExcluirMembro(false)}}>Cancelar</button>
+            <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => {excluirMembro(membroAtual)}}>Excluir</button>
           </div>
         </div>
       </Modal>

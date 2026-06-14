@@ -3,7 +3,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export async function respostadaia(pergunta) {
     try {
         const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-        const resposta = await fetch(`${BASE_URL}/ia/ask/chuncks`, {
+        const resposta = await fetch(`${BASE_URL}/ia/ask/chunks`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

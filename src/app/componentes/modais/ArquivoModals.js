@@ -48,6 +48,20 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
     onOpen();
   }
 
+  // Faz download direto a partir do modal usando a URL base fixa
+  function downloadDirect(path, nome) {
+    if (!path) return;
+    const url = `http://localhost:8081/arquivos/download?path=${encodeURIComponent(path)}`;
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.target = "_blank";
+    anchor.rel = "noopener noreferrer";
+    anchor.download = nome || "arquivo";
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+  }
+
   // Funcionalidade de criar nova pasta desabilitada
   // async function criarNovaPasta() {
   //   if (!nomepasta.trim()) {
@@ -215,7 +229,7 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
                       onClick={
                         arquivo.tipo === "pasta"
                           ? () => mostrarArquivosPasta(arquivo)
-                          : undefined
+                          : () => downloadDirect(arquivo.path || arquivo.caminho || arquivo.arquivo_path || arquivo.filePath, arquivo.nome || arquivo.name || arquivo.arquivo_nome)
                       }>
                       <p>
                         {arquivo.tipo === "arquivo" ? (

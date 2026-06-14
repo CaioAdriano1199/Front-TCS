@@ -39,7 +39,6 @@ export default function Cadastro() {
 
 
   async function cadastroEmpresa() {
-
     try {
       setLoading(true);
       const resposta = await fetch(`${BASe_URL}/empresas/create`, {
@@ -53,12 +52,16 @@ export default function Cadastro() {
 
       const dados = await resposta.json();
 
+      if (!resposta.ok) {
+        throw new Error(dados.message || "Erro no cadastro da empresa");
+      }
+
       toast.success("Sucesso no cadastro da empresa");
+      setLoading(false);
       router.push("/login");
     } catch (erro) {
       console.error("Erro:", erro);
-      toast.error("Erro no cadastro da empresa");
-    } finally {
+      toast.error(erro.message || "Erro no cadastro da empresa");
       setLoading(false);
     }
   }

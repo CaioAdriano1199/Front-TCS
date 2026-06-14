@@ -65,11 +65,16 @@ export default function ChatCont() {
     try {
       const resposta = await respostadaia(textoenviado);
 
+      // Normaliza possíveis formatos de resposta da API
+      const textoResposta = resposta?.answer || resposta?.text || resposta?.answerText || resposta?.result || (typeof resposta === 'string' ? resposta : null) || "Nenhuma resposta encontrada";
+
+      const documentosResposta = resposta?.sources || resposta?.documents || resposta?.results?.sources || resposta?.data?.sources || [];
+
       const novaMensagemIA = {
         id: crypto.randomUUID(),
-        texto: resposta.answer || "Nenhuma resposta encontrada",
+        texto: textoResposta,
         autor: "ia",
-        documentos: resposta.sources || []
+        documentos: Array.isArray(documentosResposta) ? documentosResposta : []
       };
 
       setMensagens((prev) => [...prev, novaMensagemIA]);
@@ -120,36 +125,38 @@ export default function ChatCont() {
       ) : (
         <>
           {/* 📩 Lista de mensagens */}
-          <div className="flex flex-1 flex-col gap-3 overflow-y-auto mb-4">
-            {mensagens.map((msg) => (
-              <div
-                key={msg.id}
-                className={`max-w-[80%] md:max-w-[60%] p-3 rounded-lg whitespace-pre-wrap ${msg.autor === "eu"
-                  ? "bg-[var(--bgbuttonhover)] text-white self-end ml-auto"
-                  : "bg-white text-black"
-                  }`}
-              >
-                <>
-                  <p>{msg.texto}</p>
+          <div className="flex flex-1 flex-col gap-3 overflow-hidden mb-4">
+            <div className="w-full overflow-y-auto pr-2" style={{ maxHeight: '60vh' }}>
+              {mensagens.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`max-w-[80%] md:max-w-[60%] p-3 rounded-lg whitespace-pre-wrap ${msg.autor === "eu"
+                    ? "bg-[var(--bgbuttonhover)] text-white self-end ml-auto"
+                    : "bg-white text-black"
+                    }`}
+                >
+                  <>
+                    <p>{msg.texto}</p>
 
-                  {msg.documentos?.length > 0 && (
-                    <div className="mt-3 flex flex-col gap-2">
-                      {msg.documentos.map((doc, index) => (
-                        <button
-                          key={index}
-                          type="button"
-                          onClick={() => baixarArquivo(doc)}
-                          className="text-left text-[var(--bgbutton)] underline break-all flex items-center gap-1"
-                        >
-                          <i className="bi bi-file-earmark-text"></i>
-                          {doc.arquivo_nome}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </>
-              </div>
-            ))}
+                    {msg.documentos?.length > 0 && (
+                      <div className="mt-3 flex flex-col gap-2">
+                        {msg.documentos.map((doc, index) => (
+                          <button
+                            key={index}
+                            type="button"
+                            onClick={() => baixarArquivo(doc)}
+                            className="text-left text-[var(--bgbutton)] underline break-all flex items-center gap-1"
+                          >
+                            <i className="bi bi-file-earmark-text"></i>
+                            {doc.arquivo_nome}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* ✍️ Input */}

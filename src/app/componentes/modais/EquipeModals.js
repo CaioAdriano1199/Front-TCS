@@ -10,7 +10,7 @@ import { criarFuncionario } from "../servico/criarfuncionario";
 import { excluirFuncionario } from "../servico/excluirfuncionario";
 import { receberUsuarioPorId } from "../servico/reberusuarioporid";
 import { moverusuario } from "../servico/moverusuario";
-import { excluirEquipe } from "../servico/excluirEquipe";
+import { excluirempresa } from "../servico/excluirempresa";
 
 export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setListaEquipes, isOpen, onClose, onOpen }) {
   const [membrosEquipe, setMembrosEquipe] = useState([]);
@@ -171,7 +171,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
                       options={[
                         {
                           label: "Excluir",
-                          onClick: () => {excluirEquipe(equipe.id)},
+                          onClick: () => {excluirEmpresa(equipe.id)},
                         },
                       ]}
                     />

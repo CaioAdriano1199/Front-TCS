@@ -37,20 +37,15 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
   const [modalexcluirEquipe, setModalExcluirEquipe] = useState(false);
   const [modalExcluirMembro, setModalExcluirMembro] = useState(false);
 
-  const colaborador = {
-    email: email,
-    senha: senha,
-    nome: nome,
-    idEquipe: equipeAtual,
-    idsEquipes: [equipeAtual],
-    admSistema: false,
-  };
   const [equipeparaexcluir, setEquipeParaExcluir] = useState("");
+  const [admSistema, setAdmSistema] = useState(false);
+  const [admSistemaAtt, setAdmSistemaAtt] = useState(false);
 
   const colaboradorAtt = {
     email: emailAtt,
     nome: nomeAtt,
     senha: senhaAtt,
+    admSistema: admSistemaAtt,
   };
 
   async function carregarMembrosEquipe(equipeId) {
@@ -116,16 +111,45 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
 
   async function cadastroUsuario() {
     try {
-      await criarFuncionario(colaborador);
+      const novoColaborador = {
+        email: email,
+        nome: nome,
+        senha: senha,
+        idEquipe: equipeAtual,
+        idsEquipes: [equipeAtual],
+        admSistema: admSistema,
+      };
+      await criarFuncionario(novoColaborador);
       toast.success("Sucesso no cadastro do usuário");
       setEmail("");
       setSenha("");
       setConfirmarSenha("");
       setNome("");
       setmodalNovoMembro(false);
+      setAdmSistema(false);
       carregarMembrosEquipe(equipeAtual);
     } catch (erro) {
       toast.error("Erro no cadastro do usuário");
+    }
+  }
+
+  async function atualizarUsuario() {
+    try {
+      const funcionarioId = membro.id;
+      const funcionarioData = {
+        email: emailAtt,
+        nome: nomeAtt,
+        senha: senhaAtt,
+        admSistema: admSistemaAtt,
+      };
+      const { atualizarFuncionario } = await import("../servico/atualizarfuncionario");
+      await atualizarFuncionario(funcionarioId, funcionarioData);
+      toast.success("Usuário atualizado com sucesso");
+      setmodalEditarMembro(false);
+      carregarMembrosEquipe(equipeAtual);
+    } catch (error) {
+      console.error(error);
+      toast.error("Erro ao atualizar usuário");
     }
   }
 
@@ -237,6 +261,7 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
                             setEmailAtt(membroItem.email);
                             setNomeAtt(membroItem.nome);
                             setSenhaAtt(membroItem.senha);
+                            setAdmSistemaAtt(membroItem.admSistema || false);
                           },
                           className: "bg-[var(--bginput)] hover:bg-[var(--cinzaclaro)] hover:cursor-pointer text-[var(--preto)]",
                         },
@@ -282,6 +307,10 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
           <input type="text" placeholder="Nome" value={nome} onChange={(e) => setNome(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
           <input type="password" placeholder="Senha" value={senha} onChange={(e) => setSenha(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
           <input type="password" placeholder="Confirmar senha" value={confirmarSenha} onChange={(e) => setConfirmarSenha(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
+          <label className="flex items-center gap-2 mt-2 mb-4">
+            <input type="checkbox" checked={admSistema} onChange={(e) => setAdmSistema(e.target.checked)} className="accent-[var(--bgbutton)]" />
+            <span>Administrador</span>
+          </label>
           {senha !== confirmarSenha && confirmarSenha !== "" ? (<p className="text-red-500 text-sm">As senhas não coincidem</p>) : null}
           <button onClick={() => cadastroUsuario()} className=" max-w-sm w-full my-2" disabled={senha !== confirmarSenha || email === "" || nome === "" || senha === "" || confirmarSenha === ""}>Cadastrar</button>
         </div>
@@ -315,7 +344,11 @@ export default function EquipeModals({ URL_BASE, isAdmin, listaEquipes, setLista
           <input type="email" placeholder="Email" value={emailAtt} onChange={(e) => setEmailAtt(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
           <input type="text" placeholder="Nome" value={nomeAtt} onChange={(e) => setNomeAtt(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
           <input type="password" placeholder="Senha" value={senhaAtt} onChange={(e) => setSenhaAtt(e.target.value)} required className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] text-[var(--preto)] rounded w-full my-2 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)]" />
-          <button onClick={() => cadastroUsuario()} className=" max-w-sm w-full my-2" disabled={emailAtt === "" || nomeAtt === "" || senhaAtt === ""}>Atualizar</button>
+          <label className="flex items-center gap-2 mt-2 mb-4">
+            <input type="checkbox" checked={admSistemaAtt} onChange={(e) => setAdmSistemaAtt(e.target.checked)} className="accent-[var(--bgbutton)]" />
+            <span>Administrador</span>
+          </label>
+          <button onClick={() => atualizarUsuario()} className=" max-w-sm w-full my-2" disabled={emailAtt === "" || nomeAtt === "" || senhaAtt === ""}>Atualizar</button>
         </div>
       </Modal>
 

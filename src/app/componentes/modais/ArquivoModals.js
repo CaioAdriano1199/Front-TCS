@@ -24,6 +24,7 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
   const [ordem, setOrdem] = useState("asc");
   const [nomepasta, setNomePasta] = useState("");
   const [modalRenomearpasta, setmodalRenomearPasta] = useState(false);
+  const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     if (!isOpen) {

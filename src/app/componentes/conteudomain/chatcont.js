@@ -65,16 +65,11 @@ export default function ChatCont() {
     try {
       const resposta = await respostadaia(textoenviado);
 
-      const primeiroDocumento = resposta.documents[0];
-
       const novaMensagemIA = {
         id: crypto.randomUUID(),
-        texto:
-          primeiroDocumento?.arquivo_nome ||
-          "Nenhum documento encontrado",
+        texto: resposta.answer || "Nenhuma resposta encontrada",
         autor: "ia",
-
-        documento: primeiroDocumento
+        documentos: resposta.sources || []
       };
 
       setMensagens((prev) => [...prev, novaMensagemIA]);
@@ -125,58 +120,65 @@ export default function ChatCont() {
       ) : (
         <>
           {/* 📩 Lista de mensagens */}
-            <div className="flex flex-1 flex-col gap-3 overflow-y-auto mb-4">
-              {mensagens.map((msg) => (
-                <div
-                  key={msg.id}
-                  className={`max-w-[80%] md:max-w-[60%] p-3 rounded-lg whitespace-pre-wrap ${msg.autor === "eu"
-                      ? "bg-[var(--bgbuttonhover)] text-white self-end ml-auto"
-                      : "bg-white text-black"
-                    }`}
-                >
-                  {msg.documento ? (
-                    <button
-                      type="button"
-                      onClick={() => baixarArquivo(msg.documento)}
-                      className="text-left text-[var(--bgbutton)] underline break-all flex items-center gap-1"
-                    >
-                      <i className="bi bi-file-earmark-text"></i>
-                      {msg.texto}
-                    </button>
-                  ) : (
-                    msg.texto
-                  )}
-                </div>
-              ))}
-            </div>
-
-            {/* ✍️ Input */}
-            <div className="flex gap-2">
-              <textarea
-                type="text"
-                value={texto}
-                rows={1}
-
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    enviarMensagem();
-                  }
-                }}
-                onChange={(e) => setTexto(e.target.value)}
-                placeholder="Digite uma mensagem..."
-                className="flex-1 p-2 rounded border-transparent focus:ring-[var(--bgbutton)] bg-[var(--branco)] resize-none"
-              />
-
-              <button
-                onClick={enviarMensagem}
-                className="bg-[var(--bgbutton)] text-white rounded-full px-3 hover:bg-[var(--bgbuttonhover)] transition-colors duration-300 hover:cursor-pointer"
+          <div className="flex flex-1 flex-col gap-3 overflow-y-auto mb-4">
+            {mensagens.map((msg) => (
+              <div
+                key={msg.id}
+                className={`max-w-[80%] md:max-w-[60%] p-3 rounded-lg whitespace-pre-wrap ${msg.autor === "eu"
+                  ? "bg-[var(--bgbuttonhover)] text-white self-end ml-auto"
+                  : "bg-white text-black"
+                  }`}
               >
-                <i className="bi bi-send"></i>
-              </button>
-            </div>
-          </>
-        )}
+                <>
+                  <p>{msg.texto}</p>
+
+                  {msg.documentos?.length > 0 && (
+                    <div className="mt-3 flex flex-col gap-2">
+                      {msg.documentos.map((doc, index) => (
+                        <button
+                          key={index}
+                          type="button"
+                          onClick={() => baixarArquivo(doc)}
+                          className="text-left text-[var(--bgbutton)] underline break-all flex items-center gap-1"
+                        >
+                          <i className="bi bi-file-earmark-text"></i>
+                          {doc.arquivo_nome}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </>
+              </div>
+            ))}
+          </div>
+
+          {/* ✍️ Input */}
+          <div className="flex gap-2">
+            <textarea
+              type="text"
+              value={texto}
+              rows={1}
+
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  enviarMensagem();
+                }
+              }}
+              onChange={(e) => setTexto(e.target.value)}
+              placeholder="Digite uma mensagem..."
+              className="flex-1 p-2 rounded border-transparent focus:ring-[var(--bgbutton)] bg-[var(--branco)] resize-none"
+            />
+
+            <button
+              onClick={enviarMensagem}
+              className="bg-[var(--bgbutton)] text-white rounded-full px-3 hover:bg-[var(--bgbuttonhover)] transition-colors duration-300 hover:cursor-pointer"
+            >
+              <i className="bi bi-send"></i>
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

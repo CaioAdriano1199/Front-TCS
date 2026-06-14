@@ -26,8 +26,7 @@ export default function Cadastro() {
 
   const empresa = {
     cnpj: cnpj,
-    nome: nomeempresa,
-    caminhoBase: caminhoBase
+    nome: nomeempresa
   }
 
   const cadastro = {
@@ -158,13 +157,6 @@ export default function Cadastro() {
                 placeholder="Nome da empresa"
                 className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] shadow-sm rounded-md my-2.5 py-2.5 px-4 text-[var(--preto)] focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] placeholder:text-[var(--phgray)]"
                 onChange={(e) => setNomeempresa(e.target.value)}
-                required
-              />
-              <input
-                type="text"
-                placeholder="Caminho da base"
-                className="border border-[var(--bgbutton)]/20 bg-[var(--branco)] shadow-sm rounded-md my-2.5 py-2.5 px-4 text-[var(--preto)] focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] placeholder:text-[var(--phgray)]"
-                onChange={(e) => setCaminhoBase(e.target.value)}
                 required
               />
               <button

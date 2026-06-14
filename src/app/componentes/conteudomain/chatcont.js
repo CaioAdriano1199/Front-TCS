@@ -9,15 +9,22 @@ export default function ChatCont() {
   const [primeiraMensagem, setPrimeiraMensagem] = useState(true);
 
   async function baixarArquivo(documento) {
-    const path = documento?.path || documento?.arquivo_path || documento?.filePath;
-    if (!path) {
-      console.error("Caminho do arquivo não encontrado para download.");
-      return;
-    }
-
     try {
       const token = localStorage.getItem("token");
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/arquivos/download?path=${encodeURIComponent(path)}`;
+      
+      // Se houver download_url, usar diretamente
+      let url;
+      if (documento?.download_url) {
+        url = `${process.env.NEXT_PUBLIC_API_URL}${documento.download_url}`;
+      } else {
+        // Fallback para o formato anterior com path
+        const path = documento?.path || documento?.arquivo_path || documento?.filePath;
+        if (!path) {
+          console.error("Caminho do arquivo não encontrado para download.");
+          return;
+        }
+        url = `${process.env.NEXT_PUBLIC_API_URL}/arquivos/download?path=${encodeURIComponent(path)}`;
+      }
 
       const response = await fetch(url, {
         method: "GET",

@@ -75,7 +75,7 @@ export default function Cadastro() {
   }
 
   return (
-    <main className="bg-[url('/fundoAlt.png')] bg-cover bg-center bg-no-repeat min-h-screen">
+    <main className="bg-[url('/fundomenu.png')] bg-cover bg-center bg-no-repeat min-h-screen">
             <div className="flex min-h-screen flex-col items-center justify-center bg-[var(--azultransp)] backdrop-blur-sm w-full h-full absolute top-0 left-0">
       <div className="gradient-vertical left-0"></div>
       <div className="gradient-vertical right-0"></div>

@@ -11,6 +11,20 @@ export default function ChatCont() {
   const [primeiraMensagem, setPrimeiraMensagem] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const frasesPlaceHolder = [
+    "Localize o relatório de alta da UTI da semana passada...",
+    "Prontuario do paciente João da Silva.",
+    "Quero o resumo do relatório de alta do paciente Maria Oliveira.",
+    "Quais documentos tenho sobre o paciente Carlos Pereira?"]
+  const [placeholder, setPlaceholder] = useState(() => {
+    const randomIndex = Math.floor(Math.random() * frasesPlaceHolder.length);
+    return frasesPlaceHolder[randomIndex];
+  });
+
+  const randomPlaceholder = () => {
+    const randomIndex = Math.floor(Math.random() * frasesPlaceHolder.length);
+    setPlaceholder(frasesPlaceHolder[randomIndex]);
+  };
 
   async function baixarArquivo(documento) {
     try {
@@ -127,7 +141,7 @@ export default function ChatCont() {
 
   return (
 
-    <div className="flex text-black flex-col h-screen w-full p-4 md:p-6 max-w-3xl mx-auto overflow-hidden">s
+    <div className="flex text-black flex-col h-screen w-full p-4 md:p-6 max-w-3xl mx-auto overflow-hidden">
       {primeiraMensagem ? (
 
         <div className="flex flex-col flex-1 items-center justify-center">
@@ -148,7 +162,7 @@ export default function ChatCont() {
                 }
               }}
               onChange={(e) => setTexto(e.target.value)}
-              placeholder="Localize o relatório de alta da UTI da semana passada..."
+              placeholder={placeholder}
               className="resize-none flex-1 p-2 rounded-xl border-transparent focus:outline-none focus:ring-2 focus:ring-[var(--bgbutton)] bg-[var(--branco)] resize-none"
             />
             <button
@@ -171,7 +185,7 @@ export default function ChatCont() {
             {error && (
               <div className="text-red-600 bg-red-100 p-2 rounded mb-2">{error}</div>
             )}
-             <div className="flex-1 overflow-y-auto pr-2">
+            <div className="flex-1 overflow-y-auto pr-2">
               {mensagens.map((msg) => (
                 <div
                   key={msg.id}

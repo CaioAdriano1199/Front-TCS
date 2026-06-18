@@ -185,13 +185,13 @@ export default function ChatCont() {
             {error && (
               <div className="text-red-600 bg-red-100 p-2 rounded mb-2">{error}</div>
             )}
-            <div className="flex-1 overflow-y-auto pr-2">
+            <div className="flex-1 overflow-y-auto pr-2 flex flex-col gap-3">
               {mensagens.map((msg) => (
                 <div
                   key={msg.id}
-                  className={`max-w-[80%] md:max-w-[60%] p-3 rounded-lg whitespace-pre-wrap ${msg.autor === "eu"
-                    ? "bg-[var(--bgbuttonhover)] text-white self-end ml-auto"
-                    : "bg-white text-black"
+                  className={`w-fit max-w-[80%] md:max-w-[60%] p-3 rounded-lg whitespace-pre-wrap break-words ${msg.autor === "eu"
+                    ? "bg-[var(--bgbuttonhover)] text-white self-end"
+                    : "bg-white text-black self-start"
                     }`}
                 >
                   <>

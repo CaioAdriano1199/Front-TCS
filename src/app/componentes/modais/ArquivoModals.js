@@ -25,6 +25,7 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
   const [ordem, setOrdem] = useState("asc");
   const [nomepasta, setNomePasta] = useState("");
   const [modalRenomearpasta, setmodalRenomearPasta] = useState(false);
+  const [enviandoArquivo, setEnviandoArquivo] = useState(false);
   const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
@@ -160,12 +161,54 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
     setListaArquivos([...subpastasFormatadas, ...arquivosFormatados]);
   }
 
-  // Funcionalidades de upload de arquivo desabilitadas
-  // function abrirSeletor() {
-  //   inputRef.current.click();
-  // }
-  // async function onFileChange(event) { ... }
-  // function handleUpload(event) { ... }
+  function abrirSeletor() {
+    inputRef.current?.click();
+  }
+
+  async function recarregarPastaAtual() {
+    const pastaAtual = historicoPastas[historicoPastas.length - 1];
+    if (!pastaAtual?.path) return;
+
+    const dados = await receberarquivos(pastaAtual.path);
+
+    const subpastasFormatadas = (dados.subpastas || []).map((p) => ({
+      ...p,
+      nome: p.name || p.nome,
+      tipo: "pasta",
+      dataUpload: p.dataCriacao
+    }));
+
+    const arquivosFormatados = (dados.arquivos || []).map((a) => ({
+      ...a,
+      nome: a.name || a.nome,
+      tipo: "arquivo",
+      dataUpload: a.date
+    }));
+
+    setListaArquivos([...subpastasFormatadas, ...arquivosFormatados]);
+  }
+
+  async function onFileChange(event) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    const pastaAtual = historicoPastas[historicoPastas.length - 1];
+    if (!pastaAtual?.path) {
+      toast.error("Abra uma pasta antes de enviar um arquivo.");
+      return;
+    }
+
+    try {
+      setEnviandoArquivo(true);
+      await uploadArquivo(pastaAtual.path, file);
+      await recarregarPastaAtual();
+    } catch (error) {
+      console.error("Erro ao enviar arquivo:", error);
+    } finally {
+      setEnviandoArquivo(false);
+    }
+  }
 
   const raizordenada = [...listaPastasRaiz].sort((a, b) => {
     const nomeA = (a.nome || "").toLowerCase();
@@ -297,7 +340,26 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
                         </p>
                       </button>
                     </div>
+                    <button
+                      type="button"
+                      onClick={abrirSeletor}
+                      disabled={enviandoArquivo}
+                      className={`ml-auto my-4 flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold transition-colors duration-200 ${enviandoArquivo ? "bg-gray-400 text-white cursor-not-allowed" : "bg-[var(--bgbutton)] text-[var(--branco)] hover:bg-[var(--bgbuttonhover)] cursor-pointer"}`}
+                    >
+                      {enviandoArquivo ? (
+                        <i className="bi bi-arrow-repeat animate-spin"></i>
+                      ) : (
+                        <i className="bi bi-upload"></i>
+                      )}
+                      Enviar arquivo
+                    </button>
                   </div>
+                  <input
+                    type="file"
+                    ref={inputRef}
+                    onChange={onFileChange}
+                    className="hidden"
+                  />
                   <div className="w-full mx-auto overflow-y-auto max-h-96">
                     {arquivosOrdenados.map((arquivo) => (
                       <div

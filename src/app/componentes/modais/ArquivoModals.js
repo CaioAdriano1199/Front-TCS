@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import { uploadArquivo } from "../servico/uploadarquivo";
 import { downloadArquivo } from "../servico/downloadarquivo";
 
-export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen, onClose, onOpen, modalLoading = false }) {
+export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen, onClose, onOpen, caminhoBase, modalLoading = false }) {
   const [historicoPastas, setHistoricoPastas] = useState([]);
   const [listaPastasRaiz, setListaPastasRaiz] = useState([]);
   const [modalArquivo, setmodalArquivo] = useState(false);
@@ -166,10 +166,10 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
   }
 
   async function recarregarPastaAtual() {
-    const pastaAtual = historicoPastas[historicoPastas.length - 1];
-    if (!pastaAtual?.path) return;
+    const caminhoAtual = historicoPastas[historicoPastas.length - 1]?.path || caminhoBase;
+    if (!caminhoAtual) return;
 
-    const dados = await receberarquivos(pastaAtual.path);
+    const dados = await receberarquivos(caminhoAtual);
 
     const subpastasFormatadas = (dados.subpastas || []).map((p) => ({
       ...p,
@@ -193,15 +193,15 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
     event.target.value = "";
     if (!file) return;
 
-    const pastaAtual = historicoPastas[historicoPastas.length - 1];
-    if (!pastaAtual?.path) {
+    const caminhoAtual = historicoPastas[historicoPastas.length - 1]?.path || caminhoBase;
+    if (!caminhoAtual) {
       toast.error("Abra uma pasta antes de enviar um arquivo.");
       return;
     }
 
     try {
       setEnviandoArquivo(true);
-      await uploadArquivo(pastaAtual.path, file);
+      await uploadArquivo(caminhoAtual, file);
       await recarregarPastaAtual();
     } catch (error) {
       console.error("Erro ao enviar arquivo:", error);

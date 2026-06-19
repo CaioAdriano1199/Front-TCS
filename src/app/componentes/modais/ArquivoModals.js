@@ -205,6 +205,7 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
       await recarregarPastaAtual();
     } catch (error) {
       console.error("Erro ao enviar arquivo:", error);
+      toast.error("Não foi possível enviar o arquivo.");
     } finally {
       setEnviandoArquivo(false);
     }

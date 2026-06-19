@@ -94,15 +94,31 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
     }
   }
 
-  // Funcionalidade de criar nova pasta desabilitada
-  // async function criarNovaPasta() {
-  //   if (!nomepasta.trim()) {
-  //     toast.error("Informe um nome para a nova pasta.");
-  //     return;
-  //   }
-  //   ...
-  // }
+  async function criarNovaPasta() {
+    if (!nomepasta.trim()) {
+      toast.error("Informe o nome da pasta.");
+      return;
+    }
 
+    const pastaAtual = historicoPastas[historicoPastas.length - 1];
+
+    if (!pastaAtual) {
+      toast.error("Nenhuma pasta selecionada.");
+      return;
+    }
+
+    const resultado = await criarPasta({
+      nome: nomepasta,
+      parentPath: pastaAtual.path,
+      caminhoEquipe: historicoPastas[0]?.path || pastaAtual.path
+    });
+
+    if (resultado) {
+      setNomePasta("");
+      setmodalNovaPasta(false);
+      await recarregarPastaAtual();
+    }
+  }
   async function mostrarArquivosPasta(pasta) {
     if (!pasta?.path) return;
 
@@ -340,20 +356,28 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
                           Ordenar por data
                         </p>
                       </button>
+                      <button
+                        type="button"
+                        onClick={() => setmodalNovaPasta(true)}
+                        className="my-4 flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold bg-green-600 text-white hover:bg-green-700 cursor-pointer"
+                      >
+                        <i className="bi bi-folder-plus"></i>
+                        Nova Pasta
+                      </button>
+                      <button
+                        type="button"
+                        onClick={abrirSeletor}
+                        disabled={enviandoArquivo}
+                        className={`ml-auto my-4 flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold transition-colors duration-200 ${enviandoArquivo ? "bg-gray-400 text-white cursor-not-allowed" : "bg-[var(--bgbutton)] text-[var(--branco)] hover:bg-[var(--bgbuttonhover)] cursor-pointer"}`}
+                      >
+                        {enviandoArquivo ? (
+                          <i className="bi bi-arrow-repeat animate-spin"></i>
+                        ) : (
+                          <i className="bi bi-upload"></i>
+                        )}
+                        Enviar arquivo
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      onClick={abrirSeletor}
-                      disabled={enviandoArquivo}
-                      className={`ml-auto my-4 flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold transition-colors duration-200 ${enviandoArquivo ? "bg-gray-400 text-white cursor-not-allowed" : "bg-[var(--bgbutton)] text-[var(--branco)] hover:bg-[var(--bgbuttonhover)] cursor-pointer"}`}
-                    >
-                      {enviandoArquivo ? (
-                        <i className="bi bi-arrow-repeat animate-spin"></i>
-                      ) : (
-                        <i className="bi bi-upload"></i>
-                      )}
-                      Enviar arquivo
-                    </button>
                   </div>
                   <input
                     type="file"
@@ -373,10 +397,10 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
                             arquivo.tipo === "pasta"
                               ? () => mostrarArquivosPasta(arquivo)
                               : () =>
-                                  downloadDirect(
-                                    arquivo.path || arquivo.caminho || arquivo.arquivo_path || arquivo.filePath,
-                                    arquivo.nome || arquivo.name || arquivo.arquivo_nome
-                                  )
+                                downloadDirect(
+                                  arquivo.path || arquivo.caminho || arquivo.arquivo_path || arquivo.filePath,
+                                  arquivo.nome || arquivo.name || arquivo.arquivo_nome
+                                )
                           }
                         >
                           <p>
@@ -390,12 +414,12 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
                           <p className="text-sm text-gray-500">
                             {arquivo.dataUpload
                               ? new Date(arquivo.dataUpload).toLocaleString("pt-BR", {
-                                  day: "2-digit",
-                                  month: "2-digit",
-                                  year: "numeric",
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                }).replace(",", "")
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              }).replace(",", "")
                               : "-"}
                           </p>
                         </div>
@@ -409,7 +433,32 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
           )}
         </div>
       </Modal>
-      {/* Modais desabilitados: Nova Pasta e Renomear Pasta */}
+      <Modal
+        isOpen={modalNovapasta}
+        onClose={() => {
+          setmodalNovaPasta(false);
+          setNomePasta("");
+        }}
+        title="Nova Pasta"
+        width="w-md"
+      >
+        <div className="p-4 flex flex-col gap-4">
+          <input
+            type="text"
+            value={nomepasta}
+            onChange={(e) => setNomePasta(e.target.value)}
+            placeholder="Nome da pasta"
+            className="w-full border rounded-md p-2"
+          />
+
+          <button
+            onClick={criarNovaPasta}
+            className="bg-[var(--bgbutton)] text-white rounded-md p-2 hover:bg-[var(--bgbuttonhover)]"
+          >
+            Criar Pasta
+          </button>
+        </div>
+      </Modal>
     </>
   );
 }

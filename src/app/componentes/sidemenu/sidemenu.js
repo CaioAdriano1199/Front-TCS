@@ -16,11 +16,13 @@ export default function Sidemenu({ setPgc }) {
   const [modalEquipeAberto, setModalEquipeAberto] = useState(false);
   const [modalArquivoAberto, setModalArquivoAberto] = useState(false);
   const [modalLoading, setModalLoading] = useState(false);
+  const [caminhoEquipe, setCaminhoEquipe] = useState("");
 
   async function abrirArquivosDaEquipe(equipe) {
     const path = equipe.caminho || equipe.caminhoBase || equipe.path;
     if (!path) return;
 
+    setCaminhoEquipe(path);
     setModalArquivoAberto(true);
     setModalLoading(true);
     try {
@@ -87,7 +89,7 @@ export default function Sidemenu({ setPgc }) {
           </div>
         </div>
         
-        <ArquivoModals listaArquivos={listaArquivos} setListaArquivos={setListaArquivos} isOpen={modalArquivoAberto} onClose={() => setModalArquivoAberto(false)} onOpen={() => setModalArquivoAberto(true)} modalLoading={modalLoading} />
+        <ArquivoModals listaArquivos={listaArquivos} setListaArquivos={setListaArquivos} isOpen={modalArquivoAberto} onClose={() => setModalArquivoAberto(false)} onOpen={() => setModalArquivoAberto(true)} caminhoBase={caminhoEquipe} modalLoading={modalLoading} />
         <div className="mt-auto text-sm py-2 text-gray-400">
           <EquipeModals URL_BASE={URL_BASE} isAdmin={isAdmin} listaEquipes={listaEquipes} setListaEquipes={setListaEquipes} isOpen={modalEquipeAberto} onClose={() => setModalEquipeAberto(false)} onOpen={() => setModalEquipeAberto(true)} />
           

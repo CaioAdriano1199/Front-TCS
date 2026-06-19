@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import { uploadArquivo } from "../servico/uploadarquivo";
 import { downloadArquivo } from "../servico/downloadarquivo";
 
-export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen, onClose, onOpen, modalLoading = false }) {
+export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen, onClose, onOpen, caminhoBase, modalLoading = false }) {
   const [historicoPastas, setHistoricoPastas] = useState([]);
   const [listaPastasRaiz, setListaPastasRaiz] = useState([]);
   const [modalArquivo, setmodalArquivo] = useState(false);
@@ -25,6 +25,7 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
   const [ordem, setOrdem] = useState("asc");
   const [nomepasta, setNomePasta] = useState("");
   const [modalRenomearpasta, setmodalRenomearPasta] = useState(false);
+  const [enviandoArquivo, setEnviandoArquivo] = useState(false);
   const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
@@ -160,12 +161,55 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
     setListaArquivos([...subpastasFormatadas, ...arquivosFormatados]);
   }
 
-  // Funcionalidades de upload de arquivo desabilitadas
-  // function abrirSeletor() {
-  //   inputRef.current.click();
-  // }
-  // async function onFileChange(event) { ... }
-  // function handleUpload(event) { ... }
+  function abrirSeletor() {
+    inputRef.current?.click();
+  }
+
+  async function recarregarPastaAtual() {
+    const caminhoAtual = historicoPastas[historicoPastas.length - 1]?.path || caminhoBase;
+    if (!caminhoAtual) return;
+
+    const dados = await receberarquivos(caminhoAtual);
+
+    const subpastasFormatadas = (dados.subpastas || []).map((p) => ({
+      ...p,
+      nome: p.name || p.nome,
+      tipo: "pasta",
+      dataUpload: p.dataCriacao
+    }));
+
+    const arquivosFormatados = (dados.arquivos || []).map((a) => ({
+      ...a,
+      nome: a.name || a.nome,
+      tipo: "arquivo",
+      dataUpload: a.date
+    }));
+
+    setListaArquivos([...subpastasFormatadas, ...arquivosFormatados]);
+  }
+
+  async function onFileChange(event) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    const caminhoAtual = historicoPastas[historicoPastas.length - 1]?.path || caminhoBase;
+    if (!caminhoAtual) {
+      toast.error("Abra uma pasta antes de enviar um arquivo.");
+      return;
+    }
+
+    try {
+      setEnviandoArquivo(true);
+      await uploadArquivo(caminhoAtual, file);
+      await recarregarPastaAtual();
+    } catch (error) {
+      console.error("Erro ao enviar arquivo:", error);
+      toast.error("Não foi possível enviar o arquivo.");
+    } finally {
+      setEnviandoArquivo(false);
+    }
+  }
 
   const raizordenada = [...listaPastasRaiz].sort((a, b) => {
     const nomeA = (a.nome || "").toLowerCase();
@@ -297,7 +341,26 @@ export default function ArquivoModals({ listaArquivos, setListaArquivos, isOpen,
                         </p>
                       </button>
                     </div>
+                    <button
+                      type="button"
+                      onClick={abrirSeletor}
+                      disabled={enviandoArquivo}
+                      className={`ml-auto my-4 flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold transition-colors duration-200 ${enviandoArquivo ? "bg-gray-400 text-white cursor-not-allowed" : "bg-[var(--bgbutton)] text-[var(--branco)] hover:bg-[var(--bgbuttonhover)] cursor-pointer"}`}
+                    >
+                      {enviandoArquivo ? (
+                        <i className="bi bi-arrow-repeat animate-spin"></i>
+                      ) : (
+                        <i className="bi bi-upload"></i>
+                      )}
+                      Enviar arquivo
+                    </button>
                   </div>
+                  <input
+                    type="file"
+                    ref={inputRef}
+                    onChange={onFileChange}
+                    className="hidden"
+                  />
                   <div className="w-full mx-auto overflow-y-auto max-h-96">
                     {arquivosOrdenados.map((arquivo) => (
                       <div
